@@ -11,7 +11,7 @@
 </div>
 
 > [!NOTE]
-> 이 저장소는 [Autodesk Platform Services API & SDK Documentation](https://aps.autodesk.com/developer/documentation) 카탈로그를 원문에 충실하게 보관한 비공식 아카이브입니다. **보관됨**은 로컬 스냅샷을 열고, **공식 원문만 연결**은 아직 수집되지 않은 Autodesk 원문으로 이동합니다.
+> 이 저장소는 [Autodesk Platform Services API & SDK Documentation](https://aps.autodesk.com/developer/documentation) 카탈로그를 원문에 충실하게 보관한 비공식 아카이브입니다. **로컬 문서**는 이 저장소의 버전 스냅샷을 열고, **공식 원문만 연결**은 아직 이 저장소에 없는 Autodesk 문서를 엽니다.
 
 ## 아카이브 둘러보기
 
@@ -58,14 +58,14 @@
 
 보관된 문서는 바로 표시합니다. 아직 보관하지 않은 Autodesk 제품은 아래 목록을 열어야 볼 수 있습니다.
 
-| Autodesk 문서 | 아카이브 |
+| Autodesk 문서 | 로컬 문서 |
 | --- | --- |
-| [AEC Data Model API](https://aps.autodesk.com/developer/overview/aec-data-model-api) | [보관됨](./forma/aec-data-model/INDEX.md) |
-| [Authentication API](https://aps.autodesk.com/developer/overview/authentication-api) | [보관됨](./authentication/README.ko.md) |
-| [Autodesk Forma APIs](https://aps.autodesk.com/developer/overview/forma) | [보관됨](./forma/README.ko.md) |
-| [Data Management API](https://aps.autodesk.com/developer/overview/data-management-api) | [보관됨](./data-management/README.ko.md) |
-| [Model Derivative API](https://aps.autodesk.com/developer/overview/model-derivative-api) | [보관됨](./model-derivative/README.ko.md) |
-| [Viewer SDK](https://aps.autodesk.com/developer/overview/viewer-sdk) | [보관됨](./viewer/README.ko.md) |
+| [AEC Data Model API](https://aps.autodesk.com/developer/overview/aec-data-model-api) | [문서 보기](./forma/aec-data-model/INDEX.md) |
+| [Authentication API](https://aps.autodesk.com/developer/overview/authentication-api) | [문서 보기](./authentication/README.ko.md) |
+| [Autodesk Forma APIs](https://aps.autodesk.com/developer/overview/forma) | [문서 보기](./forma/README.ko.md) |
+| [Data Management API](https://aps.autodesk.com/developer/overview/data-management-api) | [문서 보기](./data-management/README.ko.md) |
+| [Model Derivative API](https://aps.autodesk.com/developer/overview/model-derivative-api) | [문서 보기](./model-derivative/README.ko.md) |
+| [Viewer SDK](https://aps.autodesk.com/developer/overview/viewer-sdk) | [문서 보기](./viewer/README.ko.md) |
 
 <details>
 <summary><strong>아직 보관하지 않은 문서 보기</strong></summary>

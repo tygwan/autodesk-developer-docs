@@ -11,7 +11,7 @@ Find the Autodesk API or SDK you need, follow the source, and keep every answer 
 </div>
 
 > [!NOTE]
-> This is an unofficial, source-faithful archive of the [Autodesk Platform Services API & SDK Documentation](https://aps.autodesk.com/developer/documentation) catalog. **Archived** opens a local snapshot; **Official source only** points upstream and has not been captured here.
+> This is an unofficial, source-faithful archive of the [Autodesk Platform Services API & SDK Documentation](https://aps.autodesk.com/developer/documentation) catalog. **Local docs** opens a versioned snapshot in this repository; **Official source only** opens Autodesk documentation that is not available locally.
 
 ## Explore the archive
 
@@ -58,14 +58,14 @@ Return:
 
 Captured documentation is visible at a glance. Open the section below only when you need an Autodesk product that has not yet been archived.
 
-| Autodesk documentation | Archive |
+| Autodesk documentation | Local docs |
 | --- | --- |
-| [AEC Data Model API](https://aps.autodesk.com/developer/overview/aec-data-model-api) | [Archived](./forma/aec-data-model/INDEX.md) |
-| [Authentication API](https://aps.autodesk.com/developer/overview/authentication-api) | [Archived](./authentication/README.md) |
-| [Autodesk Forma APIs](https://aps.autodesk.com/developer/overview/forma) | [Archived](./forma/README.md) |
-| [Data Management API](https://aps.autodesk.com/developer/overview/data-management-api) | [Archived](./data-management/README.md) |
-| [Model Derivative API](https://aps.autodesk.com/developer/overview/model-derivative-api) | [Archived](./model-derivative/README.md) |
-| [Viewer SDK](https://aps.autodesk.com/developer/overview/viewer-sdk) | [Archived](./viewer/README.md) |
+| [AEC Data Model API](https://aps.autodesk.com/developer/overview/aec-data-model-api) | [Browse docs](./forma/aec-data-model/INDEX.md) |
+| [Authentication API](https://aps.autodesk.com/developer/overview/authentication-api) | [Browse docs](./authentication/README.md) |
+| [Autodesk Forma APIs](https://aps.autodesk.com/developer/overview/forma) | [Browse docs](./forma/README.md) |
+| [Data Management API](https://aps.autodesk.com/developer/overview/data-management-api) | [Browse docs](./data-management/README.md) |
+| [Model Derivative API](https://aps.autodesk.com/developer/overview/model-derivative-api) | [Browse docs](./model-derivative/README.md) |
+| [Viewer SDK](https://aps.autodesk.com/developer/overview/viewer-sdk) | [Browse docs](./viewer/README.md) |
 
 <details>
 <summary><strong>Show documentation not yet archived</strong></summary>
