@@ -1,0 +1,206 @@
+---
+title: "Control"
+url_path: reference/UI/Control
+surface: viewer-sdk
+document_kind: reference
+category: "UI"
+---
+# Control
+
+## new Control(id, options)
+
+Base class for UI controls.
+
+It is abstract and should not be instantiated directly.
+
+### Parameters
+
+| idstring | The id for this control. |
+| --- | --- |
+| optionsobject | Dictionary with options. |
+| collapsibleboolean | Whether this control is collapsible. |
+
+# Properties
+
+| EventString | Enum for control event IDs. |
+| --- | --- |
+| containerHTMLElement | The HTMLElement representing this control. |
+
+# Methods
+
+## getId()
+
+Gets this control’s ID.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| string | The control’s ID. |
+
+## setVisible(visible)
+
+Sets the visibility of this control.
+
+### Parameters
+
+| visible*boolean | The visibility value to set. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the control’s visibility changed. |
+
+## isVisible()
+
+Gets the visibility of this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the this control is visible. |
+
+## setToolTip(toolTipText)
+
+Sets the tooltip text for this control.
+
+### Parameters
+
+| toolTipText*string | The text for the tooltip. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the tooltip was successfully set. |
+
+## getToolTip()
+
+Returns the tooltip text for this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| string | The tooltip text. Null if it’s not set. |
+
+## setCollapsed(collapsed)
+
+Sets the collapsed state of this control.
+
+### Parameters
+
+| collapsed*boolean | The collapsed value to set. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the control’s collapsed state changes. |
+
+## isCollapsed()
+
+Gets the collapsed state of this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if this control is collapsed. |
+
+## isCollapsible()
+
+Returns whether or not this control is collapsible.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if this control can be collapsed. |
+
+## addClass(cssClass)
+
+Adds a CSS class to this control.
+
+### Parameters
+
+| cssClass*string | The name of the CSS class. |
+| --- | --- |
+
+## removeClass(cssClass)
+
+Removes a CSS class from this control.
+
+### Parameters
+
+| cssClass*string | The name of the CSS class. |
+| --- | --- |
+
+## getPosition()
+
+Returns the position of this control relative to the canvas.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| object | The `top` and `left` values of the toolbar. |
+
+## getDimensions()
+
+Returns the dimensions of this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| object | The `width` and `height` of the toolbar. |
+
+## setDisplay(value)
+
+Sets the CSS `display` style value.
+
+### Parameters
+
+| value*string | CSS display value |
+| --- | --- |
+
+## removeFromParent()
+
+Removes current control from its parent container.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the control was successfully removed. |
+
+# Events
+
+## VISIBILITY_CHANGED
+
+Event fired when the visibility of the control changes.
+
+### Properties
+
+| controlIdstring | The ID of the control that fired this event. |
+| --- | --- |
+| isVisibleboolean | True if the control is now visible. |
+
+## COLLAPSED_CHANGED
+
+Event fired when the collapsed state of the control changes.
+
+### Properties
+
+| controlIdstring | The ID of the control that fired this event. |
+| --- | --- |
+| isCollapsedboolean | True if the control is now collapsed. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Control

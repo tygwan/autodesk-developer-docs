@@ -1,0 +1,290 @@
+---
+operation_id: mc-modelset-service-v3-get-model-set-version-latest-GET
+method: GET
+path: /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions/latest
+group: "Model Coordination"
+auth_context: user context required
+scopes: [data:read]
+surface: http
+verification: docs-only
+---
+
+# Retrieves the latest version of a given model set based on the model set ID
+
+```http
+GET https://developer.api.autodesk.com/bim360/modelset/v3/containers/:containerId/modelsets/:modelSetId/versions/latest
+```
+
+| | |
+| --- | --- |
+| **인증 컨텍스트** | user context required |
+| **필요 스코프** | `data:read` |
+| **데이터 포맷** | JSON |
+| **그룹** | Model Coordination |
+
+Retrieves the latest version of a given model set based on the model set ID.
+
+## 요청
+
+### URI 파라미터
+
+| 이름 | 타입 | 필수 | 설명 |
+| --- | --- | --- | --- |
+| `containerId` | string: UUID |  | The GUID that uniquely identifies the container. |
+| `modelSetId` | string: UUID |  | The GUID that uniquely identifies the model set. |
+
+### 헤더
+
+| 이름 | 타입 | 필수 | 설명 |
+| --- | --- | --- | --- |
+| `Authorization` | string | **필수** | Must be Bearer <token>, where <token> is obtained via a three-legged OAuth flow. |
+| `region` | string |  | The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase. For the full list of supported regions, see the Regions page. The API continues to support x-ads-region for backward compatibility. |
+
+## 응답
+
+| 코드 | 의미 | 설명 |
+| --- | --- | --- |
+| `200` | OK | Success |
+| `400` | Bad Request | The parameters of the requested operation are invalid. |
+| `401` | Unauthorized | The provided bearer token is not valid. |
+| `403` | Forbidden | The user or service represented by the bearer token does not have permission to perform this operation. |
+| `404` | Not Found | The requested resource could not be found. |
+| `429` | Too Many Requests | Rate limit exceeded. Wait some time before retrying. The Retry-After header might provide the amount of the time to wait. |
+| `500` | Internal Server Error | An unknown error occurred on the server. |
+
+### 응답 본문 (200)
+
+- `modelSetId` — `string: UUID`  
+    The GUID that uniquely identifies the model set.
+- `version` — `int32`  
+    The model set version number.
+- `createTime` — `datetime: ISO 8601`  
+    The date and time that the model set version was created.
+- `status` — `enum: string`  
+    The creation status of the model set version. Possible values: Pending, Processing, Successful, Partial, Failed.
+- `documentVersions` — `array: object`  
+    The document versions included in this version of the model set.
+  - `stableDocumentId` — `string`  
+      The unique ID of the document which identifies all versions of this document and is stable across model set versions.
+  - `unstableDocumentId` — `string`  
+      The unique ID of the document which identifies this version of the document and is not stable across model set versions.
+  - `documentLineage` — `object`  
+      A document from a model set.
+    - `lineageUrn` — `string`  
+        The URN of the document lineage.
+    - `parentFolderUrn` — `string`  
+        The URN of the parent folder for the document lineage.
+    - `isAligned` — `boolean`  
+        Indicates whether the document lineage is aligned.
+    - `tipVersionUrn` — `string`  
+        The tip version URN for the document lineage.
+  - `alignment` — `object`  
+      Contains the transform and alignment checksum for this document.
+    - `transform` — `array: double`  
+        A 4x4 matrix stored in column-major order, used for column-vector (mV) multiplication. Min items: 16. Max items: 16.
+    - `checksum` — `string`  
+        An opaque string describing the current state of the object, used to prevent update collisions.
+    - `upAxis` — `array: int`  
+        An axis-aligned unit vector describing which axis is considered up. Min items: 3. Max items: 3.
+    - `distanceUnit` — `enum: string`  
+        A Forge unit identifier describing the model’s units. Possible values: autodesk.unit.unit:meters-2.0.0, autodesk.unit.unit:centimeters-2.0.0, autodesk.unit.unit:millimeters-2.0.0, autodesk.unit.unit:feet-2.0.0, autodesk.unit.unit:inches-2.0.0, autodesk.unit.unit:yards-2.0.0, autodesk.unit.unit:kilometers-2.0.0, autodesk.unit.unit:miles-2.0.0.
+  - `isTipVersion` — `boolean`  
+      Indicates whether this document version is the most recent version (tip) in the lineage.
+  - `documentStatus` — `enum: string`  
+      The status of the document. Possible values: Succeeded, Failed, Running, Skipped.
+  - `forgeType` — `enum: string`  
+      The forge type associated with this document (used by the Document Management APIs). Possible values: versions:autodesk.bim360:Document, versions:autodesk.bim360:File.
+  - `versionUrn` — `string`  
+      The URN of the document version.
+  - `displayName` — `string`  
+      The display name of the document version.
+  - `revision` — `int`  
+      The revision label as seen in Document Management.
+  - `viewableName` — `string`  
+      The name of the viewable in the Model Derivative manifest.
+  - `createUserId` — `string`  
+      The unique identifier of the user who created the document version.
+  - `createTime` — `datetime: ISO 8601`  
+      The date and time that the document version was created.
+  - `viewableGuid` — `string`  
+      The ID of the geometry node in the derivative manifest to which this document version refers.
+  - `viewableId` — `string`  
+      The ID of the viewable for the document version.
+  - `viewableMime` — `string`  
+      The mime type of the viewable for the document version.
+  - `bubbleUrn` — `string`  
+      The URN of the Model Derivative bubble for the document version.
+  - `isSvf2Supported` — `boolean`  
+      Indicates whether this file supports the SVF2 streaming web format for Forge Viewer.
+  - `originalSeedFileVersionSize` — `int64`  
+      The size of the seed file version in bytes from which this document was originally extracted. Null if this document’s forgeType is versions:autodesk.bim360:Document.
+  - `originalSeedFileVersionUrn` — `string`  
+      The URN of the seed file version from which this document was originally extracted.
+  - `originalSeedFileVersionName` — `string`  
+      The name of the seed file version from which this document was originally extracted.
+
+### 응답 본문 (400)
+
+- `type` — `string`  
+    The error code.
+- `title` — `string`  
+    A short title for the error.
+- `detail` — `string`  
+    A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation.
+- `errors` — `array: object`  
+    A set of specific validation errors that need to be fixed.
+  - `field` — `string`  
+      The field which failed validation.
+  - `title` — `string`  
+      A short title for the error.
+  - `detail` — `string`  
+      A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation.
+  - `type` — `string`  
+      The error code.
+
+## Example #1 (no query parameters)
+
+```
+curl -v 'https://developer.api.autodesk.com/bim360/modelset/v3/containers/f0f4f36a-ac64-687f-b132-8efe04b22454/modelsets/00fb28a5-e8a4-2755-562a-7c2f0fc87911/versions/latest' \
+     -H 'Authorization: Bearer <token>'
+```
+
+## Example #2 (with all query parameters)
+
+```
+curl -v 'https://developer.api.autodesk.com/bim360/modelset/v3/containers/f0f4f36a-ac64-687f-b132-8efe04b22454/modelsets/00fb28a5-e8a4-2755-562a-7c2f0fc87911/versions/latest?status=Successful' \
+     -H 'Authorization: Bearer <token>'
+```
+
+```
+{
+  "modelSetId": "00fb28a5-e8a4-2755-562a-7c2f0fc87911",
+  "version": 42,
+  "createTime": "2015-10-21T16:29:30.000Z",
+  "status": "Successful",
+  "documentVersions": [
+    {
+      "stableDocumentId": "urn:adsk.wipprod:dm.lineage:jvMF7mrHR7OwG_DToKsJUA#Level 1",
+      "unstableDocumentId": "urn:adsk.wipprod:fs.file:vf.M7KsPcpXTn6nPPRhrQnjGA?version=1#Level 1",
+      "documentLineage": {
+        "lineageUrn": "urn:adsk.wipprod:dm.lineage:jvMF7mrHR7OwG_DToKsJUA",
+        "parentFolderUrn": "urn:adsk.wipprod:fs.folder:co.WI8roO18TU2Cl3P9y64z4w",
+        "isAligned": false,
+        "tipVersionUrn": "urn:adsk.wipprod:fs.file:vf.jvMF7mrHR7OwG_DToKsJUA?version=1"
+      },
+      "alignment": {
+        "transform": [
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176,
+          576.2757476333176
+        ],
+        "checksum": "7215ee9c7d9dc229d2921a40e899ec5f",
+        "upAxis": [
+          "0",
+          "0",
+          "1"
+        ],
+        "distanceUnit": "autodesk.unit.unit:meters-2.0.0"
+      },
+      "isTipVersion": true,
+      "documentStatus": "Succeeded",
+      "forgeType": "versions:autodesk.bim360:Document",
+      "versionUrn": "urn:adsk.wipprod:fs.file:vf.jvMF7mrHR7OwG_DToKsJUA?version=1",
+      "displayName": "example_document.rvt",
+      "revision": "1",
+      "viewableName": "Level 1",
+      "createUserId": "PD23PXGV8V3V",
+      "createTime": "2015-10-21T16:29:30.000Z",
+      "viewableGuid": "b1e3fda8-9a15-8cb9-9951-6f4781f8f897",
+      "viewableId": "2df27d58-d1c2-467b-be10-80baf501cb87-0008ebd5",
+      "viewableMime": "application/autodesk-svf",
+      "bubbleUrn": "urn:adsk.wipprod:fs.file:vf.M7KsPcpXTn6nPPRhrQnjGA?version=1",
+      "isSvf2Supported": false,
+      "originalSeedFileVersionUrn": "urn:adsk.wipprod:fs.file:vf.M7KsPcpXTn6nPPRhrQnjGA?version=1",
+      "originalSeedFileVersionName": "Hospital_Architectural.rvt"
+    }
+  ]
+}
+```
+
+```
+{
+  "type": "BadInput",
+  "title": "One or more input values in the request were bad",
+  "detail": "The following parameters are invalid: containerId",
+  "errors": [
+    {
+      "field": "containerId",
+      "title": "Invalid parameter",
+      "detail": "The value 'testing' is not valid.",
+      "type": "BadInput"
+    }
+  ]
+}
+```
+
+## Query Parameters
+
+- `status` — `array: enum: string`  
+    The statuses to filter the model set version.
+
+## 같은 그룹의 다른 엔드포인트
+
+- `POST /bim360/clash/v3/containers/{containerId}/tests/{testId}/clashes:assign` — [Creates a batch of new assigned clash groups for the given clash test](./mc-clash-service-v3-add-assigned-clash-group-batch-POST.md)
+- `POST /bim360/clash/v3/containers/{containerId}/tests/{testId}/clashes:close` — [Adds a batch of new closed clash groups to the given clash test](./mc-clash-service-v3-add-closed-clash-group-batch-POST.md)
+- `POST /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/screenshots` — [Uploads a screenshot, associating it with a given model set](./mc-clash-service-v3-add-screen-shot-POST.md)
+- `POST /bim360/clash/v3/containers/{containerId}/tests/{testId}/clashes/assigned` — [Retrieves the state of the specified assigned clash groups, relative to a specified clash test](./mc-clash-service-v3-get-assigned-clash-group-batch-POST.md)
+- `POST /bim360/clash/v3/containers/{containerId}/clashes/assigned/viewcontext` — [GET clashes/assigned/viewcontext](./mc-clash-service-v3-get-assigned-clash-group-view-context-POST.md)
+- `GET /bim360/clash/v3/containers/{containerId}/clashes/jobs/{jobId}` — [Retrieves information about a given clash job](./mc-clash-service-v3-get-clash-group-job-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/tests/{testId}/clashes/assigned` — [Retrieves the state of all assigned clash groups in a particular model set, relative to a specified clash test](./mc-clash-service-v3-get-clash-test-assigned-clash-group-intersection-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/tests/{testId}/clashes/closed` — [Retrieves the state of all closed clash groups in a particular model set, relative to a specified clash test](./mc-clash-service-v3-get-clash-test-closed-clash-group-intersection-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/tests/{testId}` — [Retrieves a requested clash test based on the clash test ID](./mc-clash-service-v3-get-clash-test-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/tests/{testId}/resources` — [Retrieves information about a given clash test result resources](./mc-clash-service-v3-get-clash-test-resources-GET.md)
+- `POST /bim360/clash/v3/containers/{containerId}/tests/{testId}/clashes/closed` — [Retrieves the state of the specified closed clash groups, relative to a specified clash test](./mc-clash-service-v3-get-closed-clash-group-data-batch-POST.md)
+- `GET /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/clashes/grouped` — [Retrieves a list of clashes associated with assigned or closed clash groups in a given model set](./mc-clash-service-v3-get-grouped-clashes-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/tests` — [Retrieves a list of summaries for all clash tests that have been executed for a given model set](./mc-clash-service-v3-get-model-set-clash-tests-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/versions/{version}/tests` — [Retrieves a list of summaries for all clash tests that have been executed for a given model set version](./mc-clash-service-v3-get-model-set-version-clash-tests-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/screenshots/{screenShotId}` — [Retrieves a specific screenshot based on the screenshot ID](./mc-clash-service-v3-get-screen-shot-GET.md)
+- `POST /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/clashes:reopen` — [Re-opens a batch of existing closed clash groups](./mc-clash-service-v3-reopen-closed-clash-group-batch-POST.md)
+- `GET /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/clashes/assigned` — [Retrieves a list of assigned clash groups in a given model set which match the provided search parameters](./mc-clash-service-v3-search-container-issue-clash-groups-GET.md)
+- `GET /bim360/clash/v3/containers/{containerId}/modelsets/{modelSetId}/clashes/closed` — [Retrieves a list of closed clash groups in a given model set which match the provided search parameters](./mc-clash-service-v3-search-container-model-set-closed-clash-groups-GET.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/issues` — [Adds a model set visual inspection issue, represented as a BIM 360 issue](./mc-modelset-service-v3-add-model-set-issue-POST.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/screenshots` — [Uploads a screenshot, associating it with a given model set](./mc-modelset-service-v3-add-screen-shot-POST.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/modelsets` — [Model Set](./mc-modelset-service-v3-create-model-set-POST.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions` — [Creates a new version of a given model set](./mc-modelset-service-v3-create-model-set-version-POST.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views` — [Creates a view for a given model set](./mc-modelset-service-v3-create-model-set-view-POST.md)
+- `DELETE /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views/{viewId}` — [Deletes a specific model set view based on the view ID](./mc-modelset-service-v3-delete-model-set-view-DELETE.md)
+- `PATCH /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions:disable` — [Disables automatic version creation for a given model set](./mc-modelset-service-v3-disable-model-set-versions-PATCH.md)
+- `PATCH /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions:enable` — [Enables automatic version creation for a given model set](./mc-modelset-service-v3-enable-model-set-versions-PATCH.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/jobs/{jobId}` — [Retrieves information about a given container job](./mc-modelset-service-v3-get-container-job-by-container-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}` — [Retrieves a requested model set based on the model set ID](./mc-modelset-service-v3-get-model-set-GET.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/issues/viewcontext` — [Model Set](./mc-modelset-service-v3-get-model-set-issue-view-context-POST.rst.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/jobs/{jobId}` — [Retrieves information about a given model set job](./mc-modelset-service-v3-get-model-set-job-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions/{version}` — [Retrieves a specific version of a given model set based on the model set ID and version number](./mc-modelset-service-v3-get-model-set-version-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions` — [Retrieves a list of versions of a given model set](./mc-modelset-service-v3-get-model-set-versions-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views/{viewId}` — [Retrieves a specific model set view based on the view ID](./mc-modelset-service-v3-get-model-set-view-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views/{viewId}/jobs/{jobId}` — [Retrieves information about a given model set view job](./mc-modelset-service-v3-get-model-set-view-job-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions/{version}/views/{viewId}` — [Retrieves a model set view as it exists in a specific model set version](./mc-modelset-service-v3-get-model-set-view-version-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/versions/{version}/views` — [Retrieves a list of all model set views in a given model set as they exist in a specific model set version](./mc-modelset-service-v3-get-model-set-view-versions-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views` — [Retrieves a list of model set views in a given model set that match the provided search parameters](./mc-modelset-service-v3-get-model-set-views-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets` — [Retrieves a list of model sets in a given container that match the provided search parameters](./mc-modelset-service-v3-get-model-sets-GET.md)
+- `GET /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/screenshots/{screenShotId}` — [Retrieves a specific screenshot based on the screenshot ID](./mc-modelset-service-v3-get-screen-shot-GET.md)
+- `PATCH /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}` — [Updates a given model set name and/or description](./mc-modelset-service-v3-patch-model-set-name-description-PATCH.md)
+- `POST /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views:lineages` — [Retrieves a list of model set views in a given model set that contain the provided set of document lineage URNs](./mc-modelset-service-v3-search-model-set-view-lineages-POST.md)
+- `PATCH /bim360/modelset/v3/containers/{containerId}/modelsets/{modelSetId}/views/{viewId}` — [Updates a specific model set view](./mc-modelset-service-v3-update-model-set-view-PATCH.md)
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/acc/v1/reference/http/mc-modelset-service-v3-get-model-set-version-latest-GET

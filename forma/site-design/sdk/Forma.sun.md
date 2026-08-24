@@ -1,0 +1,62 @@
+---
+namespace: Forma.sun
+class: SunApi
+sdk_version: 0.93.0
+surface: sdk
+runtime: forma-iframe-only
+---
+
+# Forma.sun
+
+```ts
+import { Forma } from "forma-embedded-view-sdk/auto";
+```
+
+## `getDate`
+
+```ts
+Forma.sun.getDate(): Promise<Date>;
+```
+
+Fetch the `Date` corresponding to the current position of the sun in the scene.
+
+@remarks
+Since `Date` objects in JavaScript are based on the instance where the script is run,
+it is important to capture the discrepancy between the machine local time and the time
+at the project location. We recommend using a library such as
+[Luxon](https://moment.github.io/luxon/) to handle this
+-- their website has a lot of good documentation on the intricacies of time zones.
+
+@returns Date for the current sun position.
+
+@example
+import { DateTime } from "luxon";
+
+const projectTimezone = await Forma.project.getTimezone();
+const projectDate = await Forma.sun.getDate()
+const currentDate = DateTime.fromJSDate(currentDate, { zone: projectTimezone });
+
+## `setDate`
+
+```ts
+Forma.sun.setDate(request: { /** Date corresponding to the wanted sun position. */ date: Date; }): Promise<void>;
+```
+
+Set the position of the sun in the scene.
+
+@remarks
+Since `Date` objects in JavaScript are based on the instance where the script is run,
+it is important to capture the discrepancy between the machine local time and the time
+at the project location. We recommend using a library such as
+[Luxon](https://moment.github.io/luxon/) to handle this
+-- their website has a lot of good documentation on the intricacies of time zones.
+
+@example
+import { DateTime } from "luxon";
+
+const projectTimezone = await Forma.project.getTimezone();
+const wantedDate = DateTime.fromISO("2023-07-01T13:37:00", { zone: projectTimezone });
+await Forma.sun.setDate({ date: wantedDate.toJSDate() });
+
+---
+SDK 문서: https://app.autodeskforma.com/forma-embedded-view-sdk/docs/

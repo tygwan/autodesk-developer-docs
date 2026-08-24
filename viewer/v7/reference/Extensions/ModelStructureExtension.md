@@ -1,0 +1,87 @@
+---
+title: "ModelStructureExtension"
+url_path: reference/Extensions/ModelStructureExtension
+surface: viewer-sdk
+document_kind: reference
+category: "Extensions"
+---
+# ModelStructureExtension
+
+## new ModelStructureExtension(viewer, options)
+
+Adds a toolbar button for accessing the Model Browser panel.
+
+Use its `activate()` method to open the Model Browser panel. The Model Browser is only available to 3D models.
+
+The extension id is: `Autodesk.ModelStructure`
+
+[Autodesk.Viewing.GuiViewer3D](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/GuiViewer3D/) loads this extension by default.
+
+### Parameters
+
+| viewer*[Viewer3D](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/) | Viewer instance |
+| --- | --- |
+| options*object | Configurations for the extension |
+
+### Examples
+
+```
+viewer.loadExtension('Autodesk.ModelStructure')
+```
+
+# Methods
+
+## load()
+
+Invoked automatically when the extension is loaded.
+
+## unload()
+
+Invoked automatically when the extension is unloaded.
+
+## onToolbarCreated(toolbar)
+
+Invoked after the Toolbar UI gets created. Adds toolbar button.
+
+### Parameters
+
+| toolbar*[Autodesk.Viewing.UI.ToolBar](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/ToolBar/) | toolbar instance. |
+| --- | --- |
+
+## activate()
+
+Opens the Model Browser UI.
+
+## deactivate()
+
+Closes the Model Browser UI.
+
+## isActive()
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | true when the panel is visible. |
+
+## setModelStructurePanel(modelStructurePanel)
+
+Sets the panel instance to open when clicking the toolbar button. Use the API to override the default panel with a custom one.
+
+### Parameters
+
+| modelStructurePanel*[Autodesk.Viewing.UI.ModelStructurePanel](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/ModelStructurePanel/) | The model structure panel to use, or null. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the panel, or null, was set successfully; false otherwise. |
+
+## restoreDefaultPanel()
+
+Removes custom panel and restores the default one.
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/Extensions/ModelStructureExtension

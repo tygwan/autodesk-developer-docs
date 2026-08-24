@@ -1,0 +1,1843 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Relationships"
+  version: v1
+  description: |-
+    Forma APIs — Relationships.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /bim360/relationship/v2
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Relationships
+x-forma-common-base: "/bim360/relationship/v2"
+paths:
+  "/bim360/relationship/v2/containers/{containerId}/relationships:batch":
+    post:
+      operationId: relationship-service-v2-get-relationships-batch-POST
+      summary: "Retrieves a list of one or more relationships by passing an array of relationship IDs"
+      description: "Retrieves a list of one or more relationships by passing an array of relationship IDs."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the container."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The UUID that uniquely identifies the relationship."
+                  createdOn:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the relationship was created."
+                  isReadOnly:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship is read only for the current caller.
+                      false if this relationship is not read only for the current caller.
+                  isService:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship was created by a service.
+                      false if this relationship was not created by a service.
+                  isDeleted:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship is deleted.
+                      false if this relationship is not deleted.
+                  deletedOn:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the relationship was deleted."
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the entity was created."
+                        domain:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The domain to which the entity belongs.
+                            To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                            Max length: 128
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The type of entity.
+                            Max length: 128
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The unique identifier of the entity.
+                            Max length: 512
+                    x-forma-type: "array: object"
+                    description: |-
+                      The entities contained in the relationship.
+                      Min items: 2 Max items: 2
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-get-relationships-batch-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                "array: string: UUID":
+                  x-forma-type: "array: string: UUID"
+                  description: |-
+                    The list of relationship IDs to retrieve.
+                    Min items: 1 Max items: 50
+              required:
+                - "array: string: UUID"
+  "/bim360/relationship/v2/containers/{containerId}/relationships:delete":
+    post:
+      operationId: relationship-service-v2-delete-relationships-POST
+      summary: "Deletes one or more relationships by passing an array of relationship UUIDs"
+      description: "Deletes one or more relationships by passing an array of relationship UUIDs."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    x-forma-type: "array: string: UUID"
+                    description: "The list of UUIDs that uniquely identify the deleted relationships."
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-delete-relationships-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                "array: string: UUID":
+                  x-forma-type: "array: string: UUID"
+                  description: |-
+                    The list of relationships (UUIDs) to delete.
+                    Min items: 1 Max items: 50
+              required:
+                - "array: string: UUID"
+  "/bim360/relationship/v2/containers/{containerId}/relationships:intersect":
+    post:
+      operationId: relationship-service-v2-intersect-relationships-POST
+      summary: "Retrieves a list of relationships that contain the specified relationship entities"
+      description: "Retrieves a list of relationships that contain the specified relationship entities."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the container."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: object
+                    x-forma-type: object
+                    description: "Paging information associated with a paging response."
+                    properties:
+                      continuationToken:
+                        type: string
+                        x-forma-type: string
+                        description: "A continuation token to retrieve the next page."
+                      syncToken:
+                        type: string
+                        x-forma-type: string
+                        description: "The token that can be used to obtain data via the synchronization endpoint."
+                  relationships:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The UUID that uniquely identifies the relationship."
+                        createdOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the relationship was created."
+                        isReadOnly:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship is read only for the current caller.
+                            false if this relationship is not read only for the current caller.
+                        isService:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship was created by a service.
+                            false if this relationship was not created by a service.
+                        isDeleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship is deleted.
+                            false if this relationship is not deleted.
+                        deletedOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the relationship was deleted."
+                        entities:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              createdOn:
+                                type: string
+                                format: date-time
+                                x-forma-type: "datetime: ISO 8601"
+                                description: "The date and time the entity was created."
+                              domain:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The domain to which the entity belongs.
+                                  To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                                  Max length: 128
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The type of entity.
+                                  Max length: 128
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The unique identifier of the entity.
+                                  Max length: 512
+                          x-forma-type: "array: object"
+                          description: |-
+                            The entities contained in the relationship.
+                            Min items: 2 Max items: 2
+                    x-forma-type: "array: object"
+                    description: |-
+                      The list of relationships.
+                      Max items: 100
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-intersect-relationships-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                entities:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      domain:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The domain to which the entity belongs.
+                          To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                          Max length: 128
+                      type:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The type of entity.
+                          Max length: 128
+                      id:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The unique identifier of the entity.
+                          Max length: 512
+                    required:
+                      - domain
+                      - id
+                      - type
+                  x-forma-type: "array: object"
+                  description: |-
+                    The list of entities to return relationships for.
+                    Min items: 1 Max items: 20
+                withEntities:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      domain:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The domain that the domain entity is a part of (must be supplied if type is supplied).
+                          Max length: 128
+                      type:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The type of the domain entity (must be supplied if id is supplied).
+                          Max length: 128
+                      id:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The identifier of the domain entity.
+                          Max length: 512
+                  x-forma-type: "array: object"
+                  description: |-
+                    The optional list of entities to filter returned relationships by.
+                    Min items: 1 Max items: 20
+              required:
+                - entities
+  "/bim360/relationship/v2/containers/{containerId}/relationships:search":
+    get:
+      operationId: relationship-service-v2-search-relationships-GET
+      summary: "Retrieves a list of relationships that match the provided search parameters"
+      description: "Retrieves a list of relationships that match the provided search parameters."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the container."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: object
+                    x-forma-type: object
+                    description: "Paging information associated with a paging response."
+                    properties:
+                      continuationToken:
+                        type: string
+                        x-forma-type: string
+                        description: "A continuation token to retrieve the next page."
+                      syncToken:
+                        type: string
+                        x-forma-type: string
+                        description: "The token that can be used to obtain data via the synchronization endpoint."
+                  relationships:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The UUID that uniquely identifies the relationship."
+                        createdOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the relationship was created."
+                        isReadOnly:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship is read only for the current caller.
+                            false if this relationship is not read only for the current caller.
+                        isService:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship was created by a service.
+                            false if this relationship was not created by a service.
+                        isDeleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship is deleted.
+                            false if this relationship is not deleted.
+                        deletedOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the relationship was deleted."
+                        entities:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              createdOn:
+                                type: string
+                                format: date-time
+                                x-forma-type: "datetime: ISO 8601"
+                                description: "The date and time the entity was created."
+                              domain:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The domain to which the entity belongs.
+                                  To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                                  Max length: 128
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The type of entity.
+                                  Max length: 128
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The unique identifier of the entity.
+                                  Max length: 512
+                          x-forma-type: "array: object"
+                          description: |-
+                            The entities contained in the relationship.
+                            Min items: 2 Max items: 2
+                    x-forma-type: "array: object"
+                    description: |-
+                      The list of relationships.
+                      Max items: 100
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-search-relationships-GET"
+  "/bim360/relationship/v2/containers/{containerId}/relationships:sync":
+    post:
+      operationId: relationship-service-v2-relationships-sync-POST
+      summary: "Synchronise relationships using the (optional) synchronization token passed by the caller"
+      description: "Synchronise relationships using the (optional) synchronization token passed by the caller."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the container."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  current:
+                    type: object
+                    x-forma-type: object
+                    description: "A set of current data."
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The UUID that uniquely identifies the relationship."
+                            createdOn:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The date and time the relationship was created."
+                            isReadOnly:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship is read only for the current caller.
+                                false if this relationship is not read only for the current caller.
+                            isService:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship was created by a service.
+                                false if this relationship was not created by a service.
+                            isDeleted:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship is deleted.
+                                false if this relationship is not deleted.
+                            deletedOn:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The date and time the relationship was deleted."
+                            entities:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  createdOn:
+                                    type: string
+                                    format: date-time
+                                    x-forma-type: "datetime: ISO 8601"
+                                    description: "The date and time the entity was created."
+                                  domain:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The domain to which the entity belongs.
+                                      To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                                      Max length: 128
+                                  type:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The type of entity.
+                                      Max length: 128
+                                  id:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The unique identifier of the entity.
+                                      Max length: 512
+                              x-forma-type: "array: object"
+                              description: |-
+                                The entities contained in the relationship.
+                                Min items: 2 Max items: 2
+                        x-forma-type: "array: object"
+                        description: "A set of current relationships relative to the sync token passed by the caller."
+                  deleted:
+                    type: object
+                    x-forma-type: object
+                    description: "A set of deleted data."
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The UUID that uniquely identifies the relationship."
+                            createdOn:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The date and time the relationship was created."
+                            isReadOnly:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship is read only for the current caller.
+                                false if this relationship is not read only for the current caller.
+                            isService:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship was created by a service.
+                                false if this relationship was not created by a service.
+                            isDeleted:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship is deleted.
+                                false if this relationship is not deleted.
+                            deletedOn:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The date and time the relationship was deleted."
+                            entities:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  createdOn:
+                                    type: string
+                                    format: date-time
+                                    x-forma-type: "datetime: ISO 8601"
+                                    description: "The date and time the entity was created."
+                                  domain:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The domain to which the entity belongs.
+                                      To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                                      Max length: 128
+                                  type:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The type of entity.
+                                      Max length: 128
+                                  id:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The unique identifier of the entity.
+                                      Max length: 512
+                              x-forma-type: "array: object"
+                              description: |-
+                                The entities contained in the relationship.
+                                Min items: 2 Max items: 2
+                        x-forma-type: "array: object"
+                        description: "A set of relationships that have been deleted relative to the sync token passed by the caller."
+                  moreData:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "If set to true, data is available for synchronization using the supplied synchronization token."
+                  overwrite:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "If set to true, the data returned by the synchronization endpoint can be used to overwrite local copies."
+                  nextSyncToken:
+                    type: string
+                    x-forma-type: string
+                    description: "The token that can be used to obtain data via the synchronization endpoint. If moreData is set to false, you can use this token to resume synchronization at a later point in time."
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-relationships-sync-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                syncToken:
+                  type: string
+                  x-forma-type: string
+                  description: "The token that can be used to obtain data via the synchronization endpoint."
+                filters:
+                  type: object
+                  x-forma-type: object
+                  description: "An array of filters on the initial request without a sync token."
+                  properties:
+                    domains:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: |-
+                        An array of domains on which to filter.
+                        Min items: 1 Max items: 20
+  "/bim360/relationship/v2/containers/{containerId}/relationships:syncStatus":
+    post:
+      operationId: relationship-service-v2-relationships-sync-status-POST
+      summary: "Retrieves the relationship synchronization status for the caller as one or more synchronization tokens"
+      description: "Retrieves the relationship synchronization status for the caller as one or more synchronization tokens. This can be based on an optional array of input tokens."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the container."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        moreData:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "If set to true, data is available for synchronization using the supplied synchronization token."
+                        overwrite:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "If set to true, the data returned by the synchronization endpoint can be used to overwrite local copies."
+                        referenceId:
+                          type: string
+                          x-forma-type: string
+                          description: "An optional reference passed by the caller and returned by the service."
+                        syncToken:
+                          type: string
+                          x-forma-type: string
+                          description: "The token that can be used to obtain data via the synchronization endpoint."
+                    x-forma-type: "array: object"
+                    description: "The array of sync tokens."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field that failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                        referenceId:
+                          type: string
+                          x-forma-type: string
+                          description: "An optional reference passed by the caller and returned by the service."
+                        syncToken:
+                          type: string
+                          x-forma-type: string
+                          description: "The token that can be used to obtain data via the synchronization endpoint."
+                    x-forma-type: "array: object"
+                    description: "The array of errors associated with the request for sync tokens."
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-relationships-sync-status-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                referenceId:
+                  type: string
+                  x-forma-type: string
+                  description: "An optional reference passed by the caller and returned by the service."
+                syncToken:
+                  type: string
+                  x-forma-type: string
+                  description: "The token that can be used to obtain data via the synchronization endpoint."
+  "/bim360/relationship/v2/containers/{containerId}/relationships/{relationshipId}":
+    get:
+      operationId: relationship-service-v2-get-relationship-by-id-GET
+      summary: "Retrieves a requested relationship based on the relationship’s ID"
+      description: "Retrieves a requested relationship based on the relationship’s ID."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the container."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: relationshipId
+          in: path
+          required: true
+          description: "The GUID that uniquely identifies the relationship."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The UUID that uniquely identifies the relationship."
+                  createdOn:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the relationship was created."
+                  isReadOnly:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship is read only for the current caller.
+                      false if this relationship is not read only for the current caller.
+                  isService:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship was created by a service.
+                      false if this relationship was not created by a service.
+                  isDeleted:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship is deleted.
+                      false if this relationship is not deleted.
+                  deletedOn:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the relationship was deleted."
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the entity was created."
+                        domain:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The domain to which the entity belongs.
+                            To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                            Max length: 128
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The type of entity.
+                            Max length: 128
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The unique identifier of the entity.
+                            Max length: 512
+                    x-forma-type: "array: object"
+                    description: |-
+                      The entities contained in the relationship.
+                      Min items: 2 Max items: 2
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-get-relationship-by-id-GET"
+  "/bim360/relationship/v2/containers/{containerId}/relationships":
+    put:
+      operationId: relationship-service-v2-add-relationships-PUT
+      summary: "Creates a relationship between two entities (for example, asset and document)"
+      description: "Creates a relationship between two entities (for example, asset and document). Relationships are stored in the project container, and are retrievable via the relationships search endpoints."
+      parameters:
+        - name: containerId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:create"
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The UUID that uniquely identifies the relationship."
+                  createdOn:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the relationship was created."
+                  isReadOnly:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship is read only for the current caller.
+                      false if this relationship is not read only for the current caller.
+                  isService:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship was created by a service.
+                      false if this relationship was not created by a service.
+                  isDeleted:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      true if this relationship is deleted.
+                      false if this relationship is not deleted.
+                  deletedOn:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the relationship was deleted."
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the entity was created."
+                        domain:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The domain to which the entity belongs.
+                            To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                            Max length: 128
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The type of entity.
+                            Max length: 128
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The unique identifier of the entity.
+                            Max length: 512
+                    x-forma-type: "array: object"
+                    description: |-
+                      The entities contained in the relationship.
+                      Min items: 2 Max items: 2
+        "400":
+          description: "Bad Request"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The UUID that uniquely identifies the relationship."
+                        createdOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the relationship was created."
+                        isReadOnly:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship is read only for the current caller.
+                            false if this relationship is not read only for the current caller.
+                        isService:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship was created by a service.
+                            false if this relationship was not created by a service.
+                        isDeleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true if this relationship is deleted.
+                            false if this relationship is not deleted.
+                        deletedOn:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the relationship was deleted."
+                        entities:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              createdOn:
+                                type: string
+                                format: date-time
+                                x-forma-type: "datetime: ISO 8601"
+                                description: "The date and time the entity was created."
+                              domain:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The domain to which the entity belongs.
+                                  To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                                  Max length: 128
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The type of entity.
+                                  Max length: 128
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The unique identifier of the entity.
+                                  Max length: 512
+                          x-forma-type: "array: object"
+                          description: |-
+                            The entities contained in the relationship.
+                            Min items: 2 Max items: 2
+                    x-forma-type: "array: object"
+                    description: "Successfully created relationships."
+                  conflict:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The UUID of the conflict."
+                        actual:
+                          type: object
+                          x-forma-type: object
+                          description: "A set of related domain entities."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The UUID that uniquely identifies the relationship."
+                            createdOn:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The date and time the relationship was created."
+                            isReadOnly:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship is read only for the current caller.
+                                false if this relationship is not read only for the current caller.
+                            isService:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship was created by a service.
+                                false if this relationship was not created by a service.
+                            isDeleted:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                true if this relationship is deleted.
+                                false if this relationship is not deleted.
+                            deletedOn:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The date and time the relationship was deleted."
+                            entities:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  createdOn:
+                                    type: string
+                                    format: date-time
+                                    x-forma-type: "datetime: ISO 8601"
+                                    description: "The date and time the entity was created."
+                                  domain:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The domain to which the entity belongs.
+                                      To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                                      Max length: 128
+                                  type:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The type of entity.
+                                      Max length: 128
+                                  id:
+                                    type: string
+                                    x-forma-type: string
+                                    description: |-
+                                      The unique identifier of the entity.
+                                      Max length: 512
+                              x-forma-type: "array: object"
+                              description: |-
+                                The entities contained in the relationship.
+                                Min items: 2 Max items: 2
+                    x-forma-type: "array: object"
+                    description: |-
+                      Conflicting relationships.
+                      A conflict between IDs of an existing relationship and a proposed relationship, or due to allocating an array of entity items two different IDs.
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:create"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-add-relationships-PUT"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  x-forma-type: "string: UUID"
+                  description: "The UUID that uniquely identifies the relationship. If no id is supplied, the system automatically allocates one."
+                entities:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      domain:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The domain to which the entity belongs.
+                          To learn more about domains and entities, see the Relationship Service Field Guide.
+
+                          Max length: 128
+                      type:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The type of entity.
+                          Max length: 128
+                      id:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The unique identifier of the entity.
+                          Max length: 512
+                    required:
+                      - domain
+                      - id
+                      - type
+                  x-forma-type: "array: object"
+                  description: |-
+                    The entities to be contained in the relationship.
+                    Min items: 2 Max items: 2
+              required:
+                - entities
+  "/bim360/relationship/v2/utility/relationships:writable":
+    get:
+      operationId: relationship-service-v2-get-writable-relationship-domains-GET
+      summary: "GET utility/relationships:writable"
+      description: "Retrieves a list of entity types that are compatible with each other, to establish whether you can create relationships between them or to delete those relationships. For example, between an asset and a document."
+      parameters:
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  domain:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The domain to which the entity types belong.
+                      For example: autodesk-bim360-asset
+
+                      To learn more about domains and entities, see the Relationship Service Field Guide.
+                  entityTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        entityType:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            An individual entity type.
+                            For example: asset.
+                        allow:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              domain:
+                                type: string
+                                x-forma-type: string
+                                description: "The domain containing the allowed entity types."
+                              entityTypes:
+                                type: array
+                                items:
+                                  type: string
+                                x-forma-type: "array: string"
+                                description: "The allowed entity types."
+                          x-forma-type: "array: object"
+                          description: "The allow list for the entity type."
+                    x-forma-type: "array: object"
+                    description: "The list of entity types in the domain."
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/relationship-service-v2-get-writable-relationship-domains-GET"
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:create": "data:create"
+            "data:read": "data:read"
+            "data:write": "data:write"

@@ -1,0 +1,108 @@
+---
+title: "Snapper"
+url_path: reference/Snapping/Snapper
+surface: viewer-sdk
+document_kind: reference
+category: "Snapping"
+---
+# Snapper
+
+## new Snapper(viewer, options)
+
+A tool that lets users attach pointer events to vertices and edges. It supports 2D and 3D models.
+
+### Parameters
+
+| viewer*[Viewer3D](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/) | Viewer instance |
+| --- | --- |
+| options*object | Configurations for the extension |
+
+# Methods
+
+## isActive()
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | true when the tool is active |
+
+## activate()
+
+Starts intercepting pointer events. Invoked automatically by the [ToolController](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/ToolController/).
+
+## deactivate()
+
+Stops intercepting pointer events. Invoked automatically by the [ToolController](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/ToolController/).
+
+## getSnapResult()
+
+### Returns
+
+| type | description |
+| --- | --- |
+| [SnapResult](https://aps.autodesk.com/en/docs/viewer/v7/reference/MeasureCommon/SnapResult/) | The snapping status of the last pointer event performed. |
+
+## isSnapped()
+
+Checks whether the tool’s last update resulted on a snap.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | true when the last pointer event got snapped. |
+
+## snapping3D(result)
+
+3D Snapping
+
+### Parameters
+
+| result* | Result of Hit Test. |
+| --- | --- |
+
+## extractLineGeometry(edge, geometry)
+
+Get Edge geometry for the case that the hittest result contained a 3D lines. For this case, we have no Face3, so that faceSnapping and edgeSnapping don’t work.
+
+### Parameters
+
+| edge*Object | {a, b} with vertex indices a,b of lineStart/lineEnd vertex |
+| --- | --- |
+| geometry*GeometryBuffer |   |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| THREE.Geometry, THREE.BufferGeometry | Geometry with simple line |
+
+## faceIsCurved(face)
+
+Checks if the given geometry is curved
+
+### Parameters
+
+| face*THREE.BufferGeometry | The geometry |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the any of the faces composing the geometry is curved |
+
+## snapping2D(hitResult, options)
+
+Snap to a 2D model.
+
+### Parameters
+
+| hitResult*object | a result of a ray intersection. |
+| --- | --- |
+| optionsobject | Options object. |
+| enumSegmentsfunction | Enumerates all segments within a given bbox in model-space. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/Snapping/Snapper

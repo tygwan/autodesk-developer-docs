@@ -1,0 +1,309 @@
+openapi: "3.1.0"
+info:
+  title: "Forma Site Design — sun-analysis"
+  version: v1
+  description: |-
+    Forma Site Design — sun-analysis.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/forma/v1
+    공통 base 경로: /forma/sun-analysis/v1alpha/analyses
+    **리전 — 호출 전 반드시 확인** Forma 는 리전별로 완전히 분리된 별개 시스템입니다. 리소스 식별자(urn 등)는 리전을 넘어 유효하지 않습니다. - HTTP API: 호스트는 하나(`developer.api.autodesk.com`)이고, **`X-Ads-Region` 헤더로 리전을 지정**합니다 (`US` | `EMEA`, 미지정 시 `US`). - 웹앱/임베디드 뷰: `app.autodeskforma.com`(US) 과 `app.autodeskforma.eu`(EMEA) 로 도메인 자체가 다릅니다. - 리전이 틀리면 인증이 정상이어도 **403** 이 납니다. 문서의 403 설명이 그대로 "Are you in the right region?" 입니다.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: sun-analysis
+x-forma-common-base: "/forma/sun-analysis/v1alpha/analyses"
+paths:
+  "/forma/sun-analysis/v1alpha/analyses/{analysisId}":
+    get:
+      operationId: sun-analysis-getanalysis-GET
+      summary: "Get the metadata of an analysis"
+      description: "Get the metadata of an analysis"
+      parameters:
+        - name: analysisId
+          in: path
+          required: true
+          description: "The id of the analysis"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    x-forma-type: string
+                    description: "The id of the analysis"
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "ISO8601 timestamp (UTC) of when the analysis was created"
+                  completedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "ISO8601 timestamp (UTC) of when the analysis finished"
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The status of the analysis.
+                      Possible values: IN_PROGRESS, SUCCEEDED, FAILED, STOPPED, INVALIDATED
+                  parameters:
+                    type: object
+                    x-forma-type: object
+                    properties:
+                      rootElementUrn:
+                        type: string
+                        x-forma-type: string
+                        description: "The root urn for the analysis. The root needs a terrain for the analysis to run properly."
+                      sunDate:
+                        type: object
+                        x-forma-type: object
+                        description: "The month and day the analysis is run on."
+                        properties:
+                          month:
+                            type: integer
+                            x-forma-type: int
+                            description: "Month of year, starting at 1."
+                          date:
+                            type: integer
+                            x-forma-type: int
+                            description: "Day of month, starting at 1."
+                      geoLocation:
+                        type: object
+                        x-forma-type: object
+                        description: "The location the analysis should be run for"
+                        properties:
+                          latitude:
+                            type: number
+                            x-forma-type: number
+                          longitude:
+                            type: number
+                            x-forma-type: number
+                      selectedElementPaths:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: "The selected elements’ paths relative to the root."
+                  groundResultsDataUrl:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The location of the raw results data. The data is in ``msgpack` <https://msgpack.org/index.html>`_ format.
+                      See the groundResultsDataUrlFormat property for documentation of the data structure.
+                      Note that groundResultsDataUrlFormat is never included in the response.
+                  groundResultsDataUrlFormat:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      (This property is not included in the reponse. It only describes the format of the
+                      file that can retrieved by the URL above.)
+                      Metadata of the analysis that describes how you should parse the analysis
+                      in relation to the proposal it was run on.
+                      Is used to place the result in the real world.
+                    properties:
+                      grid:
+                        type: array
+                        items:
+                          type: number
+                        x-forma-type: "array: number"
+                        description: |-
+                          The grid is a Uint8Array and each sample point is represented with 30 Uint8 values.
+                          Each of the 8 bits in the Uint8 signals if the location is sunlit (1) or not (0) at a certain time.
+                          Results are provided for every 6 minutes throughout the day,
+                          which is why 30 bytes are required to represent the results for each sample point.
+                          The analysis is run 00:00 to 23:59 local time on the date on which the analysis was run; the first
+                          value for a sample point is for 00:00 local time for that day. Local time uses the timezone derived
+                          from the input geolocation.
+                      mask:
+                        type: array
+                        items:
+                          type: integer
+                        x-forma-type: "array: integer"
+                        description: |-
+                          Boolean array which denotes if each sample point is a valid point.
+                          Invalid sample points are typically the ones where a building is placed.
+                      resolution:
+                        type: number
+                        x-forma-type: number
+                        description: "Meters between each sample point in the scores array"
+                      width:
+                        type: integer
+                        x-forma-type: int
+                        description: "Number of points in the horizontal direction (columns) in the scores array."
+                      height:
+                        type: integer
+                        x-forma-type: int
+                        description: "Number of points in the vertical direction (rows) in the scores array."
+                      x0:
+                        type: number
+                        x-forma-type: number
+                        description: "x-coordinate of the upper left corner of the ground grid."
+                      y0:
+                        type: number
+                        x-forma-type: number
+                        description: "y-coordinate of the upper left corner of the ground grid."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/sun-analysis-getanalysis-GET"
+  "/forma/sun-analysis/v1alpha/analyses/trigger":
+    post:
+      operationId: sun-analysis-triggersunanalysis-POST
+      summary: "Trigger a sun analysis for a proposal or element on a given date"
+      description: |-
+        Trigger a sun analysis for a proposal or element on a given date. When the analysis is finished, you can fetch the raw ground results
+        for the analysis.
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    x-forma-type: string
+                    description: "The id of the analysis"
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      Status of the analysis
+                      Possible values: IN_PROGRESS, SUCCEEDED, STOPPED
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/sun-analysis-triggersunanalysis-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                rootElementUrn:
+                  type: string
+                  x-forma-type: string
+                  description: "The root urn for the analysis. The root needs a terrain for the analysis to run properly."
+                sunDate:
+                  type: object
+                  x-forma-type: object
+                  description: "The month and day the analysis is run on."
+                  properties:
+                    month:
+                      type: integer
+                      x-forma-type: int
+                      description: "Month of year, starting at 1."
+                    date:
+                      type: integer
+                      x-forma-type: int
+                      description: "Day of month, starting at 1."
+                  required:
+                    - date
+                    - month
+                geoLocation:
+                  type: object
+                  x-forma-type: object
+                  description: "The location the analysis should be run for"
+                  properties:
+                    latitude:
+                      type: number
+                      x-forma-type: number
+                    longitude:
+                      type: number
+                      x-forma-type: number
+                  required:
+                    - latitude
+                    - longitude
+                selectedElementPaths:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: "The selected elements’ paths relative to the root."
+              required:
+                - geoLocation
+                - rootElementUrn
+                - selectedElementPaths
+                - sunDate
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

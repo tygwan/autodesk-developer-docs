@@ -1,0 +1,619 @@
+openapi: "3.1.0"
+info:
+  title: "Forma Site Design — proposal"
+  version: v1
+  description: |-
+    Forma Site Design — proposal.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/forma/v1
+    공통 base 경로: /forma/proposal/v1alpha/proposals
+    **리전 — 호출 전 반드시 확인** Forma 는 리전별로 완전히 분리된 별개 시스템입니다. 리소스 식별자(urn 등)는 리전을 넘어 유효하지 않습니다. - HTTP API: 호스트는 하나(`developer.api.autodesk.com`)이고, **`X-Ads-Region` 헤더로 리전을 지정**합니다 (`US` | `EMEA`, 미지정 시 `US`). - 웹앱/임베디드 뷰: `app.autodeskforma.com`(US) 과 `app.autodeskforma.eu`(EMEA) 로 도메인 자체가 다릅니다. - 리전이 틀리면 인증이 정상이어도 **403** 이 납니다. 문서의 403 설명이 그대로 "Are you in the right region?" 입니다.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: proposal
+x-forma-common-base: "/forma/proposal/v1alpha/proposals"
+paths:
+  "/forma/proposal/v1alpha/proposals/{proposalId}/revisions/{revision}":
+    put:
+      operationId: proposal-putproposal-PUT
+      summary: "Update a proposal"
+      description: "Update a proposal"
+      parameters:
+        - name: proposalId
+          in: path
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: revision
+          in: path
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "412":
+          description: "Precondition failed. One or more preconditions for this endpoint was not met. See response for details."
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/proposal-putproposal-PUT"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: "A human-readable name for the proposal"
+                terrain:
+                  type: object
+                  x-forma-type: object
+                  description: "The terrain element (required). Must be an element from the “terrain” element system"
+                  properties:
+                    urn:
+                      type: string
+                      x-forma-type: string
+                      description: "A Forma element URN"
+                    key:
+                      type: string
+                      x-forma-type: string
+                      description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                    transform:
+                      type: array
+                      items:
+                        type: number
+                      x-forma-type: "array: number"
+                      description: "A 4x4 matrix representing the transformation of the element"
+                    name:
+                      type: string
+                      x-forma-type: string
+                      description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                  required:
+                    - key
+                    - urn
+                base:
+                  type: object
+                  x-forma-type: object
+                  description: "The base element. Must be an element from the “group” element system"
+                  properties:
+                    urn:
+                      type: string
+                      x-forma-type: string
+                      description: "A Forma element URN"
+                    key:
+                      type: string
+                      x-forma-type: string
+                      description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                    transform:
+                      type: array
+                      items:
+                        type: number
+                      x-forma-type: "array: number"
+                      description: "A 4x4 matrix representing the transformation of the element"
+                    name:
+                      type: string
+                      x-forma-type: string
+                      description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                  required:
+                    - key
+                    - urn
+                children:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      urn:
+                        type: string
+                        x-forma-type: string
+                        description: "A Forma element URN"
+                      key:
+                        type: string
+                        x-forma-type: string
+                        description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                      transform:
+                        type: array
+                        items:
+                          type: number
+                        x-forma-type: "array: number"
+                        description: "A 4x4 matrix representing the transformation of the element"
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                    required:
+                      - key
+                      - urn
+                  x-forma-type: "array: object"
+                  description: "A collection of child elements"
+              required:
+                - base
+                - children
+                - terrain
+  "/forma/proposal/v1alpha/proposals/{proposalId}/revisions":
+    get:
+      operationId: proposal-listrevisions-GET
+      summary: "List revisions for a proposal"
+      description: "List revisions for a proposal"
+      parameters:
+        - name: proposalId
+          in: path
+          required: true
+          description: "The proposal ID"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: limit
+          in: query
+          description: "Limit the number of results returned. Min 1, max 100, default 100."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: cursorState
+          in: query
+          description: "The cursor state from the previous response"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        urn:
+                          type: string
+                          x-forma-type: string
+                          description: "A Forma element URN"
+                        metadata:
+                          type: object
+                          x-forma-type: object
+                          description: "Metadata about an element. Does not describe the element itself, but rather the context in which it has been created/updated"
+                          properties:
+                            predecessor:
+                              type: string
+                              x-forma-type: string
+                              description: "Urn pointer to the previous revision of this element."
+                            createdAt:
+                              type: string
+                              x-forma-type: string
+                              description: "ISO8601 timestamp of when the element was created"
+                            createdBy:
+                              type: string
+                              x-forma-type: string
+                        properties:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            category:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "Will always be: proposal"
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "Name of proposal"
+                        children:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              urn:
+                                type: string
+                                x-forma-type: string
+                                description: "A Forma element URN"
+                              key:
+                                type: string
+                                x-forma-type: string
+                                description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                              transform:
+                                type: array
+                                items:
+                                  type: number
+                                x-forma-type: "array: number"
+                                description: "A 4x4 matrix representing the transformation of the element"
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                          x-forma-type: "array: object"
+                          description: "A collection of child elements"
+                    x-forma-type: "array: object"
+                    description: "List of proposal elements at the specified page."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The information for paginating records returned by the endpoint."
+                    properties:
+                      limit:
+                        type: number
+                        x-forma-type: number
+                        description: "The limit value supplied in the request or the default value."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "URL for retrieving the next page of items. If there are no more items, this field will not be present."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "412":
+          description: "Precondition failed. One or more preconditions for this endpoint was not met. See response for details."
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/proposal-listrevisions-GET"
+  "/forma/proposal/v1alpha/proposals":
+    get:
+      operationId: proposal-listproposals-GET
+      summary: "List proposals"
+      description: "List proposals"
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: limit
+          in: query
+          description: "Limit the number of results returned. Min 1, max 100, default 100."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: cursorState
+          in: query
+          description: "The cursor state from the previous response"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        urn:
+                          type: string
+                          x-forma-type: string
+                          description: "A Forma element URN"
+                        metadata:
+                          type: object
+                          x-forma-type: object
+                          description: "Metadata about an element. Does not describe the element itself, but rather the context in which it has been created/updated"
+                          properties:
+                            predecessor:
+                              type: string
+                              x-forma-type: string
+                              description: "Urn pointer to the previous revision of this element."
+                            createdAt:
+                              type: string
+                              x-forma-type: string
+                              description: "ISO8601 timestamp of when the element was created"
+                            createdBy:
+                              type: string
+                              x-forma-type: string
+                        properties:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            category:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "Will always be: proposal"
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "Name of proposal"
+                        children:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              urn:
+                                type: string
+                                x-forma-type: string
+                                description: "A Forma element URN"
+                              key:
+                                type: string
+                                x-forma-type: string
+                                description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                              transform:
+                                type: array
+                                items:
+                                  type: number
+                                x-forma-type: "array: number"
+                                description: "A 4x4 matrix representing the transformation of the element"
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                          x-forma-type: "array: object"
+                          description: "A collection of child elements"
+                    x-forma-type: "array: object"
+                    description: "List of proposal elements at the specified page."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The information for paginating records returned by the endpoint."
+                    properties:
+                      limit:
+                        type: number
+                        x-forma-type: number
+                        description: "The limit value supplied in the request or the default value."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "URL for retrieving the next page of items. If there are no more items, this field will not be present."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "412":
+          description: "Precondition failed. One or more preconditions for this endpoint was not met. See response for details."
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/proposal-listproposals-GET"
+    post:
+      operationId: proposal-createproposal-POST
+      summary: "Create a proposal"
+      description: "Create a proposal"
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "412":
+          description: "Precondition failed. One or more preconditions for this endpoint was not met. See response for details."
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/proposal-createproposal-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: "A human-readable name for the proposal"
+                terrain:
+                  type: object
+                  x-forma-type: object
+                  description: "The terrain element (required). Must be an element from the “terrain” element system"
+                  properties:
+                    urn:
+                      type: string
+                      x-forma-type: string
+                      description: "A Forma element URN"
+                    key:
+                      type: string
+                      x-forma-type: string
+                      description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                    transform:
+                      type: array
+                      items:
+                        type: number
+                      x-forma-type: "array: number"
+                      description: "A 4x4 matrix representing the transformation of the element"
+                    name:
+                      type: string
+                      x-forma-type: string
+                      description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                  required:
+                    - key
+                    - urn
+                base:
+                  type: object
+                  x-forma-type: object
+                  description: "The base element. Must be an element from the “group” element system"
+                  properties:
+                    urn:
+                      type: string
+                      x-forma-type: string
+                      description: "A Forma element URN"
+                    key:
+                      type: string
+                      x-forma-type: string
+                      description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                    transform:
+                      type: array
+                      items:
+                        type: number
+                      x-forma-type: "array: number"
+                      description: "A 4x4 matrix representing the transformation of the element"
+                    name:
+                      type: string
+                      x-forma-type: string
+                      description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                  required:
+                    - key
+                    - urn
+                children:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      urn:
+                        type: string
+                        x-forma-type: string
+                        description: "A Forma element URN"
+                      key:
+                        type: string
+                        x-forma-type: string
+                        description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency. Since element URNs cannot be used to identify _instances_ of elements, children have unique keys under their parent which are used to build up a path in context of the root of an element tree."
+                      transform:
+                        type: array
+                        items:
+                          type: number
+                        x-forma-type: "array: number"
+                        description: "A 4x4 matrix representing the transformation of the element"
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                    required:
+                      - key
+                      - urn
+                  x-forma-type: "array: object"
+                  description: "A collection of child elements"
+              required:
+                - base
+                - children
+                - terrain
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

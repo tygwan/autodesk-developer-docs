@@ -1,0 +1,33 @@
+{
+  "status": "complete",
+  "manifestNodes": 219,
+  "sourcePages": 202,
+  "emittedSourcePages": 202,
+  "guidePages": 43,
+  "referencePages": 152,
+  "changelogPages": 7,
+  "unclassifiedPages": 0,
+  "byKind": {
+    "changelog": 7,
+    "guide": 43,
+    "reference": 152
+  },
+  "bySection": {
+    "change_history": 7,
+    "developers_guide": 43,
+    "reference": 152
+  },
+  "referenceCategories": {
+    "ErrorCodes": 1,
+    "Extensions": 34,
+    "globals": 41,
+    "Math": 9,
+    "MeasureCommon": 2,
+    "Private": 6,
+    "ProfileSettings": 1,
+    "Scene": 13,
+    "Snapping": 2,
+    "UI": 15,
+    "Viewing": 28
+  }
+}

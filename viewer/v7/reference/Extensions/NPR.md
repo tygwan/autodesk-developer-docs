@@ -1,0 +1,65 @@
+---
+title: "NPR"
+url_path: reference/Extensions/NPR
+surface: viewer-sdk
+document_kind: reference
+category: "Extensions"
+---
+# NPR
+
+## new NPR(viewer, options)
+
+**Deprecated: This extension is deprecated and will be removed in a future release.**
+
+Provides UI controls for NPR settings
+
+The extension id is: `Autodesk.NPR`
+
+### Parameters
+
+| viewer*[Autodesk.Viewing.Viewer3D](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/) | Viewer instance. |
+| --- | --- |
+| options*Object | Not used. |
+
+### Examples
+
+```
+viewer.loadExtension('Autodesk.NPR');
+```
+
+# Methods
+
+## onToolbarCreated()
+
+Invoked by the viewer when the toolbar UI is available. Adds a button to the Settings panel.
+
+## openPanel()
+
+Opens the NPR Render Options panel.
+
+## setParameter(param, value)
+
+Changes post-processing setting parameters. The supported param/value combinations are:
+- “style”: either “edging”, “cel”, “graphite”, “pencil” or `null` to turn post-processing off.
+- “edges”: `boolean`
+- “idEdges”: `boolean`
+- “normalEdges”: `boolean`
+- “depthEdges”: `boolean`
+- “brightness”: `Number`
+- “contrast”: `Number`
+- “grayscale”: `boolean`
+- “preserveColor”: `boolean`
+- “levels”: `Number`
+- “repeats”: `Number`
+- “rotation”: `Number` between 0 and 1, around circle (e.g. 0.5 == pi radians, 1.0 == 2*pi)
+
+Fires event [RENDER_OPTION_CHANGED_EVENT](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/#render-option-changed-event/).
+
+### Parameters
+
+| param*string | Either “style”, “edges”, “idEdges”, “normalEdges”, “depthEdges”, “brightness”, “contrast”, “grayscale”, “preserveColor”, “levels”, “repeats” or “rotation”. |
+| --- | --- |
+| value* | type depends on the specified `param`. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/Extensions/NPR

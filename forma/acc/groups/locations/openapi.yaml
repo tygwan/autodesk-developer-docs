@@ -1,0 +1,504 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Locations"
+  version: v1
+  description: |-
+    Forma APIs — Locations.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/locations/v2/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Locations
+x-forma-common-base: "/construction/locations/v2/projects"
+paths:
+  "/construction/locations/v2/projects/{projectId}/trees/{treeId}/nodes/{nodeId}":
+    delete:
+      operationId: locations-nodesnodeid-DELETE
+      summary: "Deletes the specified node from the specified locations tree"
+      description: "Deletes the specified node from the specified locations tree."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The identifier of the project that contains your locations tree.
+            Use the Data Management API to retrieve the relevant Forma hub and project IDs.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: treeId
+          in: path
+          required: true
+          description: "Must be default. Currently a project can contain only the default tree."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: nodeId
+          in: path
+          required: true
+          description: |-
+            The unique identifier of an LBS node.
+            To find node IDs, call the GET nodes endpoint and check the value of results.id in the returned nodes.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/locations-nodesnodeid-DELETE"
+    patch:
+      operationId: locations-nodesnodeid-PATCH
+      summary: "Updates the name or barcode of the specified node of the specified locations tree"
+      description: "Updates the name or barcode of the specified node of the specified locations tree."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The identifier of the project that contains your locations tree.
+            Use the Data Management API to retrieve the relevant Forma hub and project IDs.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: treeId
+          in: path
+          required: true
+          description: "Must be default. Currently a project can contain only the default tree."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: nodeId
+          in: path
+          required: true
+          description: |-
+            The unique identifier of an LBS node.
+            To find node IDs, call the GET nodes endpoint and check the value of results.id in the returned nodes.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier of the new LBS node."
+                  parentId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The identifier of the parent node of this LBS node."
+                  type:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of this LBS node. Note that only Area is a currently supported request value.
+                      Possible values: Area, Level, Root
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The name of this LBS node.
+                      Max length: 255
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: "Not relevant"
+                  barcode:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The barcode that represents this LBS node. This value must be unique per project.
+                      Max length: 255
+                  order:
+                    type: integer
+                    x-forma-type: int
+                    description: |-
+                      This node’s position relative to its sibling nodes. Nodes with the same parent have a defined sequence order. A node with a lower order value will be positioned before a node with a higher order value.
+                      This is zero-based; for example, a node with an order value of 3 is the fourth node among its sibling nodes.
+
+                      If an existing sibling node has the same or higher order value, that value will be incremented to make room for the new node.
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/locations-nodesnodeid-PATCH"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of the specified LBS node to update. Note that you must specify name, barcode, or both for this endpoint to succeed.
+                    Max length: 255
+                barcode:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The barcode of the specified LBS node to update. This value must be unique per project. Note that you must specify barcode, name, or both for this endpoint to succeed.
+                    Max length: 255
+              required:
+                - barcode
+                - name
+  "/construction/locations/v2/projects/{projectId}/trees/{treeId}/nodes":
+    get:
+      operationId: locations-nodes-GET
+      summary: "Retrieves an array of nodes (locations) from the specified locations tree (LBS)"
+      description: "Retrieves an array of nodes (locations) from the specified locations tree (LBS). Returns all nodes in the tree by default."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The identifier of the project that contains your locations tree.
+            Use the Data Management API to retrieve the relevant Forma hub and project IDs.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: treeId
+          in: path
+          required: true
+          description: "Must be default. Currently a project can contain only the default tree."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[id]"
+          in: query
+          description: |-
+            Specifies one or more nodes (locations) in the LBS tree to retrieve. Separate multiple node IDs with commas (no space); for example, filter[id]=88e07ccb-4594-4dc5-8973-304412b8fa96,de9aca33-5e0c-4668-85fa-f96273db4b35.
+            To find node IDs, call this endpoint and check the value of results.id in the returned nodes.
+
+            Note that when you use this parameter, the server ignores the limit and offset parameters, and each node in the response includes a path array containing its ancestor nodes in the tree.
+          schema:
+            type: array
+            items:
+              type: string
+            x-forma-type: "array: string"
+        - name: limit
+          in: query
+          description: "The maximum number of location nodes to return per page. Acceptable values: 1-10000. Default value: 10000."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The node index at which the pagination starts. This is zero-based; for example, with a value of 6, the response starts with the seventh node."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: "The region where the Locations service you are using is located. Possible values: US, EMEA. For the full list of supported regions, see the Regions page."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of LBS nodes returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The node index at which the pagination starts. This is zero-based; for example, with a value of 6, the response starts with the seventh node."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of nodes returned."
+                      previousUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the previous page of data."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of the new LBS node."
+                        parentId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The identifier of the parent node of this LBS node."
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The type of this LBS node. Note that only Area is a currently supported request value.
+                            Possible values: Area, Level, Root
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of this LBS node.
+                            Max length: 255
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: "Not relevant"
+                        barcode:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The barcode that represents this LBS node. This value must be unique per project.
+                            Max length: 255
+                        order:
+                          type: integer
+                          x-forma-type: int
+                          description: |-
+                            This node’s position relative to its sibling nodes. Nodes with the same parent have a defined sequence order. A node with a lower order value will be positioned before a node with a higher order value.
+                            This is zero-based; for example, a node with an order value of 3 is the fourth node among its sibling nodes.
+
+                            If an existing sibling node has the same or higher order value, that value will be incremented to make room for the new node.
+                        documentCount:
+                          type: integer
+                          x-forma-type: int
+                          description: "This field is reserved for future use."
+                        path:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The path from the root node to the current node. Note that this is only included if you use the filter[id] parameter."
+                    x-forma-type: "array: object"
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/locations-nodes-GET"
+    post:
+      operationId: locations-nodes-POST
+      summary: "Creates a node in the specified locations tree"
+      description: "Creates a node in the specified locations tree. Note that creating the root node is not allowed because the root node is created automatically when the project is created."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The identifier of the project that contains your locations tree.
+            Use the Data Management API to retrieve the relevant Forma hub and project IDs.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: treeId
+          in: path
+          required: true
+          description: "Must be default. Currently a project can contain only the default tree."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: targetNodeId
+          in: query
+          description: |-
+            Unique identifier of a node that will be the new node’s immediate sibling in the locations tree. The target node’s parentId must match the body.parentId field in the request.
+            Note that nodes in a given tier of the tree have a defined sequence order. The new node will be created in the same tier, either before or after the target node. You specify the sequence position of the new node using the insertOption parameter.
+
+            Note that this parameter is unavailable if this request is creating an existing node’s first child node.
+
+            Required only when insertOption is also included in the request.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: insertOption
+          in: query
+          description: |-
+            Where to insert the new node relative to the target node that you specified with targetNodeId. The nodes in a given tier of the tree have a defined sequence order, and insertOption specifies whether the new node comes before or after the target node.
+            Required only when targetNodeId is also included in the request.
+            Possible values: After, Before
+          schema:
+            type: string
+            x-forma-type: "enum:string"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier of the new LBS node."
+                  parentId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The identifier of the parent node of this LBS node."
+                  type:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of this LBS node. Note that only Area is a currently supported request value.
+                      Possible values: Area, Level, Root
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The name of this LBS node.
+                      Max length: 255
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: "Not relevant"
+                  barcode:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The barcode that represents this LBS node. This value must be unique per project.
+                      Max length: 255
+                  order:
+                    type: integer
+                    x-forma-type: int
+                    description: |-
+                      This node’s position relative to its sibling nodes. Nodes with the same parent have a defined sequence order. A node with a lower order value will be positioned before a node with a higher order value.
+                      This is zero-based; for example, a node with an order value of 3 is the fourth node among its sibling nodes.
+
+                      If an existing sibling node has the same or higher order value, that value will be incremented to make room for the new node.
+                  documentCount:
+                    type: integer
+                    x-forma-type: int
+                    description: "This field is reserved for future use."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/locations-nodes-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                parentId:
+                  type: string
+                  format: uuid
+                  x-forma-type: "string: UUID"
+                  description: "The identifier of the parent node of this LBS node."
+                type:
+                  type: string
+                  x-forma-type: "enum:string"
+                  description: |-
+                    The type of this LBS node. Note that only Area is a currently supported request value.
+                    Possible values: Area, Level, Root
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of this LBS node.
+                    Max length: 255
+                description:
+                  type: string
+                  x-forma-type: string
+                  description: "Not relevant"
+                barcode:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The barcode that represents this LBS node. This value must be unique per project.
+                    Max length: 255
+              required:
+                - name
+                - parentId
+                - type
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

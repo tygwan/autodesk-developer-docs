@@ -1,0 +1,726 @@
+{
+  "apiName": "Forma Site Design API (Beta)",
+  "docVersion": "v1",
+  "urlPath": "forma",
+  "pages": [
+    {
+      "id": "254652df-ae0a-4af2-b2ef-969e64abddca",
+      "urlPath": "overview",
+      "displayName": "Overview",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "4f10645d-d52d-e0a6-a1e1-14b9d81b8faf",
+      "urlPath": "overview/welcome-to-forma",
+      "displayName": "Welcome to Forma Site Design",
+      "group": "Overview",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/overview/welcome-to-forma.html",
+      "sha256": "4da7873c73e8477aab3d30d50520dac6d070209d7b73288326a59a8698cee85c",
+      "kind": "guide"
+    },
+    {
+      "id": "f693f30d-b15b-20ef-032b-5413df11aed2",
+      "urlPath": "overview/extension-types",
+      "displayName": "Extension types",
+      "group": "Overview",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/overview/extension-types.html",
+      "sha256": "722d942104c673baf47630fefe4bb78e75b420b1caa920d21a11334a82078cc0",
+      "kind": "guide"
+    },
+    {
+      "id": "67d53259-f142-884b-5bb7-3ec6c0890bec",
+      "urlPath": "overview/design-guidelines",
+      "displayName": "Design guidelines",
+      "group": "Overview",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/overview/design-guidelines.html",
+      "sha256": "f72e1388aeb9e16167ca9bdd8fc0d2a77c28ba2d6e565b137d08758d95392676",
+      "kind": "guide"
+    },
+    {
+      "id": "0ee8ed73-da32-ee20-3d2d-5cc9540a6e65",
+      "urlPath": "overview/getting-started",
+      "displayName": "Getting started",
+      "group": "Overview",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/overview/getting-started.html",
+      "sha256": "7bdbba7b043a1fa41ae3785f72e916e68c51f06ad269b7a8619b269d7a576048",
+      "kind": "guide"
+    },
+    {
+      "id": "ed8fad8b-0bc5-d589-cea9-b07b428151f3",
+      "urlPath": "overview/sharing-extensions",
+      "displayName": "Share your extension",
+      "group": "Overview",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/overview/sharing-extensions.html",
+      "sha256": "bc113a554588bf1ff50ee35f1817747426658727171a3f70c5fa31e237720d1b",
+      "kind": "guide"
+    },
+    {
+      "id": "d0501f04-468e-72d3-300b-71e0d5c05b02",
+      "urlPath": "overview/publishing-extensions",
+      "displayName": "Publish to marketplace",
+      "group": "Overview",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/overview/publishing-extensions.html",
+      "sha256": "b8046e176f881fa090e8b05f2546a8fd5b403dc370ed779f65abca619901357f",
+      "kind": "guide"
+    },
+    {
+      "id": "1f1f0c44-38b1-3cce-a9cd-360de6df6eda",
+      "urlPath": "embedded-views",
+      "displayName": "Embedded Views",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "4f9a46a4-8676-a51f-4102-89a884d2ebde",
+      "urlPath": "embedded-views/introduction",
+      "displayName": "Introduction",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/introduction.html",
+      "sha256": "92301f66b25f3de3c7461a7b89bf862a135b152d7af1088ff14a4ea8c6673efd",
+      "kind": "guide"
+    },
+    {
+      "id": "7a4fbbb9-80d6-2b04-c9b1-6a9f180560aa",
+      "urlPath": "embedded-views/tutorial",
+      "displayName": "Tutorial",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/tutorial.html",
+      "sha256": "34d5873dcd20e39f45782724333ab75d7dc9c0bbbc146a4ec36a135ca9485158",
+      "kind": "guide"
+    },
+    {
+      "id": "77ac5fe6-2df9-f137-bc6d-8cc77eb16270",
+      "urlPath": "embedded-views/using-http-apis",
+      "displayName": "Using HTTP APIs",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/using-http-apis.html",
+      "sha256": "c5eaea062b46962ec2627dfb0c6b33cbb1559366aee578423f4e9aba62ed11e2",
+      "kind": "guide"
+    },
+    {
+      "id": "d80e29bd-c5de-ddb2-3f99-fc30e8574ab7",
+      "urlPath": "embedded-views/examples",
+      "displayName": "Examples",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/examples/examples.html",
+      "sha256": "81f61def12c6896a64a84c95ced9bb83c2aa94498e94ace5b9283251727d6437",
+      "kind": "guide"
+    },
+    {
+      "id": "dda6839f-957d-988f-45cd-4d63e454a828",
+      "urlPath": "embedded-views/examples/shadow-study",
+      "displayName": "Shadow Study",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/examples/shadow-study.html",
+      "sha256": "a4b6e1c028211503b7f304a73a9626f1a18be0b56b789c2c1f6726222caae79c",
+      "kind": "guide"
+    },
+    {
+      "id": "61cadd7e-b73c-06fc-2eec-4ae9357b34fe",
+      "urlPath": "embedded-views/examples/file-explorer",
+      "displayName": "File explorer",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/examples/file-explorer.html",
+      "sha256": "3f5c8f7672882ac8c6a456c70f45341e1bb07a27fb74a44bd3bfd967da6f15b7",
+      "kind": "guide"
+    },
+    {
+      "id": "f31faa04-c0b4-6f66-9b2a-7efe5877fcc1",
+      "urlPath": "embedded-views/configuration",
+      "displayName": "Configuration",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/configuration.html",
+      "sha256": "1fd9702ccf811b37449ee7208e35506a1588afd1f71c6de43e460a0cb0aa5b0b",
+      "kind": "guide"
+    },
+    {
+      "id": "667bbf99-0a65-2b66-7451-fd71a31bd4c0",
+      "urlPath": "embedded-views/useful-concepts",
+      "displayName": "Useful concepts",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "dfd350ff-97c3-d1f3-d8f2-00a2f085501e",
+      "urlPath": "embedded-views/useful-concepts/analysis",
+      "displayName": "Analysis",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/useful-concepts/analysis/analysis.html",
+      "sha256": "bfcc9e8f790770a02e328b7a4c73d9d5aadb1ee8ed337829185bdae488bda3fa",
+      "kind": "guide"
+    },
+    {
+      "id": "0c79ed19-7085-c602-e374-9aa431c85622",
+      "urlPath": "embedded-views/useful-concepts/analysis/sun",
+      "displayName": "Sun",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/useful-concepts/analysis/sun.html",
+      "sha256": "f5f4aaf193fdaac2415b158f38dc73fc7981260ee76d7a2278f5c078f728936f",
+      "kind": "guide"
+    },
+    {
+      "id": "0bf46dff-dbc3-62b7-1bea-5e831df2ce0e",
+      "urlPath": "embedded-views/useful-concepts/analysis/noise",
+      "displayName": "Noise",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/useful-concepts/analysis/noise.html",
+      "sha256": "ece36aca6320ae76ca3a12a76c39932f6b2a31cde400c0c1277726bd955b6016",
+      "kind": "guide"
+    },
+    {
+      "id": "777540aa-463a-f0d0-e630-75dd4576d392",
+      "urlPath": "embedded-views/sdk-documentation",
+      "displayName": "SDK documentation",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/sdk-documentation.html",
+      "sha256": "3fc45f01400148da042bcb08601ed6e3830ce2ce78241492ae34623b87765b5a",
+      "kind": "guide"
+    },
+    {
+      "id": "66d2408f-391d-6353-489b-a7e5341320e2",
+      "urlPath": "embedded-views/technical-guidelines",
+      "displayName": "Technical guidelines",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/technical-guidelines.html",
+      "sha256": "b2372aa5bbf8127f4c4b1ca84fa3b79cd56dd36bc23a44364090580d7102292f",
+      "kind": "guide"
+    },
+    {
+      "id": "c013ce45-7df8-1b3d-4b41-af39c3df482c",
+      "urlPath": "embedded-views/inspiration",
+      "displayName": "Inspiration",
+      "group": "Embedded Views",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/embedded-views/inspiration.html",
+      "sha256": "ba9d84faa6908c7af6d40c6c9be0cd91b2f7514cca5017cb27073f6e4590aed4",
+      "kind": "guide"
+    },
+    {
+      "id": "074676af-b9e1-1b9a-3e01-7bb3149280bd",
+      "urlPath": "working-with-forma",
+      "displayName": "Working with Forma Site Design ",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "1f518141-91fa-2e05-a57b-1730b9ae3cfc",
+      "urlPath": "working-with-forma/introduction",
+      "displayName": "Introduction",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/introduction.html",
+      "sha256": "4765c576d5074b9a6faf70a96b99972f9eb64087b11deca261f921b337e465c6",
+      "kind": "guide"
+    },
+    {
+      "id": "02222aa4-7046-848d-4b30-a933b370c4f4",
+      "urlPath": "working-with-forma/element-system",
+      "displayName": "Element System",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/element-system.html",
+      "sha256": "609c00c2f82447347ed03812bacd5725d48df3f6a6b01b466ff985f1041a4c9b",
+      "kind": "guide"
+    },
+    {
+      "id": "e72dd0ce-81f9-b875-87e6-10a9648ce12b",
+      "urlPath": "working-with-forma/element-system/key-principles",
+      "displayName": "Key principles",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/element-system/key-principles.html",
+      "sha256": "99a37b2b4263fa065a4be29069499295a7de81fe52d76162c734eec281f9c7a6",
+      "kind": "guide"
+    },
+    {
+      "id": "9364ce92-e2b5-6578-f69c-1daa858fe461",
+      "urlPath": "working-with-forma/element-system/forma-element-specification",
+      "displayName": "FormaElement specification",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/element-system/forma-element-specification.html",
+      "sha256": "1aa1866542d4d22a16a10ba452bc269b18a184ef59c78da65ae13d1950761e1c",
+      "kind": "guide"
+    },
+    {
+      "id": "37491f68-14cb-453a-c340-fe1ca453124f",
+      "urlPath": "working-with-forma/element-system/element-hierarchies",
+      "displayName": "Element hierarchies",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/element-system/element-hierarchies.html",
+      "sha256": "a5165d2dc224a26cdeb60b6e662661c44a90b71e015a2182e4058c89ea3c7c1b",
+      "kind": "guide"
+    },
+    {
+      "id": "162a9b69-b7ed-ebc1-3fd0-9b4b78658a2e",
+      "urlPath": "working-with-forma/placing-geometry",
+      "displayName": "Geometry placement",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/placing-geometry.html",
+      "sha256": "f39578c1a84c30e87f5c0bf590437ff4f7e45be26e5809758dfcba61160441a7",
+      "kind": "guide"
+    },
+    {
+      "id": "86469946-3266-a646-396c-603ad801549d",
+      "urlPath": "working-with-forma/authcontext",
+      "displayName": "Auth context",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/authcontext.html",
+      "sha256": "88f45040ee3a5a5df680086dd858c75c45aad99fb0fe32187e02c43135017b7b",
+      "kind": "guide"
+    },
+    {
+      "id": "61d43bd1-5431-e705-e8fe-11b4ebca1eec",
+      "urlPath": "working-with-forma/regions",
+      "displayName": "Regions",
+      "group": "Working with Forma Site Design",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/working-with-forma/regions.html",
+      "sha256": "be5d497f3e8de7118cf4f6f32b68766608c1188671107f16c806289f88d95c54",
+      "kind": "guide"
+    },
+    {
+      "id": "a16d94b2-b35c-8147-2650-efde41a91186",
+      "urlPath": "reference",
+      "displayName": "API Reference",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "6653d5ff-f09e-47b4-cd86-ae773a0e58e3",
+      "urlPath": "reference/http-reference",
+      "displayName": "HTTP Reference",
+      "group": "API Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/quick_reference.html",
+      "sha256": "67a923adaa8c8926416538600d986b006ce9801357036ab32376161ae85e0bdb",
+      "kind": "guide"
+    },
+    {
+      "id": "ee88ad2a-92d0-4ddf-326b-601be25f9583",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Elements API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "e51dda46-0939-68ec-9145-97c0a4b28c79",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Elements",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "3edc0b3c-f6fc-d2ba-5761-5462efa09e88",
+      "urlPath": "reference/http-reference///element-getelement-GET",
+      "displayName": "GET Get element",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/element/getelement-GET.html",
+      "sha256": "5b02b5bba00418a05095d6448ac5ce59f6d0ae9edca477f20aa04e7be901adf1",
+      "kind": "endpoint"
+    },
+    {
+      "id": "f5923ffe-b557-869f-3422-b59f03289d95",
+      "urlPath": "reference/http-reference///element-getelementsbatch-POST",
+      "displayName": "POST Retrieve multiple elements",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/element/getelementsbatch-POST.html",
+      "sha256": "77e922eb4601b766510eaa15e6a744bb388ce9a5009f28d1bdfb6ce97d363cd0",
+      "kind": "endpoint"
+    },
+    {
+      "id": "bc5d4b48-fbad-60a1-7d36-998919631a31",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Blobs",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "01257938-8856-1942-48bb-916df86adc77",
+      "urlPath": "reference/http-reference///element-getblob-GET",
+      "displayName": "GET Get blob",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/element/getblob-GET.html",
+      "sha256": "45a563436c4419294a872b2c4d22f2dc135f51d7ef210fcbe45a55ba2254327a",
+      "kind": "endpoint"
+    },
+    {
+      "id": "c7853d8a-a56e-8726-207d-818000323cb0",
+      "urlPath": "reference/http-reference///element-getblobsbatch-POST",
+      "displayName": "POST Retrieve multiple blobs",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/element/getblobsbatch-POST.html",
+      "sha256": "d5f5c0c37d3d96643c895d4f267197ba140f25936013f829538ba67e90c564a9",
+      "kind": "endpoint"
+    },
+    {
+      "id": "45019b93-d96a-e14e-c354-0cfd2191ce85",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Geometries API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "7c89ee7f-c5e0-683c-2627-97c53c162959",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Write elements",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "a7e94bc2-8f4b-15a4-7f34-26c4e68feb96",
+      "urlPath": "reference/http-reference///geometries-batchcreategeometries-POST",
+      "displayName": "POST Batch Create Basic Geometries",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/geometries/batchcreategeometries-POST.html",
+      "sha256": "53379570ef13afab5f79388213f33eeefd5cadcd044262b233fe8ebae83f53ba",
+      "kind": "endpoint"
+    },
+    {
+      "id": "8e72ffc6-124d-42c3-07a5-58d504d12590",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Integrate API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "a1aea3fb-11d9-2fcd-f6ce-c643045b22a2",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Write elements V1 - Deprecated",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "e894d0d4-75c1-82fe-7e82-5bccf45b5bf2",
+      "urlPath": "reference/http-reference///integrate-createelementhierarchy-POST",
+      "displayName": "POST Create an element hierarchy",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/integrate/createelementhierarchy-POST.html",
+      "sha256": "8e07fdb3cbd64f2b2f14f066fc09795cce84a2a1412bfb7b5787a4ed0a1b00cc",
+      "kind": "endpoint"
+    },
+    {
+      "id": "ff1ffa87-5c88-15e4-ef75-955562e40575",
+      "urlPath": "reference/http-reference///integrate-updateelementwithoutrevision-POST",
+      "displayName": "POST Update an existing element",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/integrate/updateelementwithoutrevision-POST.html",
+      "sha256": "aa21f32a31a55eec3ee2c1c4d9e1acc451d6d3d5a8b14fadbbd65bd81c4efd1c",
+      "kind": "endpoint"
+    },
+    {
+      "id": "e71cf96b-892b-92eb-c3c5-81af8057b443",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Write elements V2",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "590f730a-caab-7627-7b5a-6465e0276fa5",
+      "urlPath": "reference/http-reference///integrate-createelementv2-POST",
+      "displayName": "POST Create a new element",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/integrate/createelementv2-POST.html",
+      "sha256": "e79b9324f892daed8fb3274c8a9f32823b9914888051556a6229bb1128c6d9b0",
+      "kind": "endpoint"
+    },
+    {
+      "id": "0a8ac3c9-7b2e-b040-5879-7759714bdd82",
+      "urlPath": "reference/http-reference///integrate-updateelementv2-POST",
+      "displayName": "POST Update an element",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/integrate/updateelementv2-POST.html",
+      "sha256": "f074529df8c437bdcf83fafacd563729756d2e0bf9616283ad18290723777cfe",
+      "kind": "endpoint"
+    },
+    {
+      "id": "d2e6910c-2da0-7ca3-c6ca-789c8458fd97",
+      "urlPath": "reference/http-reference///integrate-batchingestelementsv2-POST",
+      "displayName": "POST Create and/or update multiple elements in a batch",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/integrate/batchingestelementsv2-POST.html",
+      "sha256": "d779a097c88915105401e824a5f8512767e0f2528221e690d0764a27870186db",
+      "kind": "endpoint"
+    },
+    {
+      "id": "e58f6a6e-5b9a-a406-6887-ecd476941ffd",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Upload links",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "461d02db-69b2-bf2a-58e0-80a301f2a523",
+      "urlPath": "reference/http-reference///integrate-getuploadlink-GET",
+      "displayName": "GET Get a signed link to upload a payload",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/integrate/getuploadlink-GET.html",
+      "sha256": "b10611395c9a101a54858302fa34f917fcb551a39304530704da75cf210805ce",
+      "kind": "endpoint"
+    },
+    {
+      "id": "9e3c58a7-4dd2-c2de-15b2-dc4a37197709",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Library API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "8fef7df4-22d8-a3f1-562a-2c0d2ed7f72a",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Library items",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "9b60e54c-79cb-464d-da8b-cd7b54cd1173",
+      "urlPath": "reference/http-reference///library-createlibraryitem-POST",
+      "displayName": "POST Add a new item to the library",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/library/createlibraryitem-POST.html",
+      "sha256": "5b633b800a9e928a55fb1e57d38aee4040c47310f243a6b408009d7cced6f070",
+      "kind": "endpoint"
+    },
+    {
+      "id": "bcb4a90a-83de-3360-9779-d1b24aef1c1d",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Project API (deprecated)",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "497a2c7e-c9fd-08cc-48af-f50e20edfe5d",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Projects",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "bfe4f144-6ad1-e265-6890-4c0c99b9e0bf",
+      "urlPath": "reference/http-reference///project-getproject-GET",
+      "displayName": "GET Get a project. Deprecated - please use the Site API.",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/project/getproject-GET.html",
+      "sha256": "aabd3543d390c505a938a476ec3afd4b68fc123bbe226172c43f9122a4704573",
+      "kind": "endpoint"
+    },
+    {
+      "id": "7f7cbccf-ceac-484c-5bd8-be0dbf3cbc24",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Proposal API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "0ffd8415-aa22-458a-d3d6-74021ae181b9",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Proposals",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "78f62889-8217-9917-cef2-ad771851b03e",
+      "urlPath": "reference/http-reference///proposal-createproposal-POST",
+      "displayName": "POST Create a proposal",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/proposal/createproposal-POST.html",
+      "sha256": "33310b0323c6b992a06af6cadb7f2fcaf49fb580bc1c8d061fef7e308f903132",
+      "kind": "endpoint"
+    },
+    {
+      "id": "9764cd2a-5bc7-d063-3e98-4eb7892dc4db",
+      "urlPath": "reference/http-reference///proposal-listproposals-GET",
+      "displayName": "GET List proposals",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/proposal/listproposals-GET.html",
+      "sha256": "a3fa1e022ecd3ace12ff7a0a04f1941ed7a4a8248eb7b48148ca7e2eb2a3a1a4",
+      "kind": "endpoint"
+    },
+    {
+      "id": "c4ec1929-f053-d42e-9ac2-d018b78fe2d1",
+      "urlPath": "reference/http-reference///proposal-putproposal-PUT",
+      "displayName": "PUT Update a proposal",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/proposal/putproposal-PUT.html",
+      "sha256": "960ccd7525247a0f06b8823dab9af31046bd54fbd166a28b418d5a040415d5d4",
+      "kind": "endpoint"
+    },
+    {
+      "id": "49d5d885-1ff3-a7b1-dbc8-45134340bfb1",
+      "urlPath": "reference/http-reference///proposal-listrevisions-GET",
+      "displayName": "GET List revisions for a proposal",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/proposal/listrevisions-GET.html",
+      "sha256": "5706d1d1b7df3b67a737692b04b828e86d146c281f017261929aa0441366ce60",
+      "kind": "endpoint"
+    },
+    {
+      "id": "64a31e5d-0f0f-ca2b-5607-b4a03a8b5958",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Site API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "d3bb33b6-d105-9dc8-a0f7-7a8ea5e5f90d",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Sites",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "77d9f522-586f-357a-72be-ba3eda89c543",
+      "urlPath": "reference/http-reference///site-getsite-GET",
+      "displayName": "GET Get a site",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/site/getsite-GET.html",
+      "sha256": "312a6d793f4ba0574bba955e98ad3efd8b166491a8abbafd5066a722576b17ee",
+      "kind": "endpoint"
+    },
+    {
+      "id": "ba325d40-9df9-b81f-b5a4-64389619c580",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Sun Analysis API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "0799df6e-65ca-c746-5e3d-5fcb39eeab25",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Sun analyses",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "9b0b3b58-ad51-60a4-81a1-768dae0dae0b",
+      "urlPath": "reference/http-reference///sun-analysis-getanalysis-GET",
+      "displayName": "GET Get analysis",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/sun-analysis/getanalysis-GET.html",
+      "sha256": "b8879c06efe5a30f3a79db0b7cf0525e62030f2ca890f74bc25f349d574bb5f1",
+      "kind": "endpoint"
+    },
+    {
+      "id": "afeb50cd-6b3b-c32b-8b03-d8701a9f0d02",
+      "urlPath": "reference/http-reference///sun-analysis-triggersunanalysis-POST",
+      "displayName": "POST Trigger an analysis",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/sun-analysis/triggersunanalysis-POST.html",
+      "sha256": "37d804fd1ecd2964403637ee37467bd73eead2f28b986fc7a8dcf0392f26685d",
+      "kind": "endpoint"
+    },
+    {
+      "id": "476df43f-9c09-f1e4-285c-d03a36eb7c0f",
+      "urlPath": "reference/http-reference/",
+      "displayName": "Terrain API",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "8bf47237-acca-c871-f62b-1397573bcfef",
+      "urlPath": "reference/http-reference//",
+      "displayName": "Terrains",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "fa81ac04-c2c7-fcf7-ae9b-1b079b5f549a",
+      "urlPath": "reference/http-reference///terrain-createterrain-POST",
+      "displayName": "POST Create a new terrain",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/terrain/createterrain-POST.html",
+      "sha256": "243c2a4d79a93be6e158ced2eec13b402a159d4f57ee8533dffd66e95de23a1e",
+      "kind": "endpoint"
+    },
+    {
+      "id": "f24df449-d43b-cd25-f12e-93f24c3309a2",
+      "urlPath": "reference/http-reference///terrain-markterrainasuploaded-PATCH",
+      "displayName": "PATCH Mark a terrain as uploaded",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/terrain/markterrainasuploaded-PATCH.html",
+      "sha256": "00fa011a068eac41ff1ee057f02e4bbe503bc020fe0217051290fd87dfbb5e99",
+      "kind": "endpoint"
+    },
+    {
+      "id": "bae70d4c-b8b1-0476-321d-1993697c7c3b",
+      "urlPath": "reference/http-reference///terrain-downloadterrainglb-GET",
+      "displayName": "GET Download a terrain GLB file",
+      "group": "HTTP Reference",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/reference/http/terrain/downloadterrainglb-GET.html",
+      "sha256": "13f1e70b36658597f0b295a3d128bdf7b4aeb0edfe870a940284ad505be56c1e",
+      "kind": "endpoint"
+    },
+    {
+      "id": "0f6567af-dc1c-ed78-d317-1d9f5f6b5a46",
+      "urlPath": "reference/http-specification",
+      "displayName": "Usage guides",
+      "docPath": null,
+      "kind": "section"
+    },
+    {
+      "id": "3c0e3e9b-0264-457f-4108-720d5f9aee32",
+      "urlPath": "reference/http-specification/introduction",
+      "displayName": "Introduction",
+      "group": "Usage guides",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/http-specification/introduction.html",
+      "sha256": "4f6c900a5be77d01ef5880c5e1f5f4b42e4db448cdcbe071cc267229901c7eb6",
+      "kind": "guide"
+    },
+    {
+      "id": "0a5f981a-9f60-291d-19a6-58cb92f0c4f4",
+      "urlPath": "reference/http-specification/integrate-api",
+      "displayName": "Integrate API",
+      "group": "Usage guides",
+      "sourceBuild": "forma-forma-documentation-main-617165",
+      "docPath": "forma/v1/http-specification/integrate-api.html",
+      "sha256": "8333fdc28a708e4be8724d242bc7e645b3f1715429a4be0a3692954c57aa9081",
+      "kind": "guide"
+    }
+  ]
+}

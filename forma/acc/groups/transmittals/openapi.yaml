@@ -1,0 +1,1102 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Transmittals"
+  version: v1
+  description: |-
+    Forma APIs — Transmittals.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/transmittals/v1/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Transmittals
+x-forma-common-base: "/construction/transmittals/v1/projects"
+paths:
+  "/construction/transmittals/v1/projects/{projectId}/transmittals/{transmittalId}/documents":
+    get:
+      operationId: transmittals-listtransmittaldocuments-GET
+      summary: "Retrieves the documents that were included in a specific transmittal"
+      description: "Retrieves the documents that were included in a specific transmittal."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            You can retrieve the project ID using the Data Management API. For more details, see the Retrieve a Project ID tutorial.
+
+            You may provide the project ID with or without the b. prefix:
+
+            - With prefix: b.657a5565-09b7-48e0-bd03-acacfe42efaf
+
+            - Without prefix: 657a5565-09b7-48e0-bd03-acacfe42efaf
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: transmittalId
+          in: path
+          required: true
+          description: "The ID of the transmittal. To find the ID, call GET transmittals."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of results to return per page.
+            Acceptable values: 1-200.
+
+            Default value: 20.
+
+            For example, to limit the response to two results per page, use limit=2.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: |-
+            The index from which the response starts returning results.
+            Default value: 0.
+
+            For example, to skip the first three results, use offset=3.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: |-
+            Sorts the document results by a supported field and order.
+            By default, results are sorted in ascending order by name (name asc).
+
+            To sort in descending order, add desc after the field name.
+
+            Format: sort=<field> [asc or desc]
+
+            Possible values: name, title, version, lastUpdatedAt, updatedByName.
+
+            Examples:
+
+            - sort=name asc – sorts documents alphabetically by name.
+
+            - sort=lastUpdatedAt desc – sorts documents by last update time (newest first).
+          schema:
+            type: string
+            x-forma-type: "enum:string"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made.
+            This header is required only when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Your application can access only those users who are assigned to it in the SaaS Integrations UI.
+
+            Only user Autodesk IDs (autodeskId) are supported.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        urn:
+                          type: string
+                          x-forma-type: string
+                          description: "The URN of the document."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the document."
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: "The description of the document, if provided."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the document."
+                        version:
+                          type: integer
+                          x-forma-type: int
+                          description: "The version number of the document at the time the transmittal was issued."
+                        fileName:
+                          type: string
+                          x-forma-type: string
+                          description: "The file name of the document."
+                        approveStatus:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            The approval status of the file version.
+                            For more information, see File Review Statuses documentation.
+                          properties:
+                            label:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The customized label of the approval status.
+                                Max length: 255
+                            value:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                The value of the approval status.
+                                Possible values: APPROVED, REJECTED
+                        lastUpdatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the file was last updated, in ISO 8601 format."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last modified the document."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who created the file. For details about the user, call GET user."
+                        isDeleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            Indicates whether the file is deleted.
+                            true – The file is deleted, either directly or because its parent folder was deleted.
+
+                            false – The file is not deleted.
+                        parentFolderUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "The URN of the folder that contains the document."
+                        folderType:
+                          type: string
+                          x-forma-type: string
+                          description: "The type of folder that contains the document."
+                        revisionLabel:
+                          type: string
+                          x-forma-type: string
+                          description: "The revision label assigned to the document."
+                        storageUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "The storage URN of the document. You can use the storage URN to download the document. For details, see the Download Files tutorial."
+                    x-forma-type: "array: object"
+                    description: "The list of documents that were included in the transmittal when it was issued."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The list of pagination details for the response."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page, starting from zero."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL to retrieve the next page of transmittal documents. If this field is not included, the current page is the last page."
+        "202":
+          description: Accepted
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                    x-forma-type: "array: object"
+                    description: "This list of results will be empty."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/transmittals-listtransmittaldocuments-GET"
+  "/construction/transmittals/v1/projects/{projectId}/transmittals/{transmittalId}/folders":
+    get:
+      operationId: transmittals-listtransmittalfolders-GET
+      summary: "Retrieves all folders associated with the documents included in a specific transmittal"
+      description: "Retrieves all folders associated with the documents included in a specific transmittal."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            You can retrieve the project ID using the Data Management API. For more details, see the Retrieve a Project ID tutorial.
+
+            You may provide the project ID with or without the b. prefix:
+
+            - With prefix: b.657a5565-09b7-48e0-bd03-acacfe42efaf
+
+            - Without prefix: 657a5565-09b7-48e0-bd03-acacfe42efaf
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: transmittalId
+          in: path
+          required: true
+          description: "The ID of the transmittal. To find the ID, call GET transmittals."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of results to return per page.
+            Acceptable values: 1-200.
+
+            Default value: 20.
+
+            For example, to limit the response to two results per page, use limit=2.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: |-
+            The index from which the response starts returning results.
+            Default value: 0.
+
+            For example, to skip the first three results, use offset=3.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: |-
+            Sorts the folders by a supported field and order.
+            By default, folders are sorted in ascending order by name (name asc).
+
+            To sort in descending order, add desc after the field name.
+
+            Format: sort=<field> [asc or desc]
+
+            Supported fields: name, lastUpdatedAt, updatedByName.
+
+            Examples:
+
+            - sort=name asc – sorts folders alphabetically by name.
+
+            - sort=lastUpdatedAt desc – sorts folders by last updated time in descending order.
+
+            Possible values: name, lastUpdatedAt, updatedByName, name asc, lastUpdatedAt asc, updatedByName asc, name desc, lastUpdatedAt desc, updatedByName desc
+          schema:
+            type: string
+            x-forma-type: "enum:string"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made.
+            This header is required only when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Your application can access only those users who are assigned to it in the SaaS Integrations UI.
+
+            Only user Autodesk IDs (autodeskId) are supported.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        urn:
+                          type: string
+                          x-forma-type: string
+                          description: "The URN of the folder."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the folder."
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: "The description of the folder."
+                        lastUpdatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the folder was last modified, in ISO 8601 format."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who last modified the folder."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who last modified the folder. For details about the user, call GET user."
+                        isDeleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            Indicates whether the folder is deleted.
+                            true – The folder is deleted, either directly or because its parent folder was deleted.
+
+                            false – The folder is not deleted.
+                    x-forma-type: "array: object"
+                    description: "The list of folders included in the transmittal."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The list of pagination details for the response."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page, starting from zero."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL to retrieve the next page of transmittal folders. If not included, this is the last page."
+        "202":
+          description: Accepted
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                    x-forma-type: "array: object"
+                    description: "This list of folders will be empty."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/transmittals-listtransmittalfolders-GET"
+  "/construction/transmittals/v1/projects/{projectId}/transmittals/{transmittalId}/recipients":
+    get:
+      operationId: transmittals-listtransmittalrecipients-GET
+      summary: "Retrieves all recipients of a specific transmittal, including project members and external members"
+      description: "Retrieves all recipients of a specific transmittal, including project members and external members."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            You can retrieve the project ID using the Data Management API. For more details, see the Retrieve a Project ID tutorial.
+
+            You may provide the project ID with or without the b. prefix:
+
+            - With prefix: b.657a5565-09b7-48e0-bd03-acacfe42efaf
+
+            - Without prefix: 657a5565-09b7-48e0-bd03-acacfe42efaf
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: transmittalId
+          in: path
+          required: true
+          description: "The ID of the transmittal. To find the ID, call GET transmittals."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made.
+            This header is required only when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Your application can access only those users who are assigned to it in the SaaS Integrations UI.
+
+            Only user Autodesk IDs (autodeskId) are supported.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  recipients:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        autodeskId:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the recipient."
+                        email:
+                          type: string
+                          x-forma-type: string
+                          description: "The recipients email address."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The recipient’s name."
+                        companyAutodeskId:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the recipient’s company at the time the transmittal was issued."
+                        companyName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the recipient’s company at the time the transmittal was issued."
+                        receivedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the recipient received the transmittal (ISO 8601 format)."
+                        viewedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the recipient first viewed the transmittal (ISO 8601 format)."
+                        downloadedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the recipient first downloaded the transmittal (ISO 8601 format)."
+                    x-forma-type: "array: object"
+                    description: "The list of project-member recipients included in the transmittal."
+                  externalMembers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          x-forma-type: string
+                          description: "The email address of the external recipient."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the external recipient."
+                        companyName:
+                          type: string
+                          x-forma-type: string
+                          description: "The company name of the external recipient. This value may change if the external user later updates their company information."
+                        role:
+                          type: string
+                          x-forma-type: string
+                          description: "The role name of the external recipient."
+                        receivedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the external recipient received the transmittal notification, in ISO 8601 format."
+                        viewedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the external recipient first viewed the transmittal, in ISO 8601 format."
+                        downloadedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the external recipient first downloaded the transmittal, in ISO 8601 format."
+                    x-forma-type: "array: object"
+                    description: "A list of external recipients included in the transmittal."
+        "202":
+          description: Accepted
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  recipients:
+                    type: array
+                    items:
+                      type: object
+                    x-forma-type: "array: object"
+                    description: "An empty array of recipients while the transmittal is still being processed."
+                  externalMembers:
+                    type: array
+                    items:
+                      type: object
+                    x-forma-type: "array: object"
+                    description: "An empty array of external recipients while the transmittal is still being processed."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/transmittals-listtransmittalrecipients-GET"
+  "/construction/transmittals/v1/projects/{projectId}/transmittals/{transmittalId}":
+    get:
+      operationId: transmittals-gettransmittal-GET
+      summary: "Retrieves a transmittal by ID within the specified project"
+      description: "Retrieves a transmittal by ID within the specified project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            You can retrieve the project ID using the Data Management API. For more details, see the Retrieve a Project ID tutorial.
+
+            You may provide the project ID with or without the b. prefix:
+
+            - With prefix: b.657a5565-09b7-48e0-bd03-acacfe42efaf
+
+            - Without prefix: 657a5565-09b7-48e0-bd03-acacfe42efaf
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: transmittalId
+          in: path
+          required: true
+          description: "The ID of the transmittal. To find the ID, call GET transmittals."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made.
+            This header is required only when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Your application can access only those users who are assigned to it in the SaaS Integrations UI.
+
+            Only user Autodesk IDs (autodeskId) are supported.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier of the transmittal."
+                  sequenceId:
+                    type: string
+                    x-forma-type: string
+                    description: "A project-specific number automatically assigned when the transmittal is first submitted. It identifies the transmittal within the project and reflects the order in which it was created."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "The title of the transmittal."
+                  message:
+                    type: string
+                    x-forma-type: string
+                    description: "An optional message included with the transmittal."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The current processing state of the transmittal.
+
+                      - SENDING – The transmittal is being processed or packaged; some fields may be temporarily empty. The recipients and externalMembers fields may be temporarily empty.
+
+                      - COMPLETED – The transmittal has been successfully issued and all data is available.
+
+                      - FAILED – The transmittal failed to process or send.
+
+                      Possible values: SENDING, COMPLETED, FAILED.
+                  sentBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the user who created and sent the transmittal."
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the transmittal creator."
+                      email:
+                        type: string
+                        x-forma-type: string
+                        description: "The email of the transmittal creator."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The full name of the transmittal creator."
+                      companyAutodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the creator’s company at the time the transmittal was created."
+                      companyName:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the creator’s company at the time the transmittal was created."
+                  recipients:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      The list of recipients included in the transmittal, grouped by user, company, and role.
+                      For more information on how to add recipients to a transmittal, see the Create Transmittals documentation.
+                    properties:
+                      users:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the user recipient."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the user recipient."
+                        x-forma-type: "array: object"
+                        description: "The list of individual users who were added as recipients."
+                      companies:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the company recipient."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the company recipient."
+                        x-forma-type: "array: object"
+                        description: "The list of companies that were added as recipients."
+                      roles:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the role recipient."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the role recipient."
+                        x-forma-type: "array: object"
+                        description: "The list of project roles that were added as recipients."
+                  externalMembers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the external recipient."
+                        email:
+                          type: string
+                          x-forma-type: string
+                          description: "The email address of the external recipient."
+                    x-forma-type: "array: object"
+                    description: "The list of external recipients who are not members of the project."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the transmittal was created, in ISO 8601 format."
+                  documentsCount:
+                    type: integer
+                    x-forma-type: int
+                    description: "The total number of documents included in the transmittal."
+                  packedStatus:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      Indicates the progress of packaging transmittal files into a ZIP archive.
+                      Possible values: SUCCESS, PARTIAL_SUCCESS, FAILED, PROCESSING, EXPIRED, NOT_ALLOWED
+                  displayRecipients:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      Specifies how much recipient information each recipient can see.
+
+                      - ALL – All recipients can view the full recipient list.
+
+                      - LIMITED – Each recipient can view only their own recipient information.
+
+                      Project Admins and the sender always see the full list.
+
+                      Possible values: ALL, LIMITED
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/transmittals-gettransmittal-GET"
+  "/construction/transmittals/v1/projects/{projectId}/transmittals":
+    get:
+      operationId: transmittals-listtransmittals-GET
+      summary: "Retrieves all transmittals created in the specified project"
+      description: "Retrieves all transmittals created in the specified project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            You can retrieve the project ID using the Data Management API. For more details, see the Retrieve a Project ID tutorial.
+
+            You may provide the project ID with or without the b. prefix:
+
+            - With prefix: b.657a5565-09b7-48e0-bd03-acacfe42efaf
+
+            - Without prefix: 657a5565-09b7-48e0-bd03-acacfe42efaf
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of results to return per page.
+            Acceptable values: 1-200.
+
+            Default value: 20.
+
+            For example, to limit the response to two results per page, use limit=2.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: |-
+            The index from which the response starts returning results.
+            Default value: 0.
+
+            For example, to skip the first three results, use offset=3.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: |-
+            Sorts the transmittals by a supported field and order.
+
+            By default, results are sorted by sequenceId desc (descending order).
+
+            To sort in ascending order, add asc after the field name.
+
+            Format: sort=<field> [asc or desc]
+
+            Possible values: status, sequenceId, title, sentByName, createdAt, documentsCount.
+
+            Examples:
+
+            - sort=status asc – sorts transmittals by status in ascending order.
+
+            - sort=createdAt desc – sorts transmittals by creation date in descending order.
+          schema:
+            type: string
+            x-forma-type: "enum:string"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made.
+            This header is required only when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Your application can access only those users who are assigned to it in the SaaS Integrations UI.
+
+            Only user Autodesk IDs (autodeskId) are supported.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of the transmittal."
+                        sequenceId:
+                          type: string
+                          x-forma-type: string
+                          description: "A project-specific number automatically assigned when the transmittal is first submitted. It identifies the transmittal within the project and reflects the order in which it was created."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the transmittal."
+                        message:
+                          type: string
+                          x-forma-type: string
+                          description: "An optional message included with the transmittal."
+                        status:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The current processing state of the transmittal.
+
+                            - SENDING – The transmittal is being processed or packaged; some fields may be temporarily empty. The recipients and externalMembers fields may be temporarily empty.
+
+                            - COMPLETED – The transmittal has been successfully issued and all data is available.
+
+                            - FAILED – The transmittal failed to process or send.
+
+                            Possible values: SENDING, COMPLETED, FAILED.
+                        sentBy:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the user who created and sent the transmittal."
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the transmittal creator."
+                            email:
+                              type: string
+                              x-forma-type: string
+                              description: "The email of the transmittal creator."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The full name of the transmittal creator."
+                            companyAutodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the creator’s company at the time the transmittal was created."
+                            companyName:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the creator’s company at the time the transmittal was created."
+                        recipients:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            The list of recipients included in the transmittal, grouped by user, company, and role.
+                            For more information on how to add recipients to a transmittal, see the Create Transmittals documentation.
+                          properties:
+                            users:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the user recipient."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the user recipient."
+                              x-forma-type: "array: object"
+                              description: "The list of individual users who were added as recipients."
+                            companies:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the company recipient."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the company recipient."
+                              x-forma-type: "array: object"
+                              description: "The list of companies that were added as recipients."
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the role recipient."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the role recipient."
+                              x-forma-type: "array: object"
+                              description: "The list of project roles that were added as recipients."
+                        externalMembers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: "The name of the external recipient."
+                              email:
+                                type: string
+                                x-forma-type: string
+                                description: "The email address of the external recipient."
+                          x-forma-type: "array: object"
+                          description: "The list of external recipients who are not members of the project."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the transmittal was created, in ISO 8601 format."
+                        documentsCount:
+                          type: integer
+                          x-forma-type: int
+                          description: "The total number of documents included in the transmittal."
+                        packedStatus:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Indicates the progress of packaging transmittal files into a ZIP archive.
+                            Possible values: SUCCESS, PARTIAL_SUCCESS, FAILED, PROCESSING, EXPIRED, NOT_ALLOWED
+                        displayRecipients:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Specifies how much recipient information each recipient can see.
+
+                            - ALL – All recipients can view the full recipient list.
+
+                            - LIMITED – Each recipient can view only their own recipient information.
+
+                            Project Admins and the sender always see the full list.
+
+                            Possible values: ALL, LIMITED
+                    x-forma-type: "array: object"
+                    description: "A list of transmittals that belong to the specified project."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The list of pagination details for the response."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page, starting from zero."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL to retrieve the next page of transmittals. If this field is not included, the current page is the last page of results."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/transmittals-listtransmittals-GET"
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"

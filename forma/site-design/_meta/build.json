@@ -1,0 +1,11 @@
+{
+  "source": "https://aps.autodesk.com/en/docs/forma/v1",
+  "build": "forma-forma-documentation-main-617165",
+  "manifestLastModified": "Mon, 02 Mar 2026 16:37:05 GMT",
+  "manifestSha256": "790bcb8155d5b2db676b9f0e21e6a728163319b0b641c1e8ba6adfc924e73436",
+  "sdk": {
+    "package": "forma-embedded-view-sdk",
+    "version": "0.93.0",
+    "publishedAt": "2026-04-07T13:45:44.007Z"
+  }
+}

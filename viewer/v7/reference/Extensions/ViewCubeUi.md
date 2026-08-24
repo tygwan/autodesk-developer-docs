@@ -1,0 +1,93 @@
+---
+title: "ViewCubeUi"
+url_path: reference/Extensions/ViewCubeUi
+surface: viewer-sdk
+document_kind: reference
+category: "Extensions"
+---
+# ViewCubeUi
+
+## new ViewCubeUi(viewer, options)
+
+Create the UI for the view cube.
+
+The extension id is: `Autodesk.ViewCubeUi`
+
+### Parameters
+
+| viewer*[Autodesk.Viewing.Viewer3D](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/) | Viewer instance. |
+| --- | --- |
+| options*object | Not used. |
+
+### Examples
+
+```
+viewer.loadExtension('Autodesk.ViewCubeUi');
+```
+
+# Methods
+
+## setVisible(show)
+
+Show or hide the view cube element. This also applies to the home button.
+
+### Parameters
+
+| show*boolean | If set to false, the view cube and the home button will become invisible. |
+| --- | --- |
+
+## showTriad(show)
+
+Show the x,y,z axes of the view cube.
+
+### Parameters
+
+| show*boolean | if set to true, the view cube axes will be shown. |
+| --- | --- |
+
+## setViewCube(face)
+
+Set the face of ViewCube and apply camera transformation according to it.
+
+### Parameters
+
+| face*string | The face name of ViewCube. The name can contain multiple face names, the format should be `"[front/back], [top/bottom], [left/right]"`. |
+| --- | --- |
+
+### Examples
+
+```
+viewer.setViewCube('front top right');
+ viewer.setViewCube('bottom left');
+ viewer.setViewCube('back');
+```
+
+## displayHomeButton(show)
+
+Hides the Home button next to the ViewCube.
+
+### Parameters
+
+| show*boolean |   |
+| --- | --- |
+
+## displayViewCube(display, updatePrefs)
+
+Display the view cube. This will not effect the home button.
+
+### Parameters
+
+| display*boolean | if set to false the view cube element will be invisible |
+| --- | --- |
+| updatePrefs*boolean | update the view cube preference |
+
+## localize()
+
+Localize the view cube
+
+## refreshCube()
+
+Refresh the view cube
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/Extensions/ViewCubeUi

@@ -1,0 +1,120 @@
+---
+title: "FolderContents Class"
+url_path: reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/FolderContents
+product: "Data Management API"
+surface: "data-management-v2"
+protocol: ".NET SDK"
+document_kind: "sdk-reference"
+api_version: "v2"
+section: "reference"
+category: "dot-net-sdk-dm"
+---
+# Class FolderContents
+
+Namespace: [Autodesk.DataManagement.Model](https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model)Assembly: Autodesk.DataManagement.dll
+
+Successful retrieval of the folder contents collection associated with a specific folder.
+
+```
+[DataContract]
+public class FolderContents
+```
+
+## Inheritance
+
+[object](https://learn.microsoft.com/dotnet/api/system.object) ←
+[FolderContents](https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/FolderContents)
+
+## Inherited Members
+
+[object.Equals(object)](https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)),
+[object.Equals(object, object)](https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)),
+[object.GetHashCode()](https://learn.microsoft.com/dotnet/api/system.object.gethashcode),
+[object.GetType()](https://learn.microsoft.com/dotnet/api/system.object.gettype),
+[object.MemberwiseClone()](https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone),
+[object.ReferenceEquals(object, object)](https://learn.microsoft.com/dotnet/api/system.object.referenceequals),
+[object.ToString()](https://learn.microsoft.com/dotnet/api/system.object.tostring)
+
+## Constructors
+
+### FolderContents()
+
+Initializes a new instance of the class.
+
+```
+public FolderContents()
+```
+
+## Properties
+
+### Data
+
+The properties of an item or folder, as the case may be.
+
+```
+[DataMember(Name = "data", EmitDefaultValue = false)]
+[JsonConverter(typeof(FolderContentsDataConverter))]
+public List<IFolderContentsData> Data { get; set; }
+```
+
+#### Property Value
+
+[List](https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1)<[IFolderContentsData](https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/IFolderContentsData)>
+
+### Included
+
+An array of objects, where each element represents a resource included within this resource.
+
+```
+[DataMember(Name = "included", EmitDefaultValue = false)]
+public List<VersionData> Included { get; set; }
+```
+
+#### Property Value
+
+[List](https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1)<[VersionData](https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/VersionData)>
+
+### Jsonapi
+
+Gets or Sets Jsonapi
+
+```
+[DataMember(Name = "jsonapi", EmitDefaultValue = false)]
+public JsonApiVersion Jsonapi { get; set; }
+```
+
+#### Property Value
+
+[JsonApiVersion](https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/JsonApiVersion)
+
+### Links
+
+Gets or Sets Links
+
+```
+[DataMember(Name = "links", EmitDefaultValue = false)]
+public FolderContentsLinks Links { get; set; }
+```
+
+#### Property Value
+
+[FolderContentsLinks](https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/FolderContentsLinks)
+
+## Methods
+
+### ToString()
+
+Returns the string presentation of the object.
+
+```
+public override string ToString()
+```
+
+#### Returns
+
+[string](https://learn.microsoft.com/dotnet/api/system.string)
+
+String presentation of the object.
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/data/v2/reference/dot-net-sdk-dm/Autodesk.DataManagement.Model/FolderContents

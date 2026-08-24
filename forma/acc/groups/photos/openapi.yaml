@@ -1,0 +1,446 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Photos"
+  version: v1
+  description: |-
+    Forma APIs — Photos.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/photos/v1/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Photos
+x-forma-common-base: "/construction/photos/v1/projects"
+paths:
+  "/construction/photos/v1/projects/{projectId}/photos:filter":
+    post:
+      operationId: photos-getfilteredphotos-POST
+      summary: "Searches for and returns all specified media (photo or video) within a project visible to the authenticated user"
+      description: |-
+        Searches for and returns all specified media (photo or video) within a project visible to
+        the authenticated user.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "Unique identifier of the project."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Pagination details"
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "Number of result in a page"
+                      nextPost:
+                        type: object
+                        x-forma-type: object
+                        description: "Information to fetch the next results of data via POST"
+                        properties:
+                          body:
+                            type: object
+                            x-forma-type: object
+                            description: "The POST body to use to get the next result"
+                            properties:
+                              cursorState:
+                                type: string
+                                x-forma-type: string
+                                description: "An opaque cursor token that identifies where the next page of paginated results should start. It’s returned in each paginated response so that it can be supplied in the next request to continue paginated results. If a paginated response contains no cursorState value, then there are no further pages to return."
+                          url:
+                            type: string
+                            x-forma-type: string
+                            description: "The URL to get the next result"
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the media was created at (ISO8601 Date time format in UTC)."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The actor that created the media. This is an Autodesk ID."
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the media was deleted at (ISO8601 Date time format in UTC)."
+                        deletedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The actor that deleted the media. This is an Autodesk ID."
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: "Description of the media"
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: |-
+                            The ID of the media.
+                            Max length: 36
+                        isPublic:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "If true the media is public and visible to everyone"
+                        latitude:
+                          type: number
+                          x-forma-type: number
+                          description: "Latitude in decimal degrees"
+                        locked:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "If true the media cannot be deleted or edited"
+                        longitude:
+                          type: number
+                          x-forma-type: number
+                          description: "Longitude in decimal degrees"
+                        mediaType:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The type of the media (NORMAL is for a normal photo)
+                            Possible values: NORMAL, INFRARED, PHOTOSPHERE, VIDEO
+                        projectId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: |-
+                            The id of the project
+                            Max length: 36
+                        signedUrls:
+                          type: object
+                          x-forma-type: object
+                          description: "URLs to the media’s assets. Accessible by anyone but is short-lived. Must be explicitly requested via `include field"
+                          properties:
+                            fileUrl:
+                              type: string
+                              x-forma-type: string
+                              description: "Signed URL to the original asset"
+                            thumbnailUrl:
+                              type: string
+                              x-forma-type: string
+                              description: "Signed URL to the thumbnail asset"
+                        size:
+                          type: number
+                          x-forma-type: number
+                          description: "Filesize of the media in bytes"
+                        takenAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the media was captured by the camera at (ISO8601 Date time format in UTC)."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "Title of the media"
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The type of object this media was initially added with
+                            Possible values: FIELD-REPORT, FORM, ISSUE, RFI, MARKUP, ASSET, GALLERY, MEETING, SUBMITTAL, LOGO
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the media was last updated (ISO8601 Date time format in UTC)."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The actor that last updated the media. This is an Autodesk ID."
+                        urls:
+                          type: object
+                          x-forma-type: object
+                          description: "URLs to the media’s assets. Requires API auth headers (data:read) to access it."
+                          properties:
+                            fileUrl:
+                              type: string
+                              x-forma-type: string
+                              description: "URL to the original asset"
+                            thumbnailUrl:
+                              type: string
+                              x-forma-type: string
+                              description: "URL to the thumbnail asset"
+                        userCreatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the media was added to the project at (whether it was offline/locally or online) at (ISO8601 Date time format in UTC)."
+                    x-forma-type: "array: object"
+                    description: "The filtered media"
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/photos-getfilteredphotos-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                cursorState:
+                  type: string
+                  x-forma-type: string
+                  description: "An opaque cursor token that identifies where the next page of paginated results should start. It’s returned in each paginated response so that it can be supplied in the next request to continue paginated results. If a paginated response contains no cursorState value, then there are no further pages to return. If provided, all other body parameters are ignored."
+                filter:
+                  type: object
+                  x-forma-type: object
+                  description: "Parameters to filter media by"
+                  properties:
+                    createdAt:
+                      type: string
+                      x-forma-type: string
+                      description: "Filter by when the media was submitted to the server. A string that specifies a date and time or a date and time range at which all returned objects mast have been updated. A single date and time takes this format: YYYY-MM-DDThh:mm:ss.SSSZ, A date and time range takes this format: YYYY-MM-DDThh:mm:ss.SSSZ..YYYY-MM-DDThh:mm:ss.SSSZ. Range queries can be closed or open in either direction: YYYY-MM-DDThh:mm:ss.SSSZ.. or ..YYYY-MM-DDThh:mm:ss.SSSZ."
+                    createdBy:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: "The actor that created the media. This is an Autodesk ID."
+                    id:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: "List of IDs to filter by"
+                    mediaType:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: |-
+                        Filter by type of the media
+                        Possible values: NORMAL, INFRARED, PHOTOSPHERE, VIDEO
+                    takenAt:
+                      type: string
+                      x-forma-type: string
+                      description: "Filter by when the media was captured on the camera. A string that specifies a date and time or a date and time range at which all returned objects mast have been updated. A single date and time takes this format: YYYY-MM-DDThh:mm:ss.SSSZ, A date and time range takes this format: YYYY-MM-DDThh:mm:ss.SSSZ..YYYY-MM-DDThh:mm:ss.SSSZ. Range queries can be closed or open in either direction: YYYY-MM-DDThh:mm:ss.SSSZ.. or ..YYYY-MM-DDThh:mm:ss.SSSZ."
+                    title:
+                      type: string
+                      x-forma-type: string
+                      description: "Filter by media title"
+                include:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: "Extra fields to be returned for each Photo Objects (e.g. signedUrls) Will always be: signedUrls"
+                limit:
+                  type: integer
+                  x-forma-type: int
+                  description: "The maximum number of objects that can be returned in a page. A request might return fewer objects than the limit if the Photos service runs out of specified objects to return - at the end of a set of paged results, for example. The maximum limit is 50; the default limit is 25."
+                sort:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: "Define how results are sorted. Provide the field (createdAt, takenAt) and the direction (asc, desc) eg. [\"createdAt\", \"asc\"]"
+  "/construction/photos/v1/projects/{projectId}/photos/{photoId}":
+    get:
+      operationId: photos-getphoto-GET
+      summary: "Return a single media (photo or video)"
+      description: "Return a single media (photo or video)"
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "Unique identifier of the project."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: photoId
+          in: path
+          required: true
+          description: "Unique identifier of the media."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: include
+          in: query
+          description: "Extra fields to be returned for each Photo Objects. (e.g. signedUrls) Will always be: signedUrls"
+          schema:
+            type: array
+            x-forma-type: array
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the media was created at (ISO8601 Date time format in UTC)."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The actor that created the media. This is an Autodesk ID."
+                  deletedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the media was deleted at (ISO8601 Date time format in UTC)."
+                  deletedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The actor that deleted the media. This is an Autodesk ID."
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: "Description of the media"
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: |-
+                      The ID of the media.
+                      Max length: 36
+                  isPublic:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "If true the media is public and visible to everyone"
+                  latitude:
+                    type: number
+                    x-forma-type: number
+                    description: "Latitude in decimal degrees"
+                  locked:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "If true the media cannot be deleted or edited"
+                  longitude:
+                    type: number
+                    x-forma-type: number
+                    description: "Longitude in decimal degrees"
+                  mediaType:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of the media (NORMAL is for a normal photo)
+                      Possible values: NORMAL, INFRARED, PHOTOSPHERE, VIDEO
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: |-
+                      The id of the project
+                      Max length: 36
+                  signedUrls:
+                    type: object
+                    x-forma-type: object
+                    description: "URLs to the media’s assets. Accessible by anyone but is short-lived. Must be explicitly requested via `include field"
+                    properties:
+                      fileUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "Signed url to the original asset"
+                      thumbnailUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "Signed url to the thumbnail asset"
+                  size:
+                    type: number
+                    x-forma-type: number
+                    description: "Filesize of the media in bytes"
+                  takenAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the media was captured by the camera at (ISO8601 Date time format in UTC)."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "Title of the media"
+                  type:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of object this media was initially added with
+                      Possible values: FIELD-REPORT, FORM, ISSUE, RFI, MARKUP, ASSET, GALLERY, MEETING, SUBMITTAL, LOGO
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the media was last updated (ISO8601 Date time format in UTC)."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The actor that last updated the media. This is an Autodesk ID."
+                  urls:
+                    type: object
+                    x-forma-type: object
+                    description: "URLs to the media’s assets. Requires API auth headers (data:read) to access it."
+                    properties:
+                      fileUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "URL to the original asset"
+                      thumbnailUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "URL to the thumbnail asset"
+                  userCreatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the media was added to the project at (whether it was offline/locally or online) at (ISO8601 Date time format in UTC)."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "410":
+          description: Gone
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/photos-getphoto-GET"
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"

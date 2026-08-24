@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "scope": "captured-documentation",
+  "navigation": {
+    "hierarchy": [
+      "repository-readme",
+      "product-readme",
+      "product-index",
+      "surface-index",
+      "category-index",
+      "leaf-document"
+    ],
+    "relationshipEvidence": [
+      "official-documentation-link",
+      "explicit-api-or-sdk-name"
+    ],
+    "relationshipPolicy": "navigation-hints-only; no synthesized integration workflow"
+  },
+  "products": [
+    {
+      "id": "authentication",
+      "name": "Authentication API",
+      "readme": "authentication/README.md",
+      "index": "authentication/INDEX.md",
+      "surfaces": [
+        {
+          "id": "authentication-v2",
+          "name": "Authentication API v2",
+          "path": "authentication/v2",
+          "index": "authentication/v2/INDEX.md",
+          "metadata": "authentication/v2/_meta/manifest.json",
+          "version": "v2",
+          "interfaces": [
+            {
+              "kind": "api",
+              "protocol": "rest"
+            },
+            {
+              "kind": "sdk",
+              "language": "typescript"
+            },
+            {
+              "kind": "sdk",
+              "language": "dotnet"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "tutorial",
+            "endpoint",
+            "reference",
+            "sdk-reference"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/oauth/v2"
+        }
+      ]
+    },
+    {
+      "id": "autodesk-forma",
+      "name": "Autodesk Forma",
+      "readme": "forma/README.md",
+      "index": "forma/INDEX.md",
+      "related": "forma/RELATED.md",
+      "surfaces": [
+        {
+          "id": "forma-apis",
+          "name": "Forma APIs",
+          "path": "forma/acc",
+          "index": "forma/acc/INDEX.md",
+          "metadata": "forma/acc/_meta/manifest.json",
+          "version": "v1",
+          "interfaces": [
+            {
+              "kind": "api",
+              "protocol": "rest"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "endpoint"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/acc/v1"
+        },
+        {
+          "id": "aec-data-model",
+          "name": "AEC Data Model API",
+          "path": "forma/aec-data-model",
+          "index": "forma/aec-data-model/INDEX.md",
+          "metadata": "forma/aec-data-model/_meta/manifest.json",
+          "version": "v1",
+          "interfaces": [
+            {
+              "kind": "api",
+              "protocol": "graphql"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "graphql-operation",
+            "graphql-schema-reference"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/aecdatamodel/v1"
+        },
+        {
+          "id": "forma-site-design",
+          "name": "Forma Site Design API & SDK",
+          "path": "forma/site-design",
+          "index": "forma/site-design/INDEX.md",
+          "metadata": "forma/site-design/_meta/manifest.json",
+          "version": "v1",
+          "interfaces": [
+            {
+              "kind": "api",
+              "protocol": "rest"
+            },
+            {
+              "kind": "sdk",
+              "language": "typescript",
+              "runtime": "forma-embedded-view-iframe"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "endpoint",
+            "sdk-reference"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/forma/v1"
+        }
+      ]
+    },
+    {
+      "id": "data-management",
+      "name": "Data Management API",
+      "readme": "data-management/README.md",
+      "index": "data-management/INDEX.md",
+      "surfaces": [
+        {
+          "id": "data-management-v2",
+          "name": "Data Management API v2",
+          "path": "data-management/v2",
+          "index": "data-management/v2/INDEX.md",
+          "metadata": "data-management/v2/_meta/manifest.json",
+          "version": "v2",
+          "interfaces": [
+            {
+              "kind": "api",
+              "protocol": "rest"
+            },
+            {
+              "kind": "sdk",
+              "language": "typescript"
+            },
+            {
+              "kind": "sdk",
+              "language": "dotnet"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "tutorial",
+            "endpoint",
+            "reference",
+            "sdk-reference",
+            "changelog"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/data/v2"
+        }
+      ]
+    },
+    {
+      "id": "model-derivative",
+      "name": "Model Derivative API",
+      "readme": "model-derivative/README.md",
+      "index": "model-derivative/INDEX.md",
+      "surfaces": [
+        {
+          "id": "model-derivative-v2",
+          "name": "Model Derivative API v2",
+          "path": "model-derivative/v2",
+          "index": "model-derivative/v2/INDEX.md",
+          "metadata": "model-derivative/v2/_meta/manifest.json",
+          "version": "v2",
+          "interfaces": [
+            {
+              "kind": "api",
+              "protocol": "rest"
+            },
+            {
+              "kind": "sdk",
+              "language": "typescript"
+            },
+            {
+              "kind": "sdk",
+              "language": "dotnet"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "tutorial",
+            "code-sample",
+            "endpoint",
+            "reference",
+            "sdk-reference",
+            "changelog"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/model-derivative/v2"
+        }
+      ]
+    },
+    {
+      "id": "viewer-sdk",
+      "name": "Viewer SDK",
+      "readme": "viewer/README.md",
+      "index": "viewer/INDEX.md",
+      "related": "viewer/RELATED.md",
+      "surfaces": [
+        {
+          "id": "viewer-v7",
+          "name": "Viewer SDK v7",
+          "path": "viewer/v7",
+          "index": "viewer/v7/INDEX.md",
+          "metadata": "viewer/v7/_meta/manifest.json",
+          "version": "v7",
+          "interfaces": [
+            {
+              "kind": "sdk",
+              "language": "javascript",
+              "runtime": "web-browser"
+            }
+          ],
+          "documentKinds": [
+            "guide",
+            "sdk-reference",
+            "changelog"
+          ],
+          "officialSource": "https://aps.autodesk.com/en/docs/viewer/v7"
+        }
+      ]
+    }
+  ]
+}

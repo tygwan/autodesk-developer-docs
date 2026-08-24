@@ -1,0 +1,130 @@
+openapi: "3.1.0"
+info:
+  title: "Forma Site Design — library"
+  version: v1
+  description: |-
+    Forma Site Design — library.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/forma/v1
+    공통 base 경로: /forma/library/v1alpha/library-items
+    **리전 — 호출 전 반드시 확인** Forma 는 리전별로 완전히 분리된 별개 시스템입니다. 리소스 식별자(urn 등)는 리전을 넘어 유효하지 않습니다. - HTTP API: 호스트는 하나(`developer.api.autodesk.com`)이고, **`X-Ads-Region` 헤더로 리전을 지정**합니다 (`US` | `EMEA`, 미지정 시 `US`). - 웹앱/임베디드 뷰: `app.autodeskforma.com`(US) 과 `app.autodeskforma.eu`(EMEA) 로 도메인 자체가 다릅니다. - 리전이 틀리면 인증이 정상이어도 **403** 이 납니다. 문서의 403 설명이 그대로 "Are you in the right region?" 입니다.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: library
+x-forma-common-base: "/forma/library/v1alpha/library-items"
+paths:
+  "/forma/library/v1alpha/library-items":
+    post:
+      operationId: library-createlibraryitem-POST
+      summary: "This endpoint allows you to create and add a new item to the library"
+      description: "This endpoint allows you to create and add a new item to the library"
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  authcontext:
+                    type: string
+                    x-forma-type: string
+                  id:
+                    type: string
+                    x-forma-type: string
+                  elementUrn:
+                    type: string
+                    x-forma-type: string
+                  name:
+                    type: string
+                    x-forma-type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "Library items created before 2024-02-13 do not contain the created time"
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: "Possible values: pending, failed, success"
+                  failedReason:
+                    type: string
+                    x-forma-type: string
+                    description: "For a library item with status failed additional information might be available in this property"
+                  properties:
+                    type: object
+                    x-forma-type: object
+                    properties:
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/library-createlibraryitem-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                elementUrn:
+                  type: string
+                  x-forma-type: string
+                status:
+                  type: string
+                  x-forma-type: "enum:string"
+                  description: "Possible values: pending, failed, success"
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: "Max length: 100"
+                properties:
+                  type: object
+                  x-forma-type: object
+                  properties:
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

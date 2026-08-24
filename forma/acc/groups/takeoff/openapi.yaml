@@ -1,0 +1,2837 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Takeoff"
+  version: v1
+  description: |-
+    Forma APIs — Takeoff.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/takeoff/v1/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Takeoff
+x-forma-common-base: "/construction/takeoff/v1/projects"
+paths:
+  "/construction/takeoff/v1/projects/{projectId}/assigned-structures:batch-add":
+    post:
+      operationId: takeoff-projects-project_id-assigned-structuresbatch-add-POST
+      summary: "Assigns one or more classification structures (trees) to a Takeoff project"
+      description: "Assigns one or more classification structures (trees) to a Takeoff project. A project can have a maximum of five assigned structures."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        structureId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the assigned structure was added to the project, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who added the assigned structure to the project. To find details about the user call GET users."
+                    x-forma-type: "array: object"
+                    description: "The list of classification structures that were added to the project."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-assigned-structuresbatch-add-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                structureId:
+                  type: string
+                  format: uuid
+                  x-forma-type: "string: UUID"
+                  description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+              required:
+                - structureId
+  "/construction/takeoff/v1/projects/{projectId}/assigned-structures/{structureId}":
+    delete:
+      operationId: takeoff-projects-project_id-assigned-structures-structure_id-DELETE
+      summary: "Unassigns a classification structure (tree) from a Takeoff project"
+      description: "Unassigns a classification structure (tree) from a Takeoff project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: structureId
+          in: path
+          required: true
+          description: "The ID of the Classification Service structure assigned to the project."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-assigned-structures-structure_id-DELETE"
+  "/construction/takeoff/v1/projects/{projectId}/assigned-structures":
+    get:
+      operationId: takeoff-projects-project_id-assigned-structures-GET
+      summary: "Retrieves the classification structures (trees) that have been assigned to a Takeoff project"
+      description: "Retrieves the classification structures (trees) that have been assigned to a Takeoff project. These structures are defined in the Classifications API."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The number of results to skip before returning data. This is zero-based. For example, offset=2 skips the first two results."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of assigned structures per page.
+            Acceptable values: 1-5.
+
+            Default value: 5.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        structureId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the assigned structure was added to the project, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who added the assigned structure to the project. To find details about the user call GET users."
+                    x-forma-type: "array: object"
+                    description: "A list of classification structures assigned to the project."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-assigned-structures-GET"
+  "/construction/takeoff/v1/projects/{projectId}/classification-systems/{systemId}/classifications:import":
+    post:
+      operationId: takeoff-projects-project_id-classification-systems-system_id-classificationsimport-POST
+      summary: "Classification Systems"
+      deprecated: true
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: systemId
+          in: path
+          required: true
+          description: |-
+            The classification system ID.
+            To find the ID, call GET classification-systems.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  classificationChanges:
+                    type: object
+                    x-forma-type: object
+                    properties:
+                      added:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of classifications added by the import."
+                      deleted:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of classifications deleted by the import."
+                      modified:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of classifications modified by the import."
+                  classificationSystemName:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The classification system name.
+                      Max length: 200
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-classification-systems-system_id-classificationsimport-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                classificationSystemName:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The classification system name.
+                    Max length: 200
+                classifications:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The classification code.
+                          Max length: 256
+                      parentCode:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The classification parent code.
+                          Its value may be null, indicating that this classification is at the top level of the hierarchy.
+
+                          Max length: 256
+                      description:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          A description of the classification.
+                          Max length: 256
+                      measurementType:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: |-
+                          Deprecated. Will be removed on September 15, 2025.
+                          The type of measurement.
+
+                          Possible values: AREA, COUNT, DISTANCE, VOLUME.
+                    required:
+                      - code
+                      - description
+                      - parentCode
+                  x-forma-type: "array: object"
+                  description: |-
+                    The classification hierarchy.
+                    The classification hierarchy is configured as a JSON array in the payload, created from a spreadsheet file.
+
+                    Max size: 30000.
+
+                    For more details, see the Forma Configure Takeoff Settings help documentation.
+              required:
+                - classifications
+  "/construction/takeoff/v1/projects/{projectId}/classification-systems/{systemId}/classifications":
+    get:
+      operationId: takeoff-projects-project_id-classification-systems-system_id-classifications-GET
+      summary: "Classification Systems"
+      deprecated: true
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: systemId
+          in: path
+          required: true
+          description: |-
+            The classification system ID.
+            To find the ID, call GET classification-systems.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The classification index from which the pagination starts. This is zero-based."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of classification objects per page.
+            Acceptable values: 1-10000.
+
+            Default value: 10000.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The classification code.
+                            Max length: 256
+                        parentCode:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The classification parent code.
+                            Its value may be null, indicating that this classification is at the top level of the hierarchy.
+
+                            Max length: 256
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            A description of the classification.
+                            Max length: 256
+                        measurementType:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Deprecated. Will be removed on September 15, 2025.
+                            The type of measurement.
+
+                            Possible values: AREA, COUNT, DISTANCE, VOLUME.
+                    x-forma-type: "array: object"
+                    description: "List of classifications in the classification system."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-classification-systems-system_id-classifications-GET"
+  "/construction/takeoff/v1/projects/{projectId}/classification-systems/{systemId}":
+    delete:
+      operationId: takeoff-projects-project_id-classification-systems-system_id-DELETE
+      summary: "Classification Systems"
+      deprecated: true
+      parameters:
+        - name: systemId
+          in: path
+          required: true
+          description: |-
+            The classification system ID.
+            To find the ID, call GET classification-systems.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-classification-systems-system_id-DELETE"
+    get:
+      operationId: takeoff-projects-project_id-classification-systems-system_id-GET
+      summary: "Classification Systems"
+      deprecated: true
+      parameters:
+        - name: systemId
+          in: path
+          required: true
+          description: |-
+            The classification system ID.
+            To find the ID, call GET classification-systems.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The classification system ID."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The classification system name.
+                      Max length: 200
+                  type:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of classification system.
+                      Possible values: CLASSIFICATION_SYSTEM_1, CLASSIFICATION_SYSTEM_2.
+
+                      See the Help documentation for more details about the classification systems.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-classification-systems-system_id-GET"
+  "/construction/takeoff/v1/projects/{projectId}/classification-systems":
+    get:
+      operationId: takeoff-projects-project_id-classification-systems-GET
+      summary: "Classification Systems"
+      deprecated: true
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The classification system index from which the pagination starts. This is zero-based."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of classification systems per page.
+            Acceptable values: 1-200.
+
+            Default value: 200.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The classification system ID."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The classification system name.
+                            Max length: 200
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The type of classification system.
+                            Possible values: CLASSIFICATION_SYSTEM_1, CLASSIFICATION_SYSTEM_2.
+
+                            See the Help documentation for more details about the classification systems.
+                    x-forma-type: "array: object"
+                    description: "A list of classification systems for the project."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-classification-systems-GET"
+    post:
+      operationId: takeoff-projects-project_id-classification-systems-POST
+      summary: "Classification Systems"
+      deprecated: true
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The classification system ID."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The classification system name.
+                      Max length: 200
+                  type:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of classification system.
+                      Possible values: CLASSIFICATION_SYSTEM_1, CLASSIFICATION_SYSTEM_2.
+
+                      See the Help documentation for more details about the classification systems.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-classification-systems-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The classification system name.
+                    Max length: 200
+                type:
+                  type: string
+                  x-forma-type: "enum:string"
+                  description: |-
+                    The type of classification system.
+                    Possible values: CLASSIFICATION_SYSTEM_1, CLASSIFICATION_SYSTEM_2.
+
+                    See the Help documentation for more details about the classification systems.
+                classifications:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The classification code.
+                          Max length: 256
+                      parentCode:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The classification parent code.
+                          Its value may be null, indicating that this classification is at the top level of the hierarchy.
+
+                          Max length: 256
+                      description:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          A description of the classification.
+                          Max length: 256
+                      measurementType:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: |-
+                          Deprecated. Will be removed on September 15, 2025.
+                          The type of measurement.
+
+                          Possible values: AREA, COUNT, DISTANCE, VOLUME.
+                    required:
+                      - code
+                      - description
+                      - parentCode
+                  x-forma-type: "array: object"
+                  description: |-
+                    The classification hierarchy.
+                    The classification hierarchy is configured as a JSON array in the payload, created from a spreadsheet file.
+
+                    Max size: 30000.
+
+                    For more details, see the Forma Configure Takeoff Settings help documentation.
+              required:
+                - name
+                - type
+  "/construction/takeoff/v1/projects/{projectId}/content-views":
+    get:
+      operationId: takeoff-projects-project_id-content-views-GET
+      summary: "Retrieves the content views for a project"
+      description: "Retrieves the content views for a project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The content view object number from which the pagination starts. This is zero-based."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of content view objects per page.
+            Acceptable values: 1-200.
+
+            Default value: 200.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The content view ID."
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The content view type.
+                            Possible values: SHEET (2D Sheet), FILE_MODEL (3D Model).
+                        view:
+                          x-forma-type: "one of"
+                          description: "The content view."
+                          type: object
+                          properties:
+                            "Model View":
+                              type: object
+                              x-forma-type: object
+                              description: "The 3D model view."
+                              properties:
+                                lineageUrn:
+                                  type: string
+                                  x-forma-type: string
+                                  description: |-
+                                    The URN of the 3D model view.
+                                    To learn how to use this attribute to retrieve details of the 3D model, see the Takeoff Extract Inventory tutorial.
+                                viewName:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the 3D model view."
+                            "Sheet View":
+                              type: object
+                              x-forma-type: object
+                              description: "The 2D sheet view."
+                              properties:
+                                sheetName:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The sheet view name."
+                                calibration:
+                                  type: object
+                                  x-forma-type: object
+                                  description: "The sheet view calibration details."
+                                  properties:
+                                    scaleFactor:
+                                      type: number
+                                      x-forma-type: number
+                                      description: "The scale used in the sheet view calibration."
+                                    units:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: |-
+                                        The units used in the sheet view calibration.
+                                        Possible values: FT_AND_DECIMAL_IN, FT_AND_FRACTIONAL_IN, M, CM, MM.
+                    x-forma-type: "array: object"
+                    description: "A list of content views for the project."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-content-views-GET"
+  "/construction/takeoff/v1/projects/{projectId}/packages/{packageId}/takeoff-items/{takeoffItemId}":
+    get:
+      operationId: takeoff-projects-project_id-packages-package_id-takeoff-items-takeoff_item_id-GET
+      summary: "Retrieves a specified takeoff item for a package"
+      description: "Retrieves a specified takeoff item for a package."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: packageId
+          in: path
+          required: true
+          description: |-
+            The takeoff package ID.
+            To find the ID, call GET packages.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: takeoffItemId
+          in: path
+          required: true
+          description: |-
+            The takeoff item ID.
+            To find the ID, call GET takeoff-items.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The takeoff item ID."
+                  takeoffTypeId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The takeoff type ID."
+                  type:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The takeoff type method.
+                      Possible values: COUNT, DISTANCE, AREA, SELECT.
+
+                      Corresponding UI names: COUNT, LINEAR, AREA, BIM.
+                  objectName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the takeoff type that the item is derived from."
+                  geometry:
+                    type: string
+                    x-forma-type: string
+                    description: "The geometry of a 2D takeoff item specified in SVG. This property is not returned for a 3D takeoff item."
+                  rotationAngle:
+                    type: integer
+                    x-forma-type: int
+                    description: "The rotation angle of a count item in degrees."
+                  objectId:
+                    type: integer
+                    x-forma-type: int
+                    description: "The ID of the selected BIM model element in the viewing model."
+                  propertyValues:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "Name of the property."
+                        unitOfMeasure:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The unit of measurement.
+                            Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                        source:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Specifies how a takeoff property value was obtained.
+                            Possible values: MANUAL_ENTRY, BIM_PROPERTY, MEASUREMENT
+                        value:
+                          description: "The value of a takeoff instance."
+                          type: object
+                          properties:
+                            anyOf:
+                              description: "The value of a takeoff instance."
+                              type: object
+                              properties:
+                                Number:
+                                  type: number
+                                  x-forma-type: number
+                                  description: "A number representation of the property value."
+                                String:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "A string representation of the property value."
+                    x-forma-type: "array: object"
+                    description: "A list of takeoff item properties used to calculate quantity."
+                  primaryQuantity:
+                    type: object
+                    x-forma-type: object
+                    description: "The quantity of a takeoff."
+                    properties:
+                      outputName:
+                        type: string
+                        x-forma-type: string
+                        description: "A custom output name from the user."
+                      classificationCodeOne:
+                        type: string
+                        x-forma-type: string
+                        description: "Deprecated. The classification code selected from the first classification system."
+                      classificationCodeTwo:
+                        type: string
+                        x-forma-type: string
+                        description: "Deprecated. The classification code selected from the second classification system."
+                      quantity:
+                        type: number
+                        x-forma-type: number
+                        description: "The quantity of the takeoff."
+                      unitOfMeasure:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: |-
+                          The unit of measurement.
+                          Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                  secondaryQuantities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        outputName:
+                          type: string
+                          x-forma-type: string
+                          description: "A custom output name from the user."
+                        classificationCodeOne:
+                          type: string
+                          x-forma-type: string
+                          description: "Deprecated. The classification code selected from the first classification system."
+                        classificationCodeTwo:
+                          type: string
+                          x-forma-type: string
+                          description: "Deprecated. The classification code selected from the second classification system."
+                        quantity:
+                          type: number
+                          x-forma-type: number
+                          description: "The quantity of the takeoff."
+                        unitOfMeasure:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The unit of measurement.
+                            Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                    x-forma-type: "array: object"
+                    description: "A list of secondary takeoff quantities."
+                  contentView:
+                    type: object
+                    x-forma-type: object
+                    description: "The content view reference that this item is associated with."
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        x-forma-type: "string: UUID"
+                        description: "The content view ID."
+                      version:
+                        x-forma-type: "one of"
+                        description: "The content view version."
+                        type: object
+                        properties:
+                          "Data Management Identifier":
+                            type: string
+                            x-forma-type: string
+                            description: "The 3D model ID, or the 2D files ID"
+                          "Sheet identifier":
+                            type: string
+                            format: uuid
+                            x-forma-type: "string: UUID"
+                            description: "Deprecated. The 2D sheet’s ID"
+                  locationId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: |-
+                      The location ID associated with the takeoff item.
+                      For more information about the location, see GET nodes.
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the resource."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-package_id-takeoff-items-takeoff_item_id-GET"
+  "/construction/takeoff/v1/projects/{projectId}/packages/{packageId}/takeoff-items":
+    get:
+      operationId: takeoff-projects-project_id-packages-package_id-takeoff-items-GET
+      summary: "Retrieves the takeoff items for a package"
+      description: "Retrieves the takeoff items for a package."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: packageId
+          in: path
+          required: true
+          description: |-
+            The takeoff package ID.
+            To find the ID, call GET packages.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The takeoff item index from which the pagination starts. This is zero-based."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of takeoff items per page.
+            Acceptable values: 1-10000.
+
+            Default value: 1000.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The takeoff item ID."
+                        takeoffTypeId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The takeoff type ID."
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The takeoff type method.
+                            Possible values: COUNT, DISTANCE, AREA, SELECT.
+
+                            Corresponding UI names: COUNT, LINEAR, AREA, BIM.
+                        objectName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the takeoff type that the item is derived from."
+                        geometry:
+                          type: string
+                          x-forma-type: string
+                          description: "The geometry of a 2D takeoff item specified in SVG. This property is not returned for a 3D takeoff item."
+                        rotationAngle:
+                          type: integer
+                          x-forma-type: int
+                          description: "The rotation angle of a count item in degrees."
+                        objectId:
+                          type: integer
+                          x-forma-type: int
+                          description: "The ID of the selected BIM model element in the viewing model."
+                        propertyValues:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: "Name of the property."
+                              unitOfMeasure:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  The unit of measurement.
+                                  Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                              source:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  Specifies how a takeoff property value was obtained.
+                                  Possible values: MANUAL_ENTRY, BIM_PROPERTY, MEASUREMENT
+                              value:
+                                description: "The value of a takeoff instance."
+                                type: object
+                                properties:
+                                  anyOf:
+                                    description: "The value of a takeoff instance."
+                                    type: object
+                                    properties:
+                                      Number:
+                                        type: number
+                                        x-forma-type: number
+                                        description: "A number representation of the property value."
+                                      String:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "A string representation of the property value."
+                          x-forma-type: "array: object"
+                          description: "A list of takeoff item properties used to calculate quantity."
+                        primaryQuantity:
+                          type: object
+                          x-forma-type: object
+                          description: "The quantity of a takeoff."
+                          properties:
+                            outputName:
+                              type: string
+                              x-forma-type: string
+                              description: "A custom output name from the user."
+                            classificationCodeOne:
+                              type: string
+                              x-forma-type: string
+                              description: "Deprecated. The classification code selected from the first classification system."
+                            classificationCodeTwo:
+                              type: string
+                              x-forma-type: string
+                              description: "Deprecated. The classification code selected from the second classification system."
+                            quantity:
+                              type: number
+                              x-forma-type: number
+                              description: "The quantity of the takeoff."
+                            unitOfMeasure:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                The unit of measurement.
+                                Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                        secondaryQuantities:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              outputName:
+                                type: string
+                                x-forma-type: string
+                                description: "A custom output name from the user."
+                              classificationCodeOne:
+                                type: string
+                                x-forma-type: string
+                                description: "Deprecated. The classification code selected from the first classification system."
+                              classificationCodeTwo:
+                                type: string
+                                x-forma-type: string
+                                description: "Deprecated. The classification code selected from the second classification system."
+                              quantity:
+                                type: number
+                                x-forma-type: number
+                                description: "The quantity of the takeoff."
+                              unitOfMeasure:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  The unit of measurement.
+                                  Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                          x-forma-type: "array: object"
+                          description: "A list of secondary takeoff quantities."
+                        contentView:
+                          type: object
+                          x-forma-type: object
+                          description: "The content view reference that this item is associated with."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The content view ID."
+                            version:
+                              x-forma-type: "one of"
+                              description: "The content view version."
+                              type: object
+                              properties:
+                                "Data Management Identifier":
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The 3D model ID, or the 2D files ID"
+                                "Sheet identifier":
+                                  type: string
+                                  format: uuid
+                                  x-forma-type: "string: UUID"
+                                  description: "Deprecated. The 2D sheet’s ID"
+                        locationId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: |-
+                            The location ID associated with the takeoff item.
+                            For more information about the location, see GET nodes.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the resource."
+                    x-forma-type: "array: object"
+                    description: "A list of takeoff items for the package."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-package_id-takeoff-items-GET"
+  "/construction/takeoff/v1/projects/{projectId}/packages/{packageId}/takeoff-types/{takeoffTypeId}":
+    get:
+      operationId: takeoff-projects-project_id-packages-package_id-takeoff-types-takeoff_type_id-GET
+      summary: "Retrieves a specified takeoff type for a package"
+      description: "Retrieves a specified takeoff type for a package."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: packageId
+          in: path
+          required: true
+          description: |-
+            The takeoff package ID.
+            To find the ID, call GET packages.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: takeoffTypeId
+          in: path
+          required: true
+          description: |-
+            The takeoff type ID.
+            To find the ID, call GET takeoff-types.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The takeoff type ID."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The takeoff type name.
+                      Max length: 64
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A description of the takeoff type.
+                      Max length: 256
+                  color:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The color of the takeoff type as it appears on the sheet or model.
+                      A color is represented by a value consisting of 6 or 8 hexadecimal digits, prefixed with a hash (#) symbol. In the 6-digit notation, the first pair of digits represent the red channel, the middle pair of digits represent the green channel and the last pair of digits represent the blue channel. The color is completely opaque.
+
+                      The 8-digit notation follows the structure of the 6-digit notation, where the additional last 2-digits represent the alpha channel (00 is transparent and ff is fully opaque).
+                  borderColor:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The color of the takeoff type as it appears on the sheet or model.
+                      A color is represented by a value consisting of 6 or 8 hexadecimal digits, prefixed with a hash (#) symbol. In the 6-digit notation, the first pair of digits represent the red channel, the middle pair of digits represent the green channel and the last pair of digits represent the blue channel. The color is completely opaque.
+
+                      The 8-digit notation follows the structure of the 6-digit notation, where the additional last 2-digits represent the alpha channel (00 is transparent and ff is fully opaque).
+                  shapeType:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The shape of the count marker.
+                      A count marker is one of the takeoff tool type options that is selected in the UI when creating a takeoff type.
+
+                      Possible values: CIRCLE, TRIANGLE, SQUARE, DIAMOND, CHECKMARK, RECTANGLE.
+                  countMarkerSize:
+                    type: number
+                    x-forma-type: number
+                    description: |-
+                      The size of the count marker.
+                      Returns null when shapeType is RECTANGLE. For rectangles, use the height (countMarkerHeight) and width (countMarkerWidth) fields.
+                  countMarkerWidth:
+                    type: number
+                    x-forma-type: number
+                    description: |-
+                      The width of the count marker.
+                      Applies only to rectangles (RECTANGLE) and returns null for other shape types. Use with countMarkerHeight to determine the full rectangle dimensions.
+                  countMarkerHeight:
+                    type: number
+                    x-forma-type: number
+                    description: |-
+                      The height of the count marker.
+                      Applies only to rectangles (RECTANGLE) and returns null for other shape types. Use with countMarkerWidth to determine the full rectangle dimensions.
+                  tool:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The type of tool used to create takeoff items of this takeoff type.
+                      Possible values: COUNT, DISTANCE, AREA, SELECT.
+
+                      Corresponding UI names: COUNT, LINEAR, AREA, BIM.
+                  propertyDefinitions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of the property.
+                            Max length: 256
+                        unitOfMeasure:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The unit of measurement.
+                            Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                        value:
+                          type: number
+                          x-forma-type: number
+                          description: "The value of the property."
+                        valueLocation:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The location of the value.
+                            For properties Length, Width, Height, Depth and Thickness: valueLocation is INSTANCE_WITH_TAKEOFF_TYPE_DEFAULT.
+
+                            For properties WeightByLength, WeightByArea and WeightByVolume: valueLocation is TAKEOFF_TYPE.
+                            Possible values: TAKEOFF_TYPE, INSTANCE_WITH_TAKEOFF_TYPE_DEFAULT
+                    x-forma-type: "array: object"
+                    description: "A list of additional, user provided parameters associated with a 2D takeoff type."
+                  modelMappings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of the mapping.
+                            Max length: 256
+                        mappingExpression:
+                          type: string
+                          x-forma-type: string
+                          description: "The mapping formula."
+                    x-forma-type: "array: object"
+                    description: |-
+                      A list of model properties used to calculate output.
+                      Only relevant for 3D models.
+                  primaryQuantityDefinition:
+                    type: object
+                    x-forma-type: object
+                    description: "The classification quantity details."
+                    properties:
+                      outputName:
+                        type: string
+                        x-forma-type: string
+                        description: "A custom output name from the user."
+                      classificationCodeOne:
+                        type: string
+                        x-forma-type: string
+                        description: "Deprecated. The classification code selected from the first classification system."
+                      classificationCodeTwo:
+                        type: string
+                        x-forma-type: string
+                        description: "Deprecated. The classification code selected from the second classification system."
+                      expression:
+                        type: string
+                        x-forma-type: string
+                        description: "The formula to calculate the quantity."
+                      unitOfMeasure:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: |-
+                          The unit of measurement.
+                          Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                      classifications:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            structureId:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+                            nodeId:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The node ID."
+                        x-forma-type: "array: object"
+                        description: "New. Classification assignments from the Classification Service that define what structures and nodes this quantity definition applies to."
+                  secondaryQuantityDefinitions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        outputName:
+                          type: string
+                          x-forma-type: string
+                          description: "A custom output name from the user."
+                        classificationCodeOne:
+                          type: string
+                          x-forma-type: string
+                          description: "Deprecated. The classification code selected from the first classification system."
+                        classificationCodeTwo:
+                          type: string
+                          x-forma-type: string
+                          description: "Deprecated. The classification code selected from the second classification system."
+                        expression:
+                          type: string
+                          x-forma-type: string
+                          description: "The formula to calculate the quantity."
+                        unitOfMeasure:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The unit of measurement.
+                            Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                        classifications:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              structureId:
+                                type: string
+                                format: uuid
+                                x-forma-type: "string: UUID"
+                                description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+                              nodeId:
+                                type: string
+                                format: uuid
+                                x-forma-type: "string: UUID"
+                                description: "The node ID."
+                          x-forma-type: "array: object"
+                          description: "New. Classification assignments from the Classification Service that define what structures and nodes this quantity definition applies to."
+                    x-forma-type: "array: object"
+                    description: "A list of secondary classification quantity details."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the resource."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-package_id-takeoff-types-takeoff_type_id-GET"
+  "/construction/takeoff/v1/projects/{projectId}/packages/{packageId}/takeoff-types":
+    get:
+      operationId: takeoff-projects-project_id-packages-package_id-takeoff-types-GET
+      summary: "Retrieves the takeoff types for a package"
+      description: "Retrieves the takeoff types for a package."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: packageId
+          in: path
+          required: true
+          description: |-
+            The takeoff package ID.
+            To find the ID, call GET packages.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The takeoff type index from which the pagination starts. This is zero-based."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of takeoff types per page.
+            Accepatble values: 1-10000.
+
+            Default value: 1000.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The takeoff type ID."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The takeoff type name.
+                            Max length: 64
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            A description of the takeoff type.
+                            Max length: 256
+                        color:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The color of the takeoff type as it appears on the sheet or model.
+                            A color is represented by a value consisting of 6 or 8 hexadecimal digits, prefixed with a hash (#) symbol. In the 6-digit notation, the first pair of digits represent the red channel, the middle pair of digits represent the green channel and the last pair of digits represent the blue channel. The color is completely opaque.
+
+                            The 8-digit notation follows the structure of the 6-digit notation, where the additional last 2-digits represent the alpha channel (00 is transparent and ff is fully opaque).
+                        borderColor:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The color of the takeoff type as it appears on the sheet or model.
+                            A color is represented by a value consisting of 6 or 8 hexadecimal digits, prefixed with a hash (#) symbol. In the 6-digit notation, the first pair of digits represent the red channel, the middle pair of digits represent the green channel and the last pair of digits represent the blue channel. The color is completely opaque.
+
+                            The 8-digit notation follows the structure of the 6-digit notation, where the additional last 2-digits represent the alpha channel (00 is transparent and ff is fully opaque).
+                        shapeType:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The shape of the count marker.
+                            A count marker is one of the takeoff tool type options that is selected in the UI when creating a takeoff type.
+
+                            Possible values: CIRCLE, TRIANGLE, SQUARE, DIAMOND, CHECKMARK, RECTANGLE.
+                        countMarkerSize:
+                          type: number
+                          x-forma-type: number
+                          description: |-
+                            The size of the count marker.
+                            Returns null when shapeType is RECTANGLE. For rectangles, use the height (countMarkerHeight) and width (countMarkerWidth) fields.
+                        countMarkerWidth:
+                          type: number
+                          x-forma-type: number
+                          description: |-
+                            The width of the count marker.
+                            Applies only to rectangles (RECTANGLE) and returns null for other shape types. Use with countMarkerHeight to determine the full rectangle dimensions.
+                        countMarkerHeight:
+                          type: number
+                          x-forma-type: number
+                          description: |-
+                            The height of the count marker.
+                            Applies only to rectangles (RECTANGLE) and returns null for other shape types. Use with countMarkerWidth to determine the full rectangle dimensions.
+                        tool:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The type of tool used to create takeoff items of this takeoff type.
+                            Possible values: COUNT, DISTANCE, AREA, SELECT.
+
+                            Corresponding UI names: COUNT, LINEAR, AREA, BIM.
+                        propertyDefinitions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The name of the property.
+                                  Max length: 256
+                              unitOfMeasure:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  The unit of measurement.
+                                  Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                              value:
+                                type: number
+                                x-forma-type: number
+                                description: "The value of the property."
+                              valueLocation:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  The location of the value.
+                                  For properties Length, Width, Height, Depth and Thickness: valueLocation is INSTANCE_WITH_TAKEOFF_TYPE_DEFAULT.
+
+                                  For properties WeightByLength, WeightByArea and WeightByVolume: valueLocation is TAKEOFF_TYPE.
+                                  Possible values: TAKEOFF_TYPE, INSTANCE_WITH_TAKEOFF_TYPE_DEFAULT
+                          x-forma-type: "array: object"
+                          description: "A list of additional, user provided parameters associated with a 2D takeoff type."
+                        modelMappings:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The name of the mapping.
+                                  Max length: 256
+                              mappingExpression:
+                                type: string
+                                x-forma-type: string
+                                description: "The mapping formula."
+                          x-forma-type: "array: object"
+                          description: |-
+                            A list of model properties used to calculate output.
+                            Only relevant for 3D models.
+                        primaryQuantityDefinition:
+                          type: object
+                          x-forma-type: object
+                          description: "The classification quantity details."
+                          properties:
+                            outputName:
+                              type: string
+                              x-forma-type: string
+                              description: "A custom output name from the user."
+                            classificationCodeOne:
+                              type: string
+                              x-forma-type: string
+                              description: "Deprecated. The classification code selected from the first classification system."
+                            classificationCodeTwo:
+                              type: string
+                              x-forma-type: string
+                              description: "Deprecated. The classification code selected from the second classification system."
+                            expression:
+                              type: string
+                              x-forma-type: string
+                              description: "The formula to calculate the quantity."
+                            unitOfMeasure:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                The unit of measurement.
+                                Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                            classifications:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  structureId:
+                                    type: string
+                                    format: uuid
+                                    x-forma-type: "string: UUID"
+                                    description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+                                  nodeId:
+                                    type: string
+                                    format: uuid
+                                    x-forma-type: "string: UUID"
+                                    description: "The node ID."
+                              x-forma-type: "array: object"
+                              description: "New. Classification assignments from the Classification Service that define what structures and nodes this quantity definition applies to."
+                        secondaryQuantityDefinitions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              outputName:
+                                type: string
+                                x-forma-type: string
+                                description: "A custom output name from the user."
+                              classificationCodeOne:
+                                type: string
+                                x-forma-type: string
+                                description: "Deprecated. The classification code selected from the first classification system."
+                              classificationCodeTwo:
+                                type: string
+                                x-forma-type: string
+                                description: "Deprecated. The classification code selected from the second classification system."
+                              expression:
+                                type: string
+                                x-forma-type: string
+                                description: "The formula to calculate the quantity."
+                              unitOfMeasure:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  The unit of measurement.
+                                  Possible values: EA, IN, LF, YD, SI, SF, SY, CI, CF, CY, LBS, TON, MM, M, M2, M3, KG, T.
+                              classifications:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    structureId:
+                                      type: string
+                                      format: uuid
+                                      x-forma-type: "string: UUID"
+                                      description: "The ID of the classification structure (tree). Classification trees are defined in the Classifications API. Use the value of the id field returned by GET trees/{treeId}."
+                                    nodeId:
+                                      type: string
+                                      format: uuid
+                                      x-forma-type: "string: UUID"
+                                      description: "The node ID."
+                                x-forma-type: "array: object"
+                                description: "New. Classification assignments from the Classification Service that define what structures and nodes this quantity definition applies to."
+                          x-forma-type: "array: object"
+                          description: "A list of secondary classification quantity details."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the resource."
+                    x-forma-type: "array: object"
+                    description: "A list of takeoff types."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-package_id-takeoff-types-GET"
+  "/construction/takeoff/v1/projects/{projectId}/packages/{packageId}":
+    get:
+      operationId: takeoff-projects-project_id-packages-package_id-GET
+      summary: "Retrieves a specified takeoff package"
+      description: "Retrieves a specified takeoff package."
+      parameters:
+        - name: packageId
+          in: path
+          required: true
+          description: |-
+            The takeoff package ID.
+            To find the ID, call GET packages.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The package name (user defined).
+                      Corresponding UI name: Title.
+
+                      Max length: 64
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The package ID."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the resource."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-package_id-GET"
+    patch:
+      operationId: takeoff-projects-project_id-packages-package_id-PATCH
+      summary: "Updates the name of a takeoff package for a project"
+      description: "Updates the name of a takeoff package for a project."
+      parameters:
+        - name: packageId
+          in: path
+          required: true
+          description: |-
+            The takeoff package ID.
+            To find the ID, call GET packages.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The package name (user defined).
+                      Corresponding UI name: Title.
+
+                      Max length: 64
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The package ID."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the resource."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-package_id-PATCH"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The package name (user defined).
+                    Corresponding UI name: Title.
+
+                    Max length: 64
+              required:
+                - name
+  "/construction/takeoff/v1/projects/{projectId}/packages":
+    get:
+      operationId: takeoff-projects-project_id-packages-GET
+      summary: "Retrieves the takeoff packages for a project"
+      description: "Retrieves the takeoff packages for a project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The package index from which the pagination starts. This is zero-based."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of packages per page.
+            Acceptable values: 1-200.
+
+            Default value: 200.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "The pagination object."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of objects per page."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL path that returns the next page of data."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The object number from which the pagination starts. This is zero-based."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The package name (user defined).
+                            Corresponding UI name: Title.
+
+                            Max length: 64
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The package ID."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the resource."
+                    x-forma-type: "array: object"
+                    description: "A list of takeoff packages for the project."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-GET"
+    post:
+      operationId: takeoff-projects-project_id-packages-POST
+      summary: "Creates a takeoff package for a project"
+      description: "Creates a takeoff package for a project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The package name (user defined).
+                      Corresponding UI name: Title.
+
+                      Max length: 64
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The package ID."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was created, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the resource was last updated, in the following format: YYYY-MM-DDThh:mm:ssZ."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the resource."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-packages-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The package name (user defined).
+                    Corresponding UI name: Title.
+
+                    Max length: 64
+              required:
+                - name
+  "/construction/takeoff/v1/projects/{projectId}/settings":
+    get:
+      operationId: takeoff-projects-project_id-settings-GET
+      summary: "Retrieves the measurement system settings for a project"
+      description: "Retrieves the measurement system settings for a project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  measurementSystem:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The project measurement system.
+                      Possible values: IMPERIAL, METRIC.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-settings-GET"
+    patch:
+      operationId: takeoff-projects-project_id-settings-PATCH
+      summary: "Updates the measurement system settings for a project"
+      description: "Updates the measurement system settings for a project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            This corresponds to project ID in the Data Management API, and can be specified in the form of “UUID” or b.”UUID”.
+
+            To learn how to find the project ID, see the Retrieve Forma hub and project ID tutorial.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: region
+          in: header
+          description: |-
+            Specifies the region where the service is located.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  measurementSystem:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The project measurement system.
+                      Possible values: IMPERIAL, METRIC.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/takeoff-projects-project_id-settings-PATCH"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                measurementSystem:
+                  type: string
+                  x-forma-type: "enum:string"
+                  description: |-
+                    The project measurement system.
+                    Possible values: IMPERIAL, METRIC.
+              required:
+                - measurementSystem
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

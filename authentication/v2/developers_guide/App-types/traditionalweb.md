@@ -1,0 +1,71 @@
+---
+title: "Traditional Web App"
+url_path: developers_guide/App-types/traditionalweb
+product: "Authentication API"
+surface: "authentication-v2"
+protocol: "Documentation"
+document_kind: "guide"
+api_version: "v2"
+section: "developers_guide"
+category: "App-types"
+---
+# Traditional Web App
+
+Choose the Traditional Web App application type when you are building a server-side (or web-site) application that is capable of securely storing secrets on your web server. It uses the _Authorization Code grant type_, where your application first obtains an authorization code, and then exchanges it for an access token.
+
+## Authorization Code Grant Type
+
+At a high level, the Authorization Code grant type, used with traditional web applications, has the following steps to complete the user authorization:
+- Your application redirects the user’s browser to the APS Identity Provider (IDP) login page, and the user authenticates.
+- The Authorization Server generates an _authorization code_ and redirects the browser back to your application using a callback URL with authorization code appended.
+- Your web application reads the authorization code from the URL.
+- Your application exchanges this code for an access token, and optionally a refresh token, with an API call to the Authorization Server.
+- The application can now use these tokens to call the resource server (for example an API) on behalf of the user.
+
+Refer to this [walkthrough](https://aps.autodesk.com/en/docs/oauth/v2/tutorials/get-3-legged-token) to see the complete flow using the Authorization Code grant type.
+
+![../../../_images/traditional-web-app.svg](https://developer.doc.autodesk.com/bPlouYTd/cloud-platform-id-pubdocs-master-756267/_images/traditional-web-app.svg)
+
+There are a number of concepts that you need to be familiar with relevant to this application type and grant type:
+
+| Term | Meaning |
+| --- | --- |
+| app | The “app”, or “application”, is the code that you’re writing that calls APS APIs. It can be a web application, a headless server process, a mobile app, or even embedded firmware. Within the APS developer portal, your application is registered in the My Apps section.
+
+Sometimes “app” refers to your code; other times, it refers to the entity registered in the Dev Portal. It will be clear from context which is meant.
+
+When you register your application in the APS developer portal, you select the APIs that you want to bind it to. This ensures that even if you lose control of your authentication credentials, calls cannot be made on your behalf to APIs the application was not designed for.
+
+A registered application has assigned to it credentials called a “client ID” and “client secret.” These are analogous to a username and password, except that you do not select them; APS assigns them to your application. Your application uses these to obtain access tokens. |
+| client ID | The “client ID” is essentially your application’s username and can be found in the My Apps section of the Autodesk DevPortal. It is a 32-character alphanumeric string (e.g., 5zw90va0UuwMKTnPS5sLsdgZjDkVYXN7). Your application passes it as the value for the _client_id_ query parameter, and APS returns it in the _client_id_ attribute in the returned JSON payload.
+
+Other platforms, sometimes call this a “consumer key” or “API key.” |
+| client secret | The “client secret” is essentially your application’s password and can be found next to the client ID in the My Apps section of the Autodesk DevPortal. It is a 16-character alphanumeric string (e.g., 7I6uN1rjneirxiMW), and your application passes it as the value for the _client_secret_ query parameter.
+
+Other platforms sometimes call this a “consumer secret” or “API secret.” |
+| two-legged authentication | This is often considered the default type of authentication, and it is the simplest. When your application needs to call the API without having to access resources that require an end user’s permission (for example, translating a design file from one format to another), the communication is directly between your application and APS. The end user, if there is one, does not need to be aware of the authentication or provide authorization for the application to access any resources.
+
+This kind of authentication is called “two-legged” because your application and APS are the two “legs”. |
+| three-legged authentication | When an application needs to access resources belonging to an end user, that user must explicitly provide authorization. The typical mechanism, in the case of a web application, is for the application to redirect the user to an Autodesk login page with information about which of the user’s resources it wishes to access. The user then provides explicit consent, authorizing APS to grant the referring application the requested access. APS then redirects the user back to the application, using a callback URL that you provide, and your application can then access the required resources.
+
+This kind of authentication is called “three-legged” because your application, APS, and the end user make up the three “legs” of the authentication. When you use the Authorization Code grant type, APS issues an authorization code to your application to exchange it to obtain access tokens and refresh tokens. |
+| callback URL | In certain contexts, your application needs to hand over part of the authentication to APS. For example, in three-legged authentication for a web application, your application redirects the end user to an Autodesk login page, so that the user can tell APS that your application is authorized to act on the user’s behalf. The callback URL is what is passed to the Autodesk login page to tell it how to redirect the user back to your application.
+
+Callback URLs are specified in two places. You first register one or more callback URLs for your application in the My Apps section of the Autodesk DevPortal. Then, when you redirect your user to the Autodesk login page, you also specify the callback URL in the _redirect_uri_ parameter. This allows you to use different callback URLs in different parts of your application. APS validates any run-time callback URLs against registered with your application.
+
+See the GET authorize documentation for more details on the relationship between the callback URL field and the _redirect_uri_ parameter.
+
+Note that if your application does not require three-legged authentication, you can put any valid value in the callback URL field when you register your application, as no _redirect_uri_ will ever be validated against it.
+
+Multiple callback URLs can be supported by the Traditional Web App application type. |
+| authorization code | In a three-legged Authorization Code grant type, APS passes an authorization code as a query parameter it appends to the callback URL at the time it redirects the end user back to the application.
+
+Along with its client ID and secret, an application calls the POST token endpoint to exchange the authorization code for an access token.
+
+The authorization code is a 40-character string (e.g., wroM1vFA4E-Aj241-quh_LVjm7UldawnNgYEHQ8I). |
+| access token | APS returns an access token (sometimes just “token” or “bearer token”) at the end of a successful authentication type. APS uses JSON Web Tokens (JWT), which are alphanumeric strings of variable length (including periods to separate their different parts), that the application uses in subsequent API calls to the platform. The platform keeps track of what resources the token is entitled to access, and either allows or denies access at call time.
+
+Tokens have a limited lifespan and expire after a specified number of seconds. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/App-types/traditionalweb

@@ -1,0 +1,338 @@
+---
+title: "RadioButtonGroup"
+url_path: reference/UI/RadioButtonGroup
+surface: viewer-sdk
+document_kind: reference
+category: "UI"
+---
+# RadioButtonGroup
+
+Extends [Autodesk.Viewing.UI.ControlGroup](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/ControlGroup)
+
+## new RadioButtonGroup(id, options)
+
+Group of controls that act like a radio group.
+
+I.e., only one button may be active at a time. Only accepts [Autodesk.Viewing.UI.Button](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Button/).
+
+### Parameters
+
+| id*string | The id for this control group. |
+| --- | --- |
+| optionsobject | An optional dictionary of options. |
+| collapsibleboolean | Whether this control group is collapsible. |
+
+# Methods
+
+## addControl(control, options)
+
+Adds a control to this radio button group. The control must be a [button](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Button/).
+
+### Parameters
+
+| control*[Autodesk.Viewing.UI.Button](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Button/) | The button to add. |
+| --- | --- |
+| optionsobject | An option dictionary of options. |
+| indexobject | The index to insert the control at. |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the button was successfully added. |
+
+## removeControl(control)
+
+Removes a control from this control group.
+
+### Parameters
+
+| control*string, [Autodesk.Viewing.UI.Control](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Control/) | The control ID or control instance to remove. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the control was successfully removed. |
+
+## getActiveButton()
+
+Returns the active button in this radio button group.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| [Autodesk.Viewing.UI.Button](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Button/) | The active button. Null if no button is active. |
+
+## indexOf(control)
+
+Returns the index of a control in this group. -1 if the item isn’t found.
+
+### Parameters
+
+| control*string, [Autodesk.Viewing.UI.Control](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Control/) | The control ID or control instance to find. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| number | Index of a successfully removed control, otherwise -1. |
+
+## getControl(controlId)
+
+Returns the control with the corresponding ID if it is in this control group.
+
+### Parameters
+
+| controlId*string | The ID of the control. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| [Autodesk.Viewing.UI.Control](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Control/) | The control or null if it doesn’t exist. |
+
+## getControlId(index)
+
+Returns the control ID with for corresponding index if it is in this control group.
+
+### Parameters
+
+| index*number | Index of the control. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| string | The ID of the control or null if it doesn’t exist. |
+
+## getNumberOfControls()
+
+Returns the number of controls in this control group.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| number | The number of controls. |
+
+## setCollapsed(collapsed)
+
+Sets the collapsed state of this control group. Iterates over the child controls and calls child.setCollapsed(collapsed).
+
+### Parameters
+
+| collapsed*boolean | The collapsed value to set. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if at least one collapsible child’s state changes. |
+
+## getId()
+
+Gets this control’s ID.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| string | The control’s ID. |
+
+## setVisible(visible)
+
+Sets the visibility of this control.
+
+### Parameters
+
+| visible*boolean | The visibility value to set. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the control’s visibility changed. |
+
+## isVisible()
+
+Gets the visibility of this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the this control is visible. |
+
+## setToolTip(toolTipText)
+
+Sets the tooltip text for this control.
+
+### Parameters
+
+| toolTipText*string | The text for the tooltip. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the tooltip was successfully set. |
+
+## getToolTip()
+
+Returns the tooltip text for this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| string | The tooltip text. Null if it’s not set. |
+
+## isCollapsed()
+
+Gets the collapsed state of this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if this control is collapsed. |
+
+## isCollapsible()
+
+Returns whether or not this control is collapsible.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if this control can be collapsed. |
+
+## addClass(cssClass)
+
+Adds a CSS class to this control.
+
+### Parameters
+
+| cssClass*string | The name of the CSS class. |
+| --- | --- |
+
+## removeClass(cssClass)
+
+Removes a CSS class from this control.
+
+### Parameters
+
+| cssClass*string | The name of the CSS class. |
+| --- | --- |
+
+## getPosition()
+
+Returns the position of this control relative to the canvas.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| object | The `top` and `left` values of the toolbar. |
+
+## getDimensions()
+
+Returns the dimensions of this control.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| object | The `width` and `height` of the toolbar. |
+
+## setDisplay(value)
+
+Sets the CSS `display` style value.
+
+### Parameters
+
+| value*string | CSS display value |
+| --- | --- |
+
+## removeFromParent()
+
+Removes current control from its parent container.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if the control was successfully removed. |
+
+# Events
+
+## ACTIVE_BUTTON_CHANGED
+
+Event fired when active button for this radio group changes.
+
+### Properties
+
+| button[Autodesk.Viewing.UI.Button](https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/Button/) | The button whose state is changing. |
+| --- | --- |
+| isActiveButtonboolean | Is the event target the currently active button. |
+
+## CONTROL_ADDED
+
+Event fired a control is added to the control group.
+
+### Properties
+
+| controlstring | The control that was added. |
+| --- | --- |
+| indexnumber | The index at which the control was added. |
+
+## CONTROL_REMOVED
+
+Event fired when a control is removed from the control group.
+
+### Properties
+
+| controlstring | The control that was removed. |
+| --- | --- |
+| indexnumber | The index at which the control was removed. |
+
+## SIZE_CHANGED
+
+Event fired when the size of the control group changes.
+
+### Properties
+
+| childEventobject | The event that the child fired. |
+| --- | --- |
+
+## VISIBILITY_CHANGED
+
+Event fired when the visibility of the control changes.
+
+### Properties
+
+| controlIdstring | The ID of the control that fired this event. |
+| --- | --- |
+| isVisibleboolean | True if the control is now visible. |
+
+## COLLAPSED_CHANGED
+
+Event fired when the collapsed state of the control changes.
+
+### Properties
+
+| controlIdstring | The ID of the control that fired this event. |
+| --- | --- |
+| isCollapsedboolean | True if the control is now collapsed. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/UI/RadioButtonGroup

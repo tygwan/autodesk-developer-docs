@@ -1,0 +1,3739 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Reviews"
+  version: v1
+  description: |-
+    Forma APIs — Reviews.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/reviews/v1/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Reviews
+x-forma-common-base: "/construction/reviews/v1/projects"
+paths:
+  "/construction/reviews/v1/projects/{projectId}/reviews/{reviewId}/progress":
+    get:
+      operationId: reviews-getreviewprogress-GET
+      summary: "Retrieves the progress of a specific review in the specified project"
+      description: "Retrieves the progress of a specific review in the specified project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: reviewId
+          in: path
+          required: true
+          description: |-
+            The unique ID of the review.
+            This must be the UUID, not the numeric sequence ID shown in the Reviews UI.
+
+            To find the review ID, call GET reviews.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: "The maximum number of review-progress records to return. Valid range: 1–50. Default: 50. For example: limit=2."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The zero-based index of the first record to return. Use with limit for pagination. Default: 0. For example: offset=10."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        stepId:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the review step this progress record relates to."
+                        stepName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the review step this progress record relates to."
+                        claimedBy:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the user who claimed the step."
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the user. To find details about the user, call GET users/:Id."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the user."
+                        actionBy:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the user recorded when the step status is SUBMITTED or VOID. In the Reviews UI, these statuses occur when a participant submits their decision or when a step is voided."
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the user. To find details about the user, call GET users/:Id."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of a user."
+                        candidates:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the users, roles, and companies who are eligible to take the next action in this step."
+                          properties:
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the role."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the role."
+                              x-forma-type: "array: object"
+                              description: "Project roles that can act in this step."
+                            users:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the user."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the user."
+                              x-forma-type: "array: object"
+                              description: "Individual users who can act in this step."
+                            companies:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the company."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the company."
+                              x-forma-type: "array: object"
+                              description: "Companies that can act in this step."
+                        endTime:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the step ended. This value is set when the step is completed, either by being submitted or voided."
+                        notes:
+                          type: string
+                          x-forma-type: string
+                          description: "Additional information recorded for this step in the review’s progress."
+                        status:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The current status of the step. Possible values:
+
+                            - CLAIMED: A user has claimed the step.
+
+                            - UNCLAIMED: No user has claimed the step.
+
+                            - SUBMITTED: A user submitted the step (e.g., approved/rejected/custom).
+
+                            - VOID: The step was voided.
+                    x-forma-type: "array: object"
+                    description: "The list of review-progress records, returned in reverse chronological order."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Metadata about the paginated results."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page. Zero-based index."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the next page of results. If omitted, there are no more pages."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-getreviewprogress-GET"
+  "/construction/reviews/v1/projects/{projectId}/reviews/{reviewId}/versions":
+    get:
+      operationId: reviews-getreviewversions-GET
+      summary: "Retrieves the file versions included in the latest round of the specified review"
+      description: "Retrieves the file versions included in the latest round of the specified review."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: reviewId
+          in: path
+          required: true
+          description: |-
+            The unique ID of the review.
+            It must be in UUID format — not the numeric sequence ID shown in the Reviews UI. To find the review ID, call GET reviews.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: "The number of file versions to return in the response. Possible values: 1-50. Maximum: 50. Default: 50. For example: limit=2."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The index of the first result to return (zero-based). Default: 0. For example: offset=10."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: "filter[approveStatus]"
+          in: query
+          description: |-
+            Filters the results based on the approval status assigned to each file during the review. It should be URL-encoded.
+            The filter applies to the label of the approval status, as defined in the workflow — not the internal value.
+
+            For example, if your workflow includes a status labeled Approved with comments, you would filter using that label:
+
+            filter[approveStatus]=Approved with comments.
+
+            This is especially useful when a workflow includes multiple approval options with customized labels.
+
+            Note: It supports multiple values.
+
+            For example, if you want to filter with 2 labels: both Approved and Rejected, you could filter with the query string:
+
+            filter[approveStatus]=Approved&filter[approveStatus]=Rejected
+          schema:
+            type: array
+            x-forma-type: array
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        urn:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The URN of the file version currently under review.
+                            This value is used when retrieving the full approval and review history of a specific version.
+                            See GET approval-statuses for more details.
+                        itemUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "The URN of the file item this version belongs to."
+                        approveStatus:
+                          type: object
+                          x-forma-type: object
+                          description: "The approval status assigned to the file during the review."
+                          properties:
+                            id:
+                              type: string
+                              x-forma-type: string
+                              description: "The ID of the approval status."
+                            label:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The custom label assigned to the approval status.
+                                Max length: 255
+                            value:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "The internal value representing the approval status outcome. Possible values: APPROVED, REJECTED."
+                        reviewContent:
+                          type: object
+                          x-forma-type: object
+                          description: "Review-specific metadata related to the file version."
+                          properties:
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The pending file name assigned during the review.
+                                If the review is approved, this becomes the official version name.
+                                In most cases, this value is automatically generated according to the naming standard configured on the folder.
+                            customAttributes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    x-forma-type: int
+                                    description: "The ID of the attribute."
+                                  type:
+                                    type: string
+                                    x-forma-type: "enum:string"
+                                    description: "The data type of the attribute. Possible values: string (text field), date, array (drop-down list), largeList (large drop-down list)."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the attribute."
+                                  value:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The value of the attribute."
+                              x-forma-type: "array: object"
+                              description: "A list of custom attributes applied to the file during the review."
+                        copiedFileVersionUrn:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The URN of the version copied to the target folder after the file was approved.
+                            This field is only present if the workflow includes a copy action and the file was approved.
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the resulting file version."
+                    x-forma-type: "array: object"
+                    description: "A list of file versions included in the latest round of the review."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Metadata about the paginated results."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page. Zero-based index."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The URL to retrieve the next page of file versions results, if any.
+                          If not included, this is the last page.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-getreviewversions-GET"
+  "/construction/reviews/v1/projects/{projectId}/reviews/{reviewId}/workflow":
+    get:
+      operationId: reviews-getreviewworkflow-GET
+      summary: "Retrieves the approval workflow associated with a specific review"
+      description: "Retrieves the approval workflow associated with a specific review."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: reviewId
+          in: path
+          required: true
+          description: |-
+            The unique ID of the review.
+            It must be in UUID format — not the numeric sequence ID shown in the Reviews UI. To find the review ID, call GET reviews.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The name of the workflow. It must be unique within the project.
+                      Max length: 255
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A description of the workflow.
+                      Max length: 4096
+                  notes:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A custom note associated with the workflow. Visible to all reviewers during the review process.
+                      Max length: 4096
+                  additionalOptions:
+                    type: object
+                    x-forma-type: object
+                    description: "Workflow-level settings that control additional edit permissions for initiators and approvers."
+                    properties:
+                      allowInitiatorToEdit:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          Deprecated Supported for backward compatibility. Use initiatorEditPermissions with value REVIEWER_ASSIGNMENTS_AND_DURATION instead, which provides the same behavior.
+                          true: the initiator can change reviewer assignments and durations.
+
+                          false: (default) reviewers and durations are fixed.
+                      initiatorEditPermissions:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: |-
+                          An optional array of values that grant the initiator additional edit permissions. Replaces the deprecated allowInitiatorToEdit field. If omitted or empty, the initiator has no additional edit permissions. Default: [].
+                          Possible values:
+
+                          - REVIEWER_ASSIGNMENTS_AND_DURATION - Allows the initiator to edit reviewer assignments and step durations. Equivalent to setting allowInitiatorToEdit to true.
+
+                          - APPROVERS - Allows the initiator to modify the approver candidate list.
+
+                          - CLOSED_REVIEW_TITLE - Allows the initiator to rename closed reviews.
+
+                          - START_OWN_REVIEW - Allows the initiator to start their own reviews.
+                      approverEditPermissions:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: |-
+                          An optional array of values that grant approvers additional edit permissions in the UI. If omitted or empty, approvers have no additional edit permissions. Default: [] (empty array).
+                          Possible values:
+
+                          - APPROVERS - Allow approvers to adjust the approvers in approver steps.
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the workflow."
+                  approvalStatusOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        label:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The display name shown in the UI. It must be unique across all status options (built-in and custom).
+                            Maximum length: 255 characters.
+
+                            Max length: 255
+                        value:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: "The value representing the approval outcome. Possible values: APPROVED, REJECTED."
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of this approval status entry in the workflow."
+                        builtIn:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            Indicates whether the approval status is a built-in option.
+                            true: the status is built in (e.g., APPROVED, REJECTED).
+
+                            false: the status is a custom option created by a user.
+                    x-forma-type: "array: object"
+                    description: "A list of file review status options to the workflow, which contains two built in options returned by the system."
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of the step, as defined in the workflow. It appears in the UI and is used in workflow configuration. Maximum length: 255 characters.
+                            Max length: 255
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Indicates the step type in the workflow. Possible values:
+
+                            - INITIATOR: the first step. It typically represents the person who launches the review.
+
+                            - REVIEWER: an intermediate step. It allows one or more reviewers to evaluate the files.
+
+                            - APPROVER: the final step. It represents the decision maker who approves or rejects the files.
+                        duration:
+                          type: integer
+                          x-forma-type: int
+                          description: |-
+                            (Time allowed in the UI) The number of days allocated to complete this step.
+                            This field applies only to REVIEWER and APPROVER steps. It is used to calculate the due date based on the selected dueDateType.
+
+                            Valid range: 1–99.
+                        dueDateType:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Specifies how the due date is calculated for this step. It works together with duration.
+                            This field applies only to REVIEWER and APPROVER steps.
+
+                            Possible values:
+
+                            - CALENDAR_DAY (default): the due date includes all calendar days, including weekends and holidays.
+
+                            - WORKDAY: the due date excludes weekends and project holidays.
+                        groupReview:
+                          type: object
+                          x-forma-type: object
+                          description: "(Reviewer Type in the UI) Defines whether multiple reviewers can participate in this step and how their responses are handled. It applies only to REVIEWER steps."
+                          properties:
+                            enabled:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                Indicates whether group review is enabled for this step.
+                                true: multiple reviewers can participate in the step.
+
+                                false: (default) only a single reviewer is allowed.
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                (Displayed under More options in the UI) Specifies the group review rule for this step.
+                                Possible values:
+
+                                - ALL: every reviewer assigned to the step must submit a response (up to 30).
+
+                                - MINIMUM: only a specified number of reviewers must respond, as defined in min.
+                            min:
+                              type: integer
+                              x-forma-type: int
+                              description: "The minimum number of reviewers required for this step. This field is set automatically when the group review type is set to MINIMUM. It is not independently configurable. Valid range: 1–30."
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the step."
+                        candidates:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            (Displayed in the UI when selecting reviewers for a step)
+                            Lists the users, roles, or companies that were configured as reviewers for this step.
+                            These candidates are defined during workflow setup and determine who will be invited to participate in the step during a review.
+                          properties:
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the role."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the role."
+                              x-forma-type: "array: object"
+                              description: "A list of project roles assigned as candidates for this step."
+                            users:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the user."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the user."
+                              x-forma-type: "array: object"
+                              description: "A list of individual users assigned as candidates for this step."
+                            companies:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the company."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the company."
+                              x-forma-type: "array: object"
+                              description: "A list of companies assigned as candidates for this step."
+                    x-forma-type: "array: object"
+                    description: "A list of steps specify the details for each step in the workflow."
+                  copyFilesOptions:
+                    type: object
+                    x-forma-type: object
+                    description: "(Copy approved files in the UI) The configuration for copying approved files to a target folder when the review is complete."
+                    properties:
+                      enabled:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          Indicates whether approved files should be copied to a target folder after the review is complete.
+                          true: copy approved files to the target folder.
+
+                          false: do not copy approved files.
+                      allowOverride:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow the initiator to change the target folder in the UI) Allows the initiator to change the target folder when creating a review.
+                          true: the initiator can choose a different target folder.
+
+                          false: the folder defined in the workflow is used.
+                      condition:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          (All/Any files in the review have been approved in the UI)
+                          Specifies the condition under which approved files will be copied.
+                          Possible values:
+
+                          ANY: copy files if at least one file in the review is approved.
+
+                          ALL: copy files only if all files in the review are approved.
+                      folderUrn:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          (Then copy approved files to in the UI)
+                          The URN of the target folder where approved files will be copied.
+                      includeMarkups:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Include all published markups on approved files in the UI)
+                          Indicates whether published markups should be included when copying files.
+                          true: include all published (unarchived) markups from the source version.
+
+                          false: (default) do not include markups.
+                      disableOverrideMarkupSetting:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow approvers to change whether or not markups are included in the UI)
+                          Controls whether approvers or admins can change the markup inclusion setting when starting the review.
+                          true: the markup setting is locked and cannot be changed.
+
+                          false: the setting can be changed during review setup.
+                  attachedAttributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          x-forma-type: int
+                          description: "The ID of the custom attribute to be applied after review completion."
+                        required:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            (Attribute – Required by approver in the UI)
+                            Indicates whether the approver must enter a value for this attribute to submit the review.
+                            true: the attribute is required.
+
+                            false: (default) the attribute is optional.
+                    x-forma-type: "array: object"
+                    description: |-
+                      (Update Attributes in the UI)
+                      The list of attributes added in the Update Attributes action.
+                      These attributes will be applied to the approved files in the target folder, or optionally also in the source folder depending on the configuration.
+                  updateAttributesOptions:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      The configuration for applying attribute updates when a review is completed.
+                      This applies only if the workflow includes a file copy action and the Update Attributes action is enabled.
+                    properties:
+                      enableAttachedAttributes:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Update attributes in the UI)
+                          Indicates whether the Update Attributes action is enabled.
+                          true: attributes will be applied after the review.
+
+                          false: (default) attributes will not be updated.
+                      updateSourceAndCopiedFiles:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Update attributes both for target folder and source folder or Update attributes only for target folder in the UI)
+                          Determines whether attributes are updated only for files in the target folder, or for both the target and source folders.
+                          true: update attributes in both folders.
+
+                          false: (default) update only the target folder.
+
+                          Only available when the approval workflow includes a copy post-action.
+                      allowApproverToUpdateRejectedFiles:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow approvers to choose if the attributes of rejected files are updated for the source folder in the UI)
+                          Determines whether approvers can choose to update attributes for rejected files in the source folder when submitting a review.
+                          Only applicable when enableAttachedAttributes and updateSourceAndCopiedFiles are true.
+
+                          true: approvers can choose to update attributes for both approved and rejected files in the source folder.
+
+                          false: (default) attributes are only updated for approved files.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-getreviewworkflow-GET"
+  "/construction/reviews/v1/projects/{projectId}/reviews/{reviewId}":
+    get:
+      operationId: reviews-getreview-GET
+      summary: "Retrieves a specific review in the specified project by review ID"
+      description: "Retrieves a specific review in the specified project by review ID."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: reviewId
+          in: path
+          required: true
+          description: |-
+            The unique ID of the review.
+            It must be in UUID format — not the numeric sequence ID shown in the Reviews UI. To find the review ID, call GET reviews.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier of the review."
+                  sequenceId:
+                    type: integer
+                    x-forma-type: int
+                    description: |-
+                      A unique, auto-incrementing number assigned to the review when it is first submitted.
+                      This ID does not change, even if the review is sent back to the initiator and goes through multiple rounds.
+                      It identifies the review within the project and reflects the order in which reviews were created.
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the review."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The current status of the review.
+                      Possible values: OPEN, CLOSED, VOID, FAILED.
+                  currentStepId:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the current step in the review."
+                  currentStepDueDate:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The due date of the current step."
+                  createdBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the user who initiated the review."
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the initiator."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the initiator."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date time when the review was initiated."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date time when the review was last updated."
+                  finishedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date time when the review was completed."
+                  archived:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      Indicates whether the review has been archived.
+                      true: the review is archived.
+
+                      false: (default) the review is active.
+                  archivedBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the user who archived the review."
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the archiver."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the archiver."
+                  archivedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the review was archived. If the review has not been archived, this value is null."
+                  approvedBy:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      Information about the user who submitted the final workflow step.
+                      Returns an empty object if the review has not yet been final-approved.
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the final approver."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the final approver."
+                  approvedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the final workflow step was submitted. If the review has not yet been final-approved, this value is null."
+                  workflowId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier (UUID) of the approval workflow used to create this review."
+                  nextActionBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the claimers and candidates responsible for the current step."
+                    properties:
+                      claimedBy:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the user."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the user."
+                        x-forma-type: "array: object"
+                        description: "A list of users who have already claimed the current step."
+                      candidates:
+                        type: object
+                        x-forma-type: object
+                        description: "Information about the users, roles, and companies who are eligible to take the next action in this step."
+                        properties:
+                          roles:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the role."
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the role."
+                            x-forma-type: "array: object"
+                            description: "Project roles that can act in this step."
+                          users:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the user."
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the user."
+                            x-forma-type: "array: object"
+                            description: "Individual users who can act in this step."
+                          companies:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the company."
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the company."
+                            x-forma-type: "array: object"
+                            description: "Companies that can act in this step."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-getreview-GET"
+  "/construction/reviews/v1/projects/{projectId}/reviews":
+    get:
+      operationId: reviews-reviews-GET
+      summary: "Retrieves the list of reviews created in the specified project"
+      description: "Retrieves the list of reviews created in the specified project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: |-
+            The maximum number of reviews to retrieve.
+            Possible values: 1-50. Maximum: 50. Default: 50. For example: limit=2.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: |-
+            The index of the first result to return (zero-based).
+            Default: 0. For example: offset=10.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: |-
+            Sorts the results by a single field.
+            Use the format fieldName (ascending) or fieldName desc (descending).
+
+            If no direction is specified, sorting defaults to ascending.
+
+            Possible values: name, status, sequenceId, currentStepDueDate, createdAt, finishedAt.
+
+            For example: sort=createdAt desc.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[workflowId]"
+          in: query
+          description: |-
+            Filter by a specific approval workflow ID in URL-encoded format.
+            For example: filter[workflowId]=497f6eca-6276-4993-bfeb-53cbbbba6f08.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: "filter[status]"
+          in: query
+          description: |-
+            Filter by the review status in URL-encoded format.
+            Possible values: OPEN, CLOSED, VOID, FAILED.
+
+            For example: filter[status]=OPEN.
+
+            Reviews with status FAILED are only visible to project administrators.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[currentStepDueDate]"
+          in: query
+          description: |-
+            Filter by the due date of the current review step in URL-encoded format.
+            Provide a date range using the format startDate..endDate.
+
+            Both values must be in ISO 8601 format.
+
+            For example: filter[updatedAt]=2023-06-01..2023-06-30.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[createdAt]"
+          in: query
+          description: |-
+            Filter by review creation date in URL-encoded format.
+            Provide a date range using the format startDate..endDate.
+
+            Both values must be in ISO 8601 format.
+
+            For example: filter[createdAt]=2023-06-01..2023-06-30
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[updatedAt]"
+          in: query
+          description: |-
+            Filter by the review’s last updated date in URL-encoded format.
+            Provide a date range using the format startDate..endDate.
+
+            Both values must be in ISO 8601 format.
+
+            For example: filter[updatedAt]=2023-06-01..2023-06-30.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[finishedAt]"
+          in: query
+          description: |-
+            Filter by the date the review was finished, in URL-encoded format.
+            Provide a date range using the format startDate..endDate.
+
+            Both values must be in ISO 8601 format.
+
+            For example: filter[finishedAt]=2023-06-01..2023-06-30.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[nextActionByUser]"
+          in: query
+          description: |-
+            Filter by Autodesk ID of a user responsible for the next action, in URL-encoded format.
+            This includes reviews assigned directly to the user or to their role or company.
+
+            For example: filter[nextActionByUser]=A96JX8NUKRLVFWSR.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[nextActionByRole]"
+          in: query
+          description: |-
+            Filter by Autodesk ID of a role responsible for the next action, in URL-encoded format.
+            For example: filter[nextActionByRole]=1572818.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[nextActionByCompany]"
+          in: query
+          description: |-
+            Filter by Autodesk ID of a company responsible for the next action, in URL-encoded format.
+            For example: filter[nextActionByCompany]=81768771.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[name]"
+          in: query
+          description: |-
+            Filter by review name in URL-encoded format.
+            Retrieves reviews with names that contain the specified string (not case-sensitive).
+
+            For example: filter[name]=Apartment retrieves reviews like Apartment Block A and apartment_rendering.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[sequenceId]"
+          in: query
+          description: |-
+            Filter by review sequence ID in URL-encoded format.
+            Retrieves reviews with sequence IDs that partially match the specified number.
+
+            For example: filter[sequenceId]=11 may retrieve 113 and 211.
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: "filter[archived]"
+          in: query
+          description: |-
+            Filter by archive status in URL-encoded format.
+            true: retrieves only archived reviews.
+
+            false: retrieves only active (non-archived) reviews.
+
+            If omitted, only active reviews are retrieved.
+
+            For example: filter[archived]=false.
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: "filter[archivedBy]"
+          in: query
+          description: |-
+            Filter by the Autodesk ID of the user who archived the review, in URL-encoded format. To find the ID, call GET users.
+            It only takes effect when filter[archived]=true is also set.
+
+            For example: filter[archivedBy]=A96JX8NUKRLVFWSR.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[archivedAt]"
+          in: query
+          description: |-
+            Filter by the date the review was archived, in URL-encoded format.
+            It only applies if filter[archived]=true.
+
+            Provide a date range using the format startDate..endDate.
+
+            Both values must be in ISO 8601 format.
+
+            For example: filter[archivedAt]=2023-06-01..2023-06-30.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[approvedBy]"
+          in: query
+          description: |-
+            Filter by the Autodesk ID of the user who submitted the final workflow step, in URL-encoded format. To find the ID, call GET users.
+            Up to 10 Autodesk IDs, separated by commas.
+
+            For example: filter[approvedBy]=A96JX8NUKRLVFWSR.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[approvedAt]"
+          in: query
+          description: |-
+            Filter by the date the final workflow step was submitted, in URL-encoded format.
+            Provide a date range using the format startDate..endDate.
+
+            Both values must be in ISO 8601 format.
+
+            For example: filter[approvedAt]=2023-06-01..2023-06-30.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of the review."
+                        sequenceId:
+                          type: integer
+                          x-forma-type: int
+                          description: |-
+                            A unique, auto-incrementing number assigned to the review when it is first submitted.
+                            This ID does not change, even if the review is sent back to the initiator and goes through multiple rounds.
+                            It identifies the review within the project and reflects the order in which reviews were created.
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the review."
+                        status:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The current status of the review.
+                            Possible values: OPEN, CLOSED, VOID, FAILED.
+                        currentStepId:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the current step in the review."
+                        currentStepDueDate:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The due date of the current step."
+                        createdBy:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the user who initiated the review."
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the initiator."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the initiator."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date time when the review was initiated."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date time when the review was last updated."
+                        finishedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date time when the review was completed."
+                        archived:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            Indicates whether the review has been archived.
+                            true: the review is archived.
+
+                            false: (default) the review is active.
+                        archivedBy:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the user who archived the review."
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the archiver."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the archiver."
+                        archivedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the review was archived. If the review has not been archived, this value is null."
+                        approvedBy:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            Information about the user who submitted the final workflow step.
+                            Returns an empty object if the review has not yet been final-approved.
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the final approver."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the final approver."
+                        approvedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the final workflow step was submitted. If the review has not yet been final-approved, this value is null."
+                        workflowId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier (UUID) of the approval workflow used to create this review."
+                        nextActionBy:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the claimers and candidates responsible for the current step."
+                          properties:
+                            claimedBy:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the user."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the user."
+                              x-forma-type: "array: object"
+                              description: "A list of users who have already claimed the current step."
+                            candidates:
+                              type: object
+                              x-forma-type: object
+                              description: "Information about the users, roles, and companies who are eligible to take the next action in this step."
+                              properties:
+                                roles:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      autodeskId:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "The Autodesk ID of the role."
+                                      name:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "The name of the role."
+                                  x-forma-type: "array: object"
+                                  description: "Project roles that can act in this step."
+                                users:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      autodeskId:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "The Autodesk ID of the user."
+                                      name:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "The name of the user."
+                                  x-forma-type: "array: object"
+                                  description: "Individual users who can act in this step."
+                                companies:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      autodeskId:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "The Autodesk ID of the company."
+                                      name:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "The name of the company."
+                                  x-forma-type: "array: object"
+                                  description: "Companies that can act in this step."
+                    x-forma-type: "array: object"
+                    description: "A list of reviews matching the request parameters"
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Metadata about the paginated results."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page. Zero-based index."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The URL to retrieve the next page of reviews results, if any.
+                          If not included, this is the last page.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-reviews-GET"
+    post:
+      operationId: reviews-createreview-POST
+      summary: "Creates a new review in the specified project using an existing approval workflow"
+      description: "Creates a new review in the specified project using an existing approval workflow."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier of the review."
+                  sequenceId:
+                    type: integer
+                    x-forma-type: int
+                    description: |-
+                      A unique, auto-incrementing number assigned to the review when it is first submitted.
+                      This ID does not change, even if the review is sent back to the initiator and goes through multiple rounds.
+                      It identifies the review within the project and reflects the order in which reviews were created.
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the review."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The current status of the review.
+                      Possible values: OPEN, CLOSED, VOID, FAILED.
+                  currentStepId:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the current step in the review."
+                  currentStepDueDate:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The due date of the current step."
+                  createdBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the user who initiated the review."
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the initiator."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the initiator."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date time when the review was initiated."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date time when the review was last updated."
+                  finishedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date time when the review was completed."
+                  archived:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: |-
+                      Indicates whether the review has been archived.
+                      true: the review is archived.
+
+                      false: (default) the review is active.
+                  archivedBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the user who archived the review."
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the archiver."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the archiver."
+                  archivedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the review was archived. If the review has not been archived, this value is null."
+                  approvedBy:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      Information about the user who submitted the final workflow step.
+                      Returns an empty object if the review has not yet been final-approved.
+                    properties:
+                      autodeskId:
+                        type: string
+                        x-forma-type: string
+                        description: "The Autodesk ID of the final approver."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: "The name of the final approver."
+                  approvedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the final workflow step was submitted. If the review has not yet been final-approved, this value is null."
+                  workflowId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier (UUID) of the approval workflow used to create this review."
+                  nextActionBy:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the claimers and candidates responsible for the current step."
+                    properties:
+                      claimedBy:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            autodeskId:
+                              type: string
+                              x-forma-type: string
+                              description: "The Autodesk ID of the user."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: "The name of the user."
+                        x-forma-type: "array: object"
+                        description: "A list of users who have already claimed the current step."
+                      candidates:
+                        type: object
+                        x-forma-type: object
+                        description: "Information about the users, roles, and companies who are eligible to take the next action in this step."
+                        properties:
+                          roles:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the role."
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the role."
+                            x-forma-type: "array: object"
+                            description: "Project roles that can act in this step."
+                          users:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the user."
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the user."
+                            x-forma-type: "array: object"
+                            description: "Individual users who can act in this step."
+                          companies:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the company."
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The name of the company."
+                            x-forma-type: "array: object"
+                            description: "Companies that can act in this step."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-createreview-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of the review. Maximum length: 255 characters.
+                    Max length: 255
+                fileVersions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      urn:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The URN of the file version.
+                          You can find this value by following the first four steps of the Download a File tutorial and noting the included.id field in the response. Note that the Step 4 request in the tutorial returns only the latest version of each file in the folder.
+
+                          Use the included.attributes.name or included.attributes.displayName fields in the response to confirm you have the correct file.
+                    required:
+                      - urn
+                  x-forma-type: "array: object"
+                  description: "The file versions to include in the review. Maximum: 1000 items."
+                workflowId:
+                  type: string
+                  format: uuid
+                  x-forma-type: "string: UUID"
+                  description: |-
+                    The ID of the approval workflow used to create the review.
+                    To list available workflows, call GET workflows.
+                notes:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    A note about the review. In the UI, this appears as the Description field.
+                    Maximum length: 4096 characters.
+
+                    Max length: 4096
+                workflowOptions:
+                  type: object
+                  x-forma-type: object
+                  description: "Optional parameters that override approval workflow settings for this review (for example, steps, copy settings, or additional options)."
+                  properties:
+                    copyFilesOptions:
+                      type: object
+                      x-forma-type: object
+                      description: "(Copy approved files in the UI) Option for copying approved files when the review is complete."
+                      properties:
+                        folderUrn:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            (Then copy approved files to in the UI) The URN of the target folder where approved files will be copied.
+                            To find the folder URN, follow the first four steps of the Upload Files to the Forma Files tool tutorial and note the data.id field in the response. Use data.attributes.name or data.attributes.displayName to confirm you have the correct folder.
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            x-forma-type: string
+                            description: "The ID of the step in the approval workflow. Use this value to set the candidates for the step when creating the review. Retrieve step IDs by calling GET workflows."
+                          candidates:
+                            type: object
+                            x-forma-type: object
+                            description: "(Displayed in the UI when selecting Reviewers/Approvers for a step) Defines the users, roles, or companies to specify for this step of the approval workflow. At least one of the fields (users, roles, or companies) must be provided."
+                            properties:
+                              users:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    autodeskId:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The Autodesk ID of the user. To find the Autodesk IDs of users for a project, call GET projects/users."
+                                  required:
+                                    - autodeskId
+                                x-forma-type: "array: object"
+                                description: "A list of individual users assigned as candidates for this step."
+                              roles:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    autodeskId:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The Autodesk ID of the role. Note that we do not currently support finding details about roles for a project."
+                                  required:
+                                    - autodeskId
+                                x-forma-type: "array: object"
+                                description: "A list of project roles assigned as candidates for this step."
+                              companies:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    autodeskId:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The Autodesk ID of the company. To find the Autodesk IDs of companies for a project, call GET companies."
+                                  required:
+                                    - autodeskId
+                                x-forma-type: "array: object"
+                                description: "A list of companies assigned as candidates for this step."
+                        required:
+                          - candidates
+                          - id
+                      x-forma-type: "array: object"
+                      description: "Assigns participants to the steps defined in the approval workflow. If omitted, the review inherits default candidates from the workflow. If provided, your assignments replace the defaults for that step. Multiple REVIEWER steps run sequentially in the order returned by GET workflows."
+              required:
+                - fileVersions
+                - name
+                - workflowId
+  "/construction/reviews/v1/projects/{projectId}/versions/{versionId}/approval-statuses":
+    get:
+      operationId: reviews-getversionapprovalstatuses-GET
+      summary: "Retrieves the full approval records and review references of a specific file version"
+      description: "Retrieves the full approval records and review references of a specific file version."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: versionId
+          in: path
+          required: true
+          description: |-
+            The URL-encoded unique identifier (URN) of the file version whose review and approval history you want to retrieve.
+            For example, encode urn:adsk.wipprod:fs.file:vf.Ibsc4cPuQEqBHRJdBjhr6w?version=2``as ``urn%3Aadsk.wipprod%3Afs.file%3Avf.Ibsc4cPuQEqBHRJdBjhr6w%3Fversion%3D2.
+
+            To find the latest version, call GET versions and check the urn field.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: limit
+          in: query
+          description: "The maximum number of results to return in the response. Possible values: 1–50. Maximum: 50. Default: 50. For example: limit=2."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The number of results to skip from the beginning of the list. Used for pagination. Default: 0. For example: offset=10."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        approvalStatus:
+                          type: object
+                          x-forma-type: object
+                          description: "The file’s approval status within a specific review."
+                          properties:
+                            id:
+                              type: string
+                              x-forma-type: string
+                              description: "The ID of the approval status option."
+                            label:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The custom text used to describe the approval status.
+                                Max length: 255
+                            value:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "The value of the approval status. Possible values: APPROVED, REJECTED, IN_REVIEW."
+                        review:
+                          type: object
+                          x-forma-type: object
+                          description: "Metadata about the review in which this file version was included."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The ID of the review."
+                            sequenceId:
+                              type: integer
+                              x-forma-type: int
+                              description: |-
+                                A unique, auto-incrementing number assigned to the review when it is first submitted.
+                                This ID does not change, even if the review is sent back to the initiator and goes through multiple rounds.
+                                It identifies the review within the project and reflects the order in which reviews were created.
+                            status:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                The current status of the review.
+                                Possible values: OPEN, CLOSED, VOID, FAILED.
+                    x-forma-type: "array: object"
+                    description: "A list of approval statuses and related review information for the specified file version."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Metadata about the paginated results."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page. Zero-based index."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The URL to retrieve the next page of file approval statuses results, if any.
+                          If not included, this is the last page.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-getversionapprovalstatuses-GET"
+  "/construction/reviews/v1/projects/{projectId}/workflows/{workflowId}":
+    get:
+      operationId: reviews-getworkflow-GET
+      summary: "Retrieves a specific approval workflow in the project by workflow ID"
+      description: "Retrieves a specific approval workflow in the project by workflow ID."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: workflowId
+          in: path
+          required: true
+          description: |-
+            The ID of the approval workflow.
+            To find available workflow IDs, call GET Workflows.
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The name of the workflow. It must be unique within the project.
+                      Max length: 255
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A description of the workflow.
+                      Max length: 4096
+                  notes:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A custom note associated with the workflow. Visible to all reviewers during the review process.
+                      Max length: 4096
+                  additionalOptions:
+                    type: object
+                    x-forma-type: object
+                    description: "Workflow-level settings that control additional edit permissions for initiators and approvers."
+                    properties:
+                      allowInitiatorToEdit:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          Deprecated Supported for backward compatibility. Use initiatorEditPermissions with value REVIEWER_ASSIGNMENTS_AND_DURATION instead, which provides the same behavior.
+                          true: the initiator can change reviewer assignments and durations.
+
+                          false: (default) reviewers and durations are fixed.
+                      initiatorEditPermissions:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: |-
+                          An optional array of values that grant the initiator additional edit permissions. Replaces the deprecated allowInitiatorToEdit field. If omitted or empty, the initiator has no additional edit permissions. Default: [].
+                          Possible values:
+
+                          - REVIEWER_ASSIGNMENTS_AND_DURATION - Allows the initiator to edit reviewer assignments and step durations. Equivalent to setting allowInitiatorToEdit to true.
+
+                          - APPROVERS - Allows the initiator to modify the approver candidate list.
+
+                          - CLOSED_REVIEW_TITLE - Allows the initiator to rename closed reviews.
+
+                          - START_OWN_REVIEW - Allows the initiator to start their own reviews.
+                      approverEditPermissions:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: |-
+                          An optional array of values that grant approvers additional edit permissions in the UI. If omitted or empty, approvers have no additional edit permissions. Default: [] (empty array).
+                          Possible values:
+
+                          - APPROVERS - Allow approvers to adjust the approvers in approver steps.
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: |-
+                      The unique identifier of the approval workflow returned in the response.
+                      This ID can be used in subsequent API calls to reference this workflow.
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The current status of the approval workflow. Possible values:
+                      ACTIVE: the workflow is active and available for use.
+
+                      INACTIVE: the workflow has been deactivated and cannot be used to create new reviews.
+                  approvalStatusOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        label:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The display name shown in the UI. It must be unique across all status options (built-in and custom).
+                            Maximum length: 255 characters.
+
+                            Max length: 255
+                        value:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: "The value representing the approval outcome. Possible values: APPROVED, REJECTED."
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of this approval status entry in the workflow."
+                        builtIn:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            Indicates whether the approval status is a built-in option.
+                            true: the status is built in (e.g., APPROVED, REJECTED).
+
+                            false: the status is a custom option created by a user.
+                    x-forma-type: "array: object"
+                    description: |-
+                      A list of approval status options defined for this workflow.
+                      It includes two built-in options by default (typically APPROVED and REJECTED), and may also include custom statuses added by the user.
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of the step, as defined in the workflow. It appears in the UI and is used in workflow configuration. Maximum length: 255 characters.
+                            Max length: 255
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Indicates the step type in the workflow. Possible values:
+
+                            - INITIATOR: the first step. It typically represents the person who launches the review.
+
+                            - REVIEWER: an intermediate step. It allows one or more reviewers to evaluate the files.
+
+                            - APPROVER: the final step. It represents the decision maker who approves or rejects the files.
+                        duration:
+                          type: integer
+                          x-forma-type: int
+                          description: |-
+                            (Time allowed in the UI) The number of days allocated to complete this step.
+                            This field applies only to REVIEWER and APPROVER steps. It is used to calculate the due date based on the selected dueDateType.
+
+                            Valid range: 1–99.
+                        dueDateType:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Specifies how the due date is calculated for this step. It works together with duration.
+                            This field applies only to REVIEWER and APPROVER steps.
+
+                            Possible values:
+
+                            - CALENDAR_DAY (default): the due date includes all calendar days, including weekends and holidays.
+
+                            - WORKDAY: the due date excludes weekends and project holidays.
+                        groupReview:
+                          type: object
+                          x-forma-type: object
+                          description: "(Reviewer Type in the UI) Defines whether multiple reviewers can participate in this step and how their responses are handled. It applies only to REVIEWER steps."
+                          properties:
+                            enabled:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                Indicates whether group review is enabled for this step.
+                                true: multiple reviewers can participate in the step.
+
+                                false: (default) only a single reviewer is allowed.
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                (Displayed under More options in the UI) Specifies the group review rule for this step.
+                                Possible values:
+
+                                - ALL: every reviewer assigned to the step must submit a response (up to 30).
+
+                                - MINIMUM: only a specified number of reviewers must respond, as defined in min.
+                            min:
+                              type: integer
+                              x-forma-type: int
+                              description: "The minimum number of reviewers required for this step. This field is set automatically when the group review type is set to MINIMUM. It is not independently configurable. Valid range: 1–30."
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the step."
+                        candidates:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            (Displayed in the UI when selecting reviewers for a step)
+                            Lists the users, roles, or companies that were configured as reviewers for this step.
+                            These candidates are defined during workflow setup and determine who will be invited to participate in the step during a review.
+                          properties:
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the role."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the role."
+                              x-forma-type: "array: object"
+                              description: "A list of project roles assigned as candidates for this step."
+                            users:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the user."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the user."
+                              x-forma-type: "array: object"
+                              description: "A list of individual users assigned as candidates for this step."
+                            companies:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the company."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the company."
+                              x-forma-type: "array: object"
+                              description: "A list of companies assigned as candidates for this step."
+                    x-forma-type: "array: object"
+                    description: "A list of steps defined in the approval workflow. Each step defines who reviews the files, how long they have, and whether it involves multiple reviewers."
+                  copyFilesOptions:
+                    type: object
+                    x-forma-type: object
+                    description: "(Copy approved files in the UI) The configuration for copying approved files to a target folder when the review is complete."
+                    properties:
+                      enabled:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          Indicates whether approved files should be copied to a target folder after the review is complete.
+                          true: copy approved files to the target folder.
+
+                          false: do not copy approved files.
+                      allowOverride:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow the initiator to change the target folder in the UI) Allows the initiator to change the target folder when creating a review.
+                          true: the initiator can choose a different target folder.
+
+                          false: the folder defined in the workflow is used.
+                      condition:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          (All/Any files in the review have been approved in the UI)
+                          Specifies the condition under which approved files will be copied.
+                          Possible values:
+
+                          ANY: copy files if at least one file in the review is approved.
+
+                          ALL: copy files only if all files in the review are approved.
+                      folderUrn:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          (Then copy approved files to in the UI)
+                          The URN of the target folder where approved files will be copied.
+                      includeMarkups:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Include all published markups on approved files in the UI)
+                          Indicates whether published markups should be included when copying files.
+                          true: include all published (unarchived) markups from the source version.
+
+                          false: (default) do not include markups.
+                      disableOverrideMarkupSetting:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow approvers to change whether or not markups are included in the UI)
+                          Controls whether approvers or admins can change the markup inclusion setting when starting the review.
+                          true: the markup setting is locked and cannot be changed.
+
+                          false: the setting can be changed during review setup.
+                  attachedAttributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          x-forma-type: int
+                          description: "The ID of the custom attribute to be applied after review completion."
+                        required:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            (Attribute – Required by approver in the UI)
+                            Indicates whether the approver must enter a value for this attribute to submit the review.
+                            true: the attribute is required.
+
+                            false: (default) the attribute is optional.
+                    x-forma-type: "array: object"
+                    description: |-
+                      (Update Attributes in the UI)
+                      The list of attributes added in the Update Attributes action.
+                      These attributes will be applied to the approved files in the target folder, or optionally also in the source folder depending on the configuration.
+                  updateAttributesOptions:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      The configuration for applying attribute updates when a review is completed.
+                      This applies only if the workflow includes a file copy action and the Update Attributes action is enabled.
+                    properties:
+                      enableAttachedAttributes:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Update attributes in the UI)
+                          Indicates whether the Update Attributes action is enabled.
+                          true: attributes will be applied after the review.
+
+                          false: (default) attributes will not be updated.
+                      updateSourceAndCopiedFiles:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Update attributes both for target folder and source folder or Update attributes only for target folder in the UI)
+                          Determines whether attributes are updated only for files in the target folder, or for both the target and source folders.
+                          true: update attributes in both folders.
+
+                          false: (default) update only the target folder.
+
+                          Only available when the approval workflow includes a copy post-action.
+                      allowApproverToUpdateRejectedFiles:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow approvers to choose if the attributes of rejected files are updated for the source folder in the UI)
+                          Determines whether approvers can choose to update attributes for rejected files in the source folder when submitting a review.
+                          Only applicable when enableAttachedAttributes and updateSourceAndCopiedFiles are true.
+
+                          true: approvers can choose to update attributes for both approved and rejected files in the source folder.
+
+                          false: (default) attributes are only updated for approved files.
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the workflow was created."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the workflow was last updated."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-getworkflow-GET"
+  "/construction/reviews/v1/projects/{projectId}/workflows":
+    get:
+      operationId: reviews-workflows-GET
+      summary: "Retrieves all approval workflows used for file reviews in a given project"
+      description: "Retrieves all approval workflows used for file reviews in a given project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: limit
+          in: query
+          description: "The maximum number of approval workflows to return in a single request. Possible values: 1-50. Maximum: 50. Default: 50. For example: limit=2."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The index at which the endpoint starts returning results. Used for pagination. Default: 0. For example: offset=10."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: |-
+            Specifies a single field to sort the results by. The default order is ascending (asc); to sort in descending order, add desc.
+            Possible sorting fields: name, status, updatedAt.
+            For example: sort=name desc.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[initiator]"
+          in: query
+          description: |-
+            Filters the results based on who initiated the workflow. For example: filter[initiator]=true.
+            true: return only workflows initiated by the current user.
+            This filter is ignored if the user is a project admin.
+
+            false: (default) return workflows regardless of who initiated them.
+
+            Note that this filter cannot be used together with filter[status].
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: "filter[status]"
+          in: query
+          description: |-
+            Filters the results by workflow status. For example: filter[status]=INACTIVE. Possible values:
+            ACTIVE: return only active workflows.
+
+            INACTIVE: return only inactive (disabled) workflows.
+
+            Default: ACTIVE.
+
+            Note that this filter cannot be used together with filter[initiator].
+          schema:
+            type: string
+            x-forma-type: "enum:string"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of the workflow. It must be unique within the project.
+                            Max length: 255
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            A description of the workflow.
+                            Max length: 4096
+                        notes:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            A custom note associated with the workflow. Visible to all reviewers during the review process.
+                            Max length: 4096
+                        additionalOptions:
+                          type: object
+                          x-forma-type: object
+                          description: "Workflow-level settings that control additional edit permissions for initiators and approvers."
+                          properties:
+                            allowInitiatorToEdit:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                Deprecated Supported for backward compatibility. Use initiatorEditPermissions with value REVIEWER_ASSIGNMENTS_AND_DURATION instead, which provides the same behavior.
+                                true: the initiator can change reviewer assignments and durations.
+
+                                false: (default) reviewers and durations are fixed.
+                            initiatorEditPermissions:
+                              type: array
+                              items:
+                                type: string
+                              x-forma-type: "array: string"
+                              description: |-
+                                An optional array of values that grant the initiator additional edit permissions. Replaces the deprecated allowInitiatorToEdit field. If omitted or empty, the initiator has no additional edit permissions. Default: [].
+                                Possible values:
+
+                                - REVIEWER_ASSIGNMENTS_AND_DURATION - Allows the initiator to edit reviewer assignments and step durations. Equivalent to setting allowInitiatorToEdit to true.
+
+                                - APPROVERS - Allows the initiator to modify the approver candidate list.
+
+                                - CLOSED_REVIEW_TITLE - Allows the initiator to rename closed reviews.
+
+                                - START_OWN_REVIEW - Allows the initiator to start their own reviews.
+                            approverEditPermissions:
+                              type: array
+                              items:
+                                type: string
+                              x-forma-type: "array: string"
+                              description: |-
+                                An optional array of values that grant approvers additional edit permissions in the UI. If omitted or empty, approvers have no additional edit permissions. Default: [] (empty array).
+                                Possible values:
+
+                                - APPROVERS - Allow approvers to adjust the approvers in approver steps.
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: |-
+                            The unique identifier of the approval workflow returned in the response.
+                            This ID can be used in subsequent API calls to reference this workflow.
+                        status:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The current status of the approval workflow. Possible values:
+                            ACTIVE: the workflow is active and available for use.
+
+                            INACTIVE: the workflow has been deactivated and cannot be used to create new reviews.
+                        approvalStatusOptions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              label:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The display name shown in the UI. It must be unique across all status options (built-in and custom).
+                                  Maximum length: 255 characters.
+
+                                  Max length: 255
+                              value:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: "The value representing the approval outcome. Possible values: APPROVED, REJECTED."
+                              id:
+                                type: string
+                                format: uuid
+                                x-forma-type: "string: UUID"
+                                description: "The unique identifier of this approval status entry in the workflow."
+                              builtIn:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  Indicates whether the approval status is a built-in option.
+                                  true: the status is built in (e.g., APPROVED, REJECTED).
+
+                                  false: the status is a custom option created by a user.
+                          x-forma-type: "array: object"
+                          description: |-
+                            A list of approval status options defined for this workflow.
+                            It includes two built-in options by default (typically APPROVED and REJECTED), and may also include custom statuses added by the user.
+                        steps:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The name of the step, as defined in the workflow. It appears in the UI and is used in workflow configuration. Maximum length: 255 characters.
+                                  Max length: 255
+                              type:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  Indicates the step type in the workflow. Possible values:
+
+                                  - INITIATOR: the first step. It typically represents the person who launches the review.
+
+                                  - REVIEWER: an intermediate step. It allows one or more reviewers to evaluate the files.
+
+                                  - APPROVER: the final step. It represents the decision maker who approves or rejects the files.
+                              duration:
+                                type: integer
+                                x-forma-type: int
+                                description: |-
+                                  (Time allowed in the UI) The number of days allocated to complete this step.
+                                  This field applies only to REVIEWER and APPROVER steps. It is used to calculate the due date based on the selected dueDateType.
+
+                                  Valid range: 1–99.
+                              dueDateType:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  Specifies how the due date is calculated for this step. It works together with duration.
+                                  This field applies only to REVIEWER and APPROVER steps.
+
+                                  Possible values:
+
+                                  - CALENDAR_DAY (default): the due date includes all calendar days, including weekends and holidays.
+
+                                  - WORKDAY: the due date excludes weekends and project holidays.
+                              groupReview:
+                                type: object
+                                x-forma-type: object
+                                description: "(Reviewer Type in the UI) Defines whether multiple reviewers can participate in this step and how their responses are handled. It applies only to REVIEWER steps."
+                                properties:
+                                  enabled:
+                                    type: boolean
+                                    x-forma-type: boolean
+                                    description: |-
+                                      Indicates whether group review is enabled for this step.
+                                      true: multiple reviewers can participate in the step.
+
+                                      false: (default) only a single reviewer is allowed.
+                                  type:
+                                    type: string
+                                    x-forma-type: "enum:string"
+                                    description: |-
+                                      (Displayed under More options in the UI) Specifies the group review rule for this step.
+                                      Possible values:
+
+                                      - ALL: every reviewer assigned to the step must submit a response (up to 30).
+
+                                      - MINIMUM: only a specified number of reviewers must respond, as defined in min.
+                                  min:
+                                    type: integer
+                                    x-forma-type: int
+                                    description: "The minimum number of reviewers required for this step. This field is set automatically when the group review type is set to MINIMUM. It is not independently configurable. Valid range: 1–30."
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "The ID of the step."
+                              candidates:
+                                type: object
+                                x-forma-type: object
+                                description: |-
+                                  (Displayed in the UI when selecting reviewers for a step)
+                                  Lists the users, roles, or companies that were configured as reviewers for this step.
+                                  These candidates are defined during workflow setup and determine who will be invited to participate in the step during a review.
+                                properties:
+                                  roles:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        autodeskId:
+                                          type: string
+                                          x-forma-type: string
+                                          description: "The Autodesk ID of the role."
+                                        name:
+                                          type: string
+                                          x-forma-type: string
+                                          description: "The name of the role."
+                                    x-forma-type: "array: object"
+                                    description: "A list of project roles assigned as candidates for this step."
+                                  users:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        autodeskId:
+                                          type: string
+                                          x-forma-type: string
+                                          description: "The Autodesk ID of the user."
+                                        name:
+                                          type: string
+                                          x-forma-type: string
+                                          description: "The name of the user."
+                                    x-forma-type: "array: object"
+                                    description: "A list of individual users assigned as candidates for this step."
+                                  companies:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        autodeskId:
+                                          type: string
+                                          x-forma-type: string
+                                          description: "The Autodesk ID of the company."
+                                        name:
+                                          type: string
+                                          x-forma-type: string
+                                          description: "The name of the company."
+                                    x-forma-type: "array: object"
+                                    description: "A list of companies assigned as candidates for this step."
+                          x-forma-type: "array: object"
+                          description: "A list of steps defined in the approval workflow. Each step defines who reviews the files, how long they have, and whether it involves multiple reviewers."
+                        copyFilesOptions:
+                          type: object
+                          x-forma-type: object
+                          description: "(Copy approved files in the UI) The configuration for copying approved files to a target folder when the review is complete."
+                          properties:
+                            enabled:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                Indicates whether approved files should be copied to a target folder after the review is complete.
+                                true: copy approved files to the target folder.
+
+                                false: do not copy approved files.
+                            allowOverride:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                (Allow the initiator to change the target folder in the UI) Allows the initiator to change the target folder when creating a review.
+                                true: the initiator can choose a different target folder.
+
+                                false: the folder defined in the workflow is used.
+                            condition:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                (All/Any files in the review have been approved in the UI)
+                                Specifies the condition under which approved files will be copied.
+                                Possible values:
+
+                                ANY: copy files if at least one file in the review is approved.
+
+                                ALL: copy files only if all files in the review are approved.
+                            folderUrn:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                (Then copy approved files to in the UI)
+                                The URN of the target folder where approved files will be copied.
+                            includeMarkups:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                (Include all published markups on approved files in the UI)
+                                Indicates whether published markups should be included when copying files.
+                                true: include all published (unarchived) markups from the source version.
+
+                                false: (default) do not include markups.
+                            disableOverrideMarkupSetting:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                (Allow approvers to change whether or not markups are included in the UI)
+                                Controls whether approvers or admins can change the markup inclusion setting when starting the review.
+                                true: the markup setting is locked and cannot be changed.
+
+                                false: the setting can be changed during review setup.
+                        attachedAttributes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                x-forma-type: int
+                                description: "The ID of the custom attribute to be applied after review completion."
+                              required:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  (Attribute – Required by approver in the UI)
+                                  Indicates whether the approver must enter a value for this attribute to submit the review.
+                                  true: the attribute is required.
+
+                                  false: (default) the attribute is optional.
+                          x-forma-type: "array: object"
+                          description: |-
+                            (Update Attributes in the UI)
+                            The list of attributes added in the Update Attributes action.
+                            These attributes will be applied to the approved files in the target folder, or optionally also in the source folder depending on the configuration.
+                        updateAttributesOptions:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            The configuration for applying attribute updates when a review is completed.
+                            This applies only if the workflow includes a file copy action and the Update Attributes action is enabled.
+                          properties:
+                            enableAttachedAttributes:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                (Update attributes in the UI)
+                                Indicates whether the Update Attributes action is enabled.
+                                true: attributes will be applied after the review.
+
+                                false: (default) attributes will not be updated.
+                            updateSourceAndCopiedFiles:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                (Update attributes both for target folder and source folder or Update attributes only for target folder in the UI)
+                                Determines whether attributes are updated only for files in the target folder, or for both the target and source folders.
+                                true: update attributes in both folders.
+
+                                false: (default) update only the target folder.
+
+                                Only available when the approval workflow includes a copy post-action.
+                            allowApproverToUpdateRejectedFiles:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                (Allow approvers to choose if the attributes of rejected files are updated for the source folder in the UI)
+                                Determines whether approvers can choose to update attributes for rejected files in the source folder when submitting a review.
+                                Only applicable when enableAttachedAttributes and updateSourceAndCopiedFiles are true.
+
+                                true: approvers can choose to update attributes for both approved and rejected files in the source folder.
+
+                                false: (default) attributes are only updated for approved files.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the workflow was created."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the workflow was last updated."
+                    x-forma-type: "array: object"
+                    description: "A list of approval workflows in the project."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Metadata about the paginated results."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The maximum number of results returned per page."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results skipped before the current page. Zero-based index."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results that match the query, regardless of pagination."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The URL to retrieve the next page of workflows results, if any.
+                          If not included, this is the last page.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-workflows-GET"
+    post:
+      operationId: reviews-createworkflow-POST
+      summary: "Creates a new approval workflow in the specified project"
+      description: "Creates a new approval workflow in the specified project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: |-
+            The ID of the project.
+            Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can provide the project ID with or without the “b." prefix.
+
+            - Example with prefix: b.563a4c30-e30d-4869-ac02-2a18b6447abe
+
+            - Example without prefix: 563a4c30-e30d-4869-ac02-2a18b6447abe
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The Autodesk ID of the user on whose behalf the request is made. Use this header to specify which user should be affected by the request. Your application must be configured to act on behalf of that user.
+            This header is only required when using two-legged authentication. It is not needed for three-legged authentication.
+
+            Only the user’s Autodesk ID (autodeskId) can be accepted.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The name of the workflow. It must be unique within the project.
+                      Max length: 255
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A description of the workflow.
+                      Max length: 4096
+                  notes:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      A custom note associated with the workflow. Visible to all reviewers during the review process.
+                      Max length: 4096
+                  additionalOptions:
+                    type: object
+                    x-forma-type: object
+                    description: "Workflow-level settings that control additional edit permissions for initiators and approvers."
+                    properties:
+                      allowInitiatorToEdit:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          Deprecated Supported for backward compatibility. Use initiatorEditPermissions with value REVIEWER_ASSIGNMENTS_AND_DURATION instead, which provides the same behavior.
+                          true: the initiator can change reviewer assignments and durations.
+
+                          false: (default) reviewers and durations are fixed.
+                      initiatorEditPermissions:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: |-
+                          An optional array of values that grant the initiator additional edit permissions. Replaces the deprecated allowInitiatorToEdit field. If omitted or empty, the initiator has no additional edit permissions. Default: [].
+                          Possible values:
+
+                          - REVIEWER_ASSIGNMENTS_AND_DURATION - Allows the initiator to edit reviewer assignments and step durations. Equivalent to setting allowInitiatorToEdit to true.
+
+                          - APPROVERS - Allows the initiator to modify the approver candidate list.
+
+                          - CLOSED_REVIEW_TITLE - Allows the initiator to rename closed reviews.
+
+                          - START_OWN_REVIEW - Allows the initiator to start their own reviews.
+                      approverEditPermissions:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: |-
+                          An optional array of values that grant approvers additional edit permissions in the UI. If omitted or empty, approvers have no additional edit permissions. Default: [] (empty array).
+                          Possible values:
+
+                          - APPROVERS - Allow approvers to adjust the approvers in approver steps.
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: |-
+                      The unique identifier of the approval workflow returned in the response.
+                      This ID can be used in subsequent API calls to reference this workflow.
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The current status of the approval workflow. Possible values:
+                      ACTIVE: the workflow is active and available for use.
+
+                      INACTIVE: the workflow has been deactivated and cannot be used to create new reviews.
+                  approvalStatusOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        label:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The display name shown in the UI. It must be unique across all status options (built-in and custom).
+                            Maximum length: 255 characters.
+
+                            Max length: 255
+                        value:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: "The value representing the approval outcome. Possible values: APPROVED, REJECTED."
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of this approval status entry in the workflow."
+                        builtIn:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            Indicates whether the approval status is a built-in option.
+                            true: the status is built in (e.g., APPROVED, REJECTED).
+
+                            false: the status is a custom option created by a user.
+                    x-forma-type: "array: object"
+                    description: |-
+                      A list of approval status options defined for this workflow.
+                      It includes two built-in options by default (typically APPROVED and REJECTED), and may also include custom statuses added by the user.
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The name of the step, as defined in the workflow. It appears in the UI and is used in workflow configuration. Maximum length: 255 characters.
+                            Max length: 255
+                        type:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Indicates the step type in the workflow. Possible values:
+
+                            - INITIATOR: the first step. It typically represents the person who launches the review.
+
+                            - REVIEWER: an intermediate step. It allows one or more reviewers to evaluate the files.
+
+                            - APPROVER: the final step. It represents the decision maker who approves or rejects the files.
+                        duration:
+                          type: integer
+                          x-forma-type: int
+                          description: |-
+                            (Time allowed in the UI) The number of days allocated to complete this step.
+                            This field applies only to REVIEWER and APPROVER steps. It is used to calculate the due date based on the selected dueDateType.
+
+                            Valid range: 1–99.
+                        dueDateType:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            Specifies how the due date is calculated for this step. It works together with duration.
+                            This field applies only to REVIEWER and APPROVER steps.
+
+                            Possible values:
+
+                            - CALENDAR_DAY (default): the due date includes all calendar days, including weekends and holidays.
+
+                            - WORKDAY: the due date excludes weekends and project holidays.
+                        groupReview:
+                          type: object
+                          x-forma-type: object
+                          description: "(Reviewer Type in the UI) Defines whether multiple reviewers can participate in this step and how their responses are handled. It applies only to REVIEWER steps."
+                          properties:
+                            enabled:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                Indicates whether group review is enabled for this step.
+                                true: multiple reviewers can participate in the step.
+
+                                false: (default) only a single reviewer is allowed.
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: |-
+                                (Displayed under More options in the UI) Specifies the group review rule for this step.
+                                Possible values:
+
+                                - ALL: every reviewer assigned to the step must submit a response (up to 30).
+
+                                - MINIMUM: only a specified number of reviewers must respond, as defined in min.
+                            min:
+                              type: integer
+                              x-forma-type: int
+                              description: "The minimum number of reviewers required for this step. This field is set automatically when the group review type is set to MINIMUM. It is not independently configurable. Valid range: 1–30."
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the step."
+                        candidates:
+                          type: object
+                          x-forma-type: object
+                          description: |-
+                            (Displayed in the UI when selecting reviewers for a step)
+                            Lists the users, roles, or companies that were configured as reviewers for this step.
+                            These candidates are defined during workflow setup and determine who will be invited to participate in the step during a review.
+                          properties:
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the role."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the role."
+                              x-forma-type: "array: object"
+                              description: "A list of project roles assigned as candidates for this step."
+                            users:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the user."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the user."
+                              x-forma-type: "array: object"
+                              description: "A list of individual users assigned as candidates for this step."
+                            companies:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  autodeskId:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The Autodesk ID of the company."
+                                  name:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "The name of the company."
+                              x-forma-type: "array: object"
+                              description: "A list of companies assigned as candidates for this step."
+                    x-forma-type: "array: object"
+                    description: "A list of steps defined in the approval workflow. Each step defines who reviews the files, how long they have, and whether it involves multiple reviewers."
+                  copyFilesOptions:
+                    type: object
+                    x-forma-type: object
+                    description: "(Copy approved files in the UI) The configuration for copying approved files to a target folder when the review is complete."
+                    properties:
+                      enabled:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          Indicates whether approved files should be copied to a target folder after the review is complete.
+                          true: copy approved files to the target folder.
+
+                          false: do not copy approved files.
+                      allowOverride:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow the initiator to change the target folder in the UI) Allows the initiator to change the target folder when creating a review.
+                          true: the initiator can choose a different target folder.
+
+                          false: the folder defined in the workflow is used.
+                      condition:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          (All/Any files in the review have been approved in the UI)
+                          Specifies the condition under which approved files will be copied.
+                          Possible values:
+
+                          ANY: copy files if at least one file in the review is approved.
+
+                          ALL: copy files only if all files in the review are approved.
+                      folderUrn:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          (Then copy approved files to in the UI)
+                          The URN of the target folder where approved files will be copied.
+                      includeMarkups:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Include all published markups on approved files in the UI)
+                          Indicates whether published markups should be included when copying files.
+                          true: include all published (unarchived) markups from the source version.
+
+                          false: (default) do not include markups.
+                      disableOverrideMarkupSetting:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow approvers to change whether or not markups are included in the UI)
+                          Controls whether approvers or admins can change the markup inclusion setting when starting the review.
+                          true: the markup setting is locked and cannot be changed.
+
+                          false: the setting can be changed during review setup.
+                  attachedAttributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          x-forma-type: int
+                          description: "The ID of the custom attribute to be applied after review completion."
+                        required:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            (Attribute – Required by approver in the UI)
+                            Indicates whether the approver must enter a value for this attribute to submit the review.
+                            true: the attribute is required.
+
+                            false: (default) the attribute is optional.
+                    x-forma-type: "array: object"
+                    description: |-
+                      (Update Attributes in the UI)
+                      The list of attributes added in the Update Attributes action.
+                      These attributes will be applied to the approved files in the target folder, or optionally also in the source folder depending on the configuration.
+                  updateAttributesOptions:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      The configuration for applying attribute updates when a review is completed.
+                      This applies only if the workflow includes a file copy action and the Update Attributes action is enabled.
+                    properties:
+                      enableAttachedAttributes:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Update attributes in the UI)
+                          Indicates whether the Update Attributes action is enabled.
+                          true: attributes will be applied after the review.
+
+                          false: (default) attributes will not be updated.
+                      updateSourceAndCopiedFiles:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Update attributes both for target folder and source folder or Update attributes only for target folder in the UI)
+                          Determines whether attributes are updated only for files in the target folder, or for both the target and source folders.
+                          true: update attributes in both folders.
+
+                          false: (default) update only the target folder.
+
+                          Only available when the approval workflow includes a copy post-action.
+                      allowApproverToUpdateRejectedFiles:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Allow approvers to choose if the attributes of rejected files are updated for the source folder in the UI)
+                          Determines whether approvers can choose to update attributes for rejected files in the source folder when submitting a review.
+                          Only applicable when enableAttachedAttributes and updateSourceAndCopiedFiles are true.
+
+                          true: approvers can choose to update attributes for both approved and rejected files in the source folder.
+
+                          false: (default) attributes are only updated for approved files.
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the workflow was created."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the workflow was last updated."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/reviews-createworkflow-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of the workflow. It must be unique within the project.
+                    Max length: 255
+                description:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    A description of the workflow.
+                    Max length: 4096
+                notes:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    A custom note associated with the workflow. Visible to all reviewers during the review process.
+                    Max length: 4096
+                additionalOptions:
+                  type: object
+                  x-forma-type: object
+                  description: "Workflow-level settings that control additional edit permissions for initiators and approvers."
+                  properties:
+                    allowInitiatorToEdit:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        Deprecated Supported for backward compatibility. Use initiatorEditPermissions with value REVIEWER_ASSIGNMENTS_AND_DURATION instead, which provides the same behavior.
+                        true: the initiator can change reviewer assignments and durations.
+
+                        false: (default) reviewers and durations are fixed.
+                    initiatorEditPermissions:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: |-
+                        An optional array of values that grant the initiator additional edit permissions. Replaces the deprecated allowInitiatorToEdit field. If omitted or empty, the initiator has no additional edit permissions. Default: [].
+                        Possible values:
+
+                        - REVIEWER_ASSIGNMENTS_AND_DURATION - Allows the initiator to edit reviewer assignments and step durations. Equivalent to setting allowInitiatorToEdit to true.
+
+                        - APPROVERS - Allows the initiator to modify the approver candidate list.
+
+                        - CLOSED_REVIEW_TITLE - Allows the initiator to rename closed reviews.
+
+                        - START_OWN_REVIEW - Allows the initiator to start their own reviews.
+                    approverEditPermissions:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: |-
+                        An optional array of values that grant approvers additional edit permissions in the UI. If omitted or empty, approvers have no additional edit permissions. Default: [] (empty array).
+                        Possible values:
+
+                        - APPROVERS - Allow approvers to adjust the approvers in approver steps.
+                additionalApprovalStatusOptions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      label:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The display name shown in the UI. It must be unique across all status options (built-in and custom).
+                          Maximum length: 255 characters.
+
+                          Max length: 255
+                      value:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: "The value representing the approval outcome. Possible values: APPROVED, REJECTED."
+                    required:
+                      - label
+                      - value
+                  x-forma-type: "array: object"
+                  description: "Custom approval statuses to add in addition to the built-in statuses (APPROVED, REJECTED). You can define up to 50."
+                steps:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The name of the step, as defined in the workflow. It appears in the UI and is used in workflow configuration. Maximum length: 255 characters.
+                          Max length: 255
+                      type:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: |-
+                          Indicates the step type in the workflow. Possible values:
+
+                          - INITIATOR: the first step. It typically represents the person who launches the review.
+
+                          - REVIEWER: an intermediate step. It allows one or more reviewers to evaluate the files.
+
+                          - APPROVER: the final step. It represents the decision maker who approves or rejects the files.
+                      duration:
+                        type: integer
+                        x-forma-type: int
+                        description: |-
+                          (Time allowed in the UI) The number of days allocated to complete this step.
+                          This field applies only to REVIEWER and APPROVER steps. It is used to calculate the due date based on the selected dueDateType.
+
+                          Valid range: 1–99.
+                      dueDateType:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: |-
+                          Specifies how the due date is calculated for this step. It works together with duration.
+                          This field applies only to REVIEWER and APPROVER steps.
+
+                          Possible values:
+
+                          - CALENDAR_DAY (default): the due date includes all calendar days, including weekends and holidays.
+
+                          - WORKDAY: the due date excludes weekends and project holidays.
+                      groupReview:
+                        type: object
+                        x-forma-type: object
+                        description: "(Reviewer Type in the UI) Defines whether multiple reviewers can participate in this step and how their responses are handled. It applies only to REVIEWER steps."
+                        properties:
+                          enabled:
+                            type: boolean
+                            x-forma-type: boolean
+                            description: |-
+                              Indicates whether group review is enabled for this step.
+                              true: multiple reviewers can participate in the step.
+
+                              false: (default) only a single reviewer is allowed.
+                          type:
+                            type: string
+                            x-forma-type: "enum:string"
+                            description: |-
+                              (Displayed under More options in the UI) Specifies the group review rule for this step.
+                              Possible values:
+
+                              - ALL: every reviewer assigned to the step must submit a response (up to 30).
+
+                              - MINIMUM: only a specified number of reviewers must respond, as defined in min.
+                          min:
+                            type: integer
+                            x-forma-type: int
+                            description: "The minimum number of reviewers required for this step. This field is set automatically when the group review type is set to MINIMUM. It is not independently configurable. Valid range: 1–30."
+                        required:
+                          - enabled
+                      candidates:
+                        type: object
+                        x-forma-type: object
+                        description: "(Displayed in the UI when selecting Reviewers/Approvers for a step) Defines the users, roles, or companies to specify for this step of the approval workflow. At least one of the fields (users, roles, or companies) must be provided."
+                        properties:
+                          users:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the user. To find the Autodesk IDs of users for a project, call GET projects/users."
+                              required:
+                                - autodeskId
+                            x-forma-type: "array: object"
+                            description: "A list of individual users assigned as candidates for this step."
+                          roles:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the role. Note that we do not currently support finding details about roles for a project."
+                              required:
+                                - autodeskId
+                            x-forma-type: "array: object"
+                            description: "A list of project roles assigned as candidates for this step."
+                          companies:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                autodeskId:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "The Autodesk ID of the company. To find the Autodesk IDs of companies for a project, call GET companies."
+                              required:
+                                - autodeskId
+                            x-forma-type: "array: object"
+                            description: "A list of companies assigned as candidates for this step."
+                    required:
+                      - candidates
+                      - name
+                      - type
+                  x-forma-type: "array: object"
+                  description: "Defines the sequence of steps in the workflow. Steps run in the order they appear."
+                copyFilesOptions:
+                  type: object
+                  x-forma-type: object
+                  description: "(Copy approved files in the UI) The configuration for copying approved files to a target folder when the review is complete."
+                  properties:
+                    enabled:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        Indicates whether approved files should be copied to a target folder after the review is complete.
+                        true: copy approved files to the target folder.
+
+                        false: do not copy approved files.
+                    allowOverride:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        (Allow the initiator to change the target folder in the UI) Allows the initiator to change the target folder when creating a review.
+                        true: the initiator can choose a different target folder.
+
+                        false: the folder defined in the workflow is used.
+                    condition:
+                      type: string
+                      x-forma-type: string
+                      description: |-
+                        (All/Any files in the review have been approved in the UI)
+                        Specifies the condition under which approved files will be copied.
+                        Possible values:
+
+                        ANY: copy files if at least one file in the review is approved.
+
+                        ALL: copy files only if all files in the review are approved.
+                    folderUrn:
+                      type: string
+                      x-forma-type: string
+                      description: |-
+                        (Then copy approved files to in the UI)
+                        The URN of the target folder where approved files will be copied.
+                    includeMarkups:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        (Include all published markups on approved files in the UI)
+                        Indicates whether published markups should be included when copying files.
+                        true: include all published (unarchived) markups from the source version.
+
+                        false: (default) do not include markups.
+                    disableOverrideMarkupSetting:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        (Allow approvers to change whether or not markups are included in the UI)
+                        Controls whether approvers or admins can change the markup inclusion setting when starting the review.
+                        true: the markup setting is locked and cannot be changed.
+
+                        false: the setting can be changed during review setup.
+                  required:
+                    - enabled
+                attachedAttributes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        x-forma-type: int
+                        description: "The ID of the custom attribute to attach to the workflow."
+                      required:
+                        type: boolean
+                        x-forma-type: boolean
+                        description: |-
+                          (Attribute – Required by approver in the UI)
+                          Indicates whether the approver must enter a value for this attribute to submit the review.
+                          true: the attribute is required.
+
+                          false: (default) the attribute is optional.
+                    required:
+                      - id
+                  x-forma-type: "array: object"
+                  description: |-
+                    (Update Attributes in the UI)
+                    An optional list of custom attribute IDs to attach to the workflow.
+                    These attributes will be applied to the approved files in the target folder (or optionally also in the source folder) after the review is completed.
+                updateAttributesOptions:
+                  type: object
+                  x-forma-type: object
+                  description: |-
+                    The configuration for applying attribute updates when a review is completed.
+                    This applies only if the workflow includes a file copy action and the Update Attributes action is enabled.
+                  properties:
+                    enableAttachedAttributes:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        (Update attributes in the UI)
+                        Indicates whether the Update Attributes action is enabled.
+                        true: attributes will be applied after the review.
+
+                        false: (default) attributes will not be updated.
+                    updateSourceAndCopiedFiles:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        (Update attributes both for target folder and source folder or Update attributes only for target folder in the UI)
+                        Determines whether attributes are updated only for files in the target folder, or for both the target and source folders.
+                        true: update attributes in both folders.
+
+                        false: (default) update only the target folder.
+
+                        Only available when the approval workflow includes a copy post-action.
+                    allowApproverToUpdateRejectedFiles:
+                      type: boolean
+                      x-forma-type: boolean
+                      description: |-
+                        (Allow approvers to choose if the attributes of rejected files are updated for the source folder in the UI)
+                        Determines whether approvers can choose to update attributes for rejected files in the source folder when submitting a review.
+                        Only applicable when enableAttachedAttributes and updateSourceAndCopiedFiles are true.
+
+                        true: approvers can choose to update attributes for both approved and rejected files in the source folder.
+
+                        false: (default) attributes are only updated for approved files.
+              required:
+                - copyFilesOptions
+                - name
+                - steps
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

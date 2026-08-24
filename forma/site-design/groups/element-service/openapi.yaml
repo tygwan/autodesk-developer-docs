@@ -1,0 +1,1218 @@
+openapi: "3.1.0"
+info:
+  title: "Forma Site Design — element-service"
+  version: v1
+  description: |-
+    Forma Site Design — element-service.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/forma/v1
+    공통 base 경로: /forma/element-service/v1alpha
+    **리전 — 호출 전 반드시 확인** Forma 는 리전별로 완전히 분리된 별개 시스템입니다. 리소스 식별자(urn 등)는 리전을 넘어 유효하지 않습니다. - HTTP API: 호스트는 하나(`developer.api.autodesk.com`)이고, **`X-Ads-Region` 헤더로 리전을 지정**합니다 (`US` | `EMEA`, 미지정 시 `US`). - 웹앱/임베디드 뷰: `app.autodeskforma.com`(US) 과 `app.autodeskforma.eu`(EMEA) 로 도메인 자체가 다릅니다. - 리전이 틀리면 인증이 정상이어도 **403** 이 납니다. 문서의 403 설명이 그대로 "Are you in the right region?" 입니다.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: element-service
+x-forma-common-base: "/forma/element-service/v1alpha"
+paths:
+  "/forma/element-service/v1alpha/blobs-batch":
+    post:
+      operationId: element-getblobsbatch-POST
+      summary: "This operation can be used to retrieve multiple blobs at once, which helps reducing the number of API calls needed"
+      description: |-
+        This operation can be used to retrieve multiple blobs at once,
+        which helps reducing the number of API calls needed.
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+        "302":
+          description: "Clients should follow redirects, as the response might be stored somewhere else"
+          headers:
+            Location:
+              schema:
+                type: string
+                x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/element-getblobsbatch-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: "Each item value is a blob ID."
+  "/forma/element-service/v1alpha/blobs/{blobId}":
+    get:
+      operationId: element-getblob-GET
+      summary: "Get blob"
+      description: "Get blob"
+      parameters:
+        - name: blobId
+          in: path
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+        "302":
+          description: "Clients should follow redirects, as the response might be stored somewhere else"
+          headers:
+            Location:
+              schema:
+                type: string
+                x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/element-getblob-GET"
+  "/forma/element-service/v1alpha/elements-batch":
+    post:
+      operationId: element-getelementsbatch-POST
+      summary: "Retrieve multiple elements"
+      description: "Retrieve multiple elements"
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: object
+                    x-forma-type: object
+                    description: "Mapping from URN to elements"
+                    properties:
+                      "*":
+                        type: object
+                        x-forma-type: object
+                        description: "Learn more about the element system here: https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/"
+                        properties:
+                          urn:
+                            type: string
+                            x-forma-type: string
+                            description: |-
+                              Unique Resource Name (URN) for an element, used to identify a specific
+                              revision of an element.
+                              The element URN scheme is urn:adsk-forma-elements:{system}:{authcontext}:{id}:{revision}.
+                          metadata:
+                            type: object
+                            x-forma-type: object
+                            description: |-
+                              Metadata about an element. Does not describe the element itself, but
+                              rather the context in which it has been created/updated and potential
+                              licensing information.
+                            properties:
+                              predecessor:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  Unique Resource Name (URN) for an element, used to identify a specific
+                                  revision of an element.
+                                  The element URN scheme is urn:adsk-forma-elements:{system}:{authcontext}:{id}:{revision}.
+                              createdAt:
+                                type: string
+                                format: date-time
+                                x-forma-type: "datetime: ISO 8601"
+                                description: "Creation timestamp, in ISO8601 datetime format."
+                              createdBy:
+                                type: string
+                                x-forma-type: string
+                              licensing:
+                                type: object
+                                x-forma-type: object
+                                description: "Information related to the licensing governing the use and transfer of this element."
+                                properties:
+                                  exportable:
+                                    type: boolean
+                                    x-forma-type: boolean
+                                    description: "Whether or not data can be transferred out of Forma, for example by downloading a data file or sending a project to Revit."
+                                  attributions:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        action:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: |-
+                                            We support two types of attribution actions, depending on what happens to the data:
+
+                                            - display: A watermark (clickable text) to be shown whenever data is displayed.
+
+                                            - transfer: Text to be shown to users (or put in LICENCE files or similar) whenever data is imported or exported.
+
+                                            Possible values: display, transfer
+                                        content:
+                                          type: string
+                                          x-forma-type: string
+                                        url:
+                                          type: string
+                                          x-forma-type: string
+                                    x-forma-type: "array: object"
+                                    description: "Attribution requirements that must be followed. Empty if there are no requirements"
+                                  licenseUrl:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "Link to the original license for the data"
+                                  providerDescriptionUrl:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "Link to the providers description on how the license should be interpreted. For auditing purposes."
+                          properties:
+                            type: object
+                            x-forma-type: object
+                            description: |-
+                              Properties of an element are inherent attributes which are independent
+                              of the representation used to interpret its geometry.
+                              For example, setting an element’s virtual property to true will
+                              indicate that the element should not be included as a physical object
+                              which e.g. blocks sun rays – regardless of which representation you
+                              are looking at.
+                            properties:
+                              category:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The category is used to indicate the user intent of the element. It can
+                                  be used to group and filter top-level elements in the UI.
+                                  The category is a string, and can be any value.
+                              noiseIgnore:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  For elements with a volumeMesh representation, this flag signals
+                                  that the element should be ignored when analyzing traffic noise. In
+                                  contrast to the virtual property, it does _not_ imply that the
+                                  element isn’t a physical object – just that it does not block
+                                  noise.
+                                  Typically used for vegetation elements, since it is common practice
+                                  to ignore vegetation when performing traffic noise analysis.
+                              treatAsVegetationInWindAnalysis:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  If true, and if the element has a volumeMesh representation, the
+                                  wind analysis will interpret the element as vegetation modelled as a
+                                  porous medium. See
+                                  this help center article
+                                  for details about the implementation.
+                              virtual:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  This field can be used to identify something that isn’t real, like a
+                                  constraint or an illustrative boy with balloon. If this is set,
+                                  analyses and possibly other modes will ignore the element.
+                              functionId:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  Deprecated: This field is being removed. Function tagging will be
+                                  re-introduced using a new concept.
+                                  This field will assign a function to the element, which will dictate
+                                  the color with which it is rendered in addition to providing
+                                  function breakdowns in Area Metrics.
+                              trafficData:
+                                description: "Providing this field will include the element as a noise source in the rapid and detailed noise analysis."
+                                type: object
+                                properties:
+                                  anyOf:
+                                    description: "Providing this field will include the element as a noise source in the rapid and detailed noise analysis."
+                                    type: object
+                                    properties:
+                                      "0":
+                                        x-forma-type: "all of"
+                                        description: "Properties required for road traffic data"
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            description: "Base object for traffic data. Currently used for rail and road traffic data."
+                                            properties:
+                                              speed:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Average speed in km/h. Often proxied by the speed limit"
+                                              adt:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Annual average daily traffic"
+                                              adtDistribution:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Annual average daily traffic distribution. All values must sum to 100"
+                                                properties:
+                                                  dayPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the day (07:00-19:00). Number between 0 and 100"
+                                                  eveningPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the evening (19:00-23:00). Number between 0 and 100"
+                                                  nightPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the night (23:00-07:00). Number between 0 and 100"
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              heavyVehiclePercentage:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Percentage of heavy-duty vehicles, motor home vehicles, buses, with three or more axles. Number between 0 and 100"
+                                      "1":
+                                        x-forma-type: "all of"
+                                        description: "Properties required for rail traffic data"
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            description: "Base object for traffic data. Currently used for rail and road traffic data."
+                                            properties:
+                                              speed:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Average speed in km/h. Often proxied by the speed limit"
+                                              adt:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Annual average daily traffic"
+                                              adtDistribution:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Annual average daily traffic distribution. All values must sum to 100"
+                                                properties:
+                                                  dayPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the day (07:00-19:00). Number between 0 and 100"
+                                                  eveningPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the evening (19:00-23:00). Number between 0 and 100"
+                                                  nightPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the night (23:00-07:00). Number between 0 and 100"
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              railType:
+                                                type: string
+                                                x-forma-type: "enum:string"
+                                                description: |-
+                                                  Type of rail traffic. Note: The subway and train properties are used for the beta
+                                                  and will be removed in future releases.
+                                                  Possible values: train, subway, high_speed, regional, tram
+                                              vehicleLength:
+                                                type: number
+                                                x-forma-type: number
+                                                description: |-
+                                                  Length of the vehicle in meters. Note: This property is used for the beta and will
+                                                  be removed in future releases.
+                          representations:
+                            type: object
+                            x-forma-type: object
+                            description: |-
+                              Representations provide ways for an element to be interpreted. An
+                              element can have zero, one, or several representations which unlock
+                              different functionality.
+                              See:
+                              https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/forma-element-specification/#representations
+                            properties:
+                              "*":
+                                x-forma-type: "one of"
+                                type: object
+                                properties:
+                                  LinkedRepresentation:
+                                    type: object
+                                    x-forma-type: object
+                                    description: |-
+                                      The data for a linked representation must be fetched by
+                                      a separate API using the blob ID.
+                                    properties:
+                                      type:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Will always be: linked"
+                                      blobId:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "Blob ID. Used to retrieve the data for this representation."
+                                      selection:
+                                        x-forma-type: "one of"
+                                        description: |-
+                                          The underlying data for a representation can be shared
+                                          across multiple elements/representations.
+                                          This field, if present, should be used to select the relevant parts
+                                          from the data that belongs to this representation. The exact details
+                                          is specific for the representation/format, but in most cases this
+                                          is used with an ID in the data and comparing it against this value
+                                          using the specified operator.
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: equals"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "The relevant data for the representation will be under this value."
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: startsWith"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "Any value with this prefix is relevant for the representation."
+                                      properties:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Additional information about the representation."
+                                        properties:
+                                  EmbeddedJsonRepresentation:
+                                    type: object
+                                    x-forma-type: object
+                                    description: "The data for an embedded representation can be accessed directly under the data key."
+                                    properties:
+                                      type:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Will always be: embedded-json"
+                                      data:
+                                        type: object
+                                        x-forma-type: object
+                                      selection:
+                                        x-forma-type: "one of"
+                                        description: |-
+                                          The underlying data for a representation can be shared
+                                          across multiple elements/representations.
+                                          This field, if present, should be used to select the relevant parts
+                                          from the data that belongs to this representation. The exact details
+                                          is specific for the representation/format, but in most cases this
+                                          is used with an ID in the data and comparing it against this value
+                                          using the specified operator.
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: equals"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "The relevant data for the representation will be under this value."
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: startsWith"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "Any value with this prefix is relevant for the representation."
+                                      properties:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Additional information about the representation."
+                                        properties:
+                                  EmbeddedBinaryRepresentation:
+                                    type: object
+                                    x-forma-type: object
+                                    description: "The data for an embedded representation can be accessed directly under the data key."
+                                    properties:
+                                      type:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Will always be: embedded-binary"
+                                      data:
+                                        type: string
+                                        x-forma-type: string
+                                      selection:
+                                        x-forma-type: "one of"
+                                        description: |-
+                                          The underlying data for a representation can be shared
+                                          across multiple elements/representations.
+                                          This field, if present, should be used to select the relevant parts
+                                          from the data that belongs to this representation. The exact details
+                                          is specific for the representation/format, but in most cases this
+                                          is used with an ID in the data and comparing it against this value
+                                          using the specified operator.
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: equals"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "The relevant data for the representation will be under this value."
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: startsWith"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "Any value with this prefix is relevant for the representation."
+                                      properties:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Additional information about the representation."
+                                        properties:
+                          children:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                urn:
+                                  type: string
+                                  x-forma-type: string
+                                  description: |-
+                                    Unique Resource Name (URN) for an element, used to identify a specific
+                                    revision of an element.
+                                    The element URN scheme is urn:adsk-forma-elements:{system}:{authcontext}:{id}:{revision}.
+                                key:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency."
+                                transform:
+                                  type: array
+                                  items:
+                                    type: number
+                                  x-forma-type: "array: number"
+                                  description: |-
+                                    Flat array of 16 numbers representing column-major 4x4 affine matrix.
+                                    Translation values use metres as unit.
+                                    The matrix is applied to the element’s geometry, and the resulting
+                                    geometry is then transformed by the parent’s matrix.
+
+                                    See:
+                                    https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/forma-element-specification/#transformation-matrix
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                            x-forma-type: "array: object"
+                            description: |-
+                              An element can include other elements as children, which results in
+                              a tree structure. Elements may be referenced multiple times, with
+                              different transforms and under different parents.
+                              See:
+                              https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/forma-element-specification/#children
+                  errors:
+                    type: object
+                    x-forma-type: object
+                    description: "Mapping from URN to error"
+                    properties:
+                      "*":
+                        type: object
+                        x-forma-type: object
+                        description: "Mapping from blob IDs to errors."
+                        properties:
+                          "*":
+                            type: object
+                            x-forma-type: object
+                            properties:
+                              code:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: |-
+                                  Supported error codes are skipped, not_found and other.
+                                  If the error code skipped is used, it means the element system
+                                  was unable to process the requested item, and the client should
+                                  issue another request for that item (optionally together with multiple
+                                  others). This error code can be used in cases where the total size
+                                  of the result or processing time exceeds a certain system-specific
+                                  threshold, to ensure a valid partial response can be given.
+                                  This must be expected for both elements and blobs batch operations.
+                                  The client should repeat this process until either all items have
+                                  been processed or the system only returns errors with this code.
+                                  Possible values: skipped, not_found, other
+                              message:
+                                type: string
+                                x-forma-type: string
+        "302":
+          description: "Clients should follow redirects, as the response might be stored somewhere else"
+          headers:
+            Location:
+              schema:
+                type: string
+                x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/element-getelementsbatch-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                urns:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+              required:
+                - urns
+  "/forma/element-service/v1alpha/elements/{urn}":
+    get:
+      operationId: element-getelement-GET
+      summary: "Get element by urn"
+      description: "Get element by urn."
+      parameters:
+        - name: urn
+          in: path
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "The authcontext of the resource you are requesting"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: recursive
+          in: query
+          description: |-
+            Will traverse the element’s entire hierarchy recursively if enabled.
+            All of the element’s children will be returned.
+            Default is false.
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  elements:
+                    type: object
+                    x-forma-type: object
+                    description: "Mapping from URN to element"
+                    properties:
+                      "*":
+                        type: object
+                        x-forma-type: object
+                        description: "Learn more about the element system here: https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/"
+                        properties:
+                          urn:
+                            type: string
+                            x-forma-type: string
+                            description: |-
+                              Unique Resource Name (URN) for an element, used to identify a specific
+                              revision of an element.
+                              The element URN scheme is urn:adsk-forma-elements:{system}:{authcontext}:{id}:{revision}.
+                          metadata:
+                            type: object
+                            x-forma-type: object
+                            description: |-
+                              Metadata about an element. Does not describe the element itself, but
+                              rather the context in which it has been created/updated and potential
+                              licensing information.
+                            properties:
+                              predecessor:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  Unique Resource Name (URN) for an element, used to identify a specific
+                                  revision of an element.
+                                  The element URN scheme is urn:adsk-forma-elements:{system}:{authcontext}:{id}:{revision}.
+                              createdAt:
+                                type: string
+                                format: date-time
+                                x-forma-type: "datetime: ISO 8601"
+                                description: "Creation timestamp, in ISO8601 datetime format."
+                              createdBy:
+                                type: string
+                                x-forma-type: string
+                              licensing:
+                                type: object
+                                x-forma-type: object
+                                description: "Information related to the licensing governing the use and transfer of this element."
+                                properties:
+                                  exportable:
+                                    type: boolean
+                                    x-forma-type: boolean
+                                    description: "Whether or not data can be transferred out of Forma, for example by downloading a data file or sending a project to Revit."
+                                  attributions:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        action:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: |-
+                                            We support two types of attribution actions, depending on what happens to the data:
+
+                                            - display: A watermark (clickable text) to be shown whenever data is displayed.
+
+                                            - transfer: Text to be shown to users (or put in LICENCE files or similar) whenever data is imported or exported.
+
+                                            Possible values: display, transfer
+                                        content:
+                                          type: string
+                                          x-forma-type: string
+                                        url:
+                                          type: string
+                                          x-forma-type: string
+                                    x-forma-type: "array: object"
+                                    description: "Attribution requirements that must be followed. Empty if there are no requirements"
+                                  licenseUrl:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "Link to the original license for the data"
+                                  providerDescriptionUrl:
+                                    type: string
+                                    x-forma-type: string
+                                    description: "Link to the providers description on how the license should be interpreted. For auditing purposes."
+                          properties:
+                            type: object
+                            x-forma-type: object
+                            description: |-
+                              Properties of an element are inherent attributes which are independent
+                              of the representation used to interpret its geometry.
+                              For example, setting an element’s virtual property to true will
+                              indicate that the element should not be included as a physical object
+                              which e.g. blocks sun rays – regardless of which representation you
+                              are looking at.
+                            properties:
+                              category:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  The category is used to indicate the user intent of the element. It can
+                                  be used to group and filter top-level elements in the UI.
+                                  The category is a string, and can be any value.
+                              noiseIgnore:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  For elements with a volumeMesh representation, this flag signals
+                                  that the element should be ignored when analyzing traffic noise. In
+                                  contrast to the virtual property, it does _not_ imply that the
+                                  element isn’t a physical object – just that it does not block
+                                  noise.
+                                  Typically used for vegetation elements, since it is common practice
+                                  to ignore vegetation when performing traffic noise analysis.
+                              treatAsVegetationInWindAnalysis:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  If true, and if the element has a volumeMesh representation, the
+                                  wind analysis will interpret the element as vegetation modelled as a
+                                  porous medium. See
+                                  this help center article
+                                  for details about the implementation.
+                              virtual:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: |-
+                                  This field can be used to identify something that isn’t real, like a
+                                  constraint or an illustrative boy with balloon. If this is set,
+                                  analyses and possibly other modes will ignore the element.
+                              functionId:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  Deprecated: This field is being removed. Function tagging will be
+                                  re-introduced using a new concept.
+                                  This field will assign a function to the element, which will dictate
+                                  the color with which it is rendered in addition to providing
+                                  function breakdowns in Area Metrics.
+                              trafficData:
+                                description: "Providing this field will include the element as a noise source in the rapid and detailed noise analysis."
+                                type: object
+                                properties:
+                                  anyOf:
+                                    description: "Providing this field will include the element as a noise source in the rapid and detailed noise analysis."
+                                    type: object
+                                    properties:
+                                      "0":
+                                        x-forma-type: "all of"
+                                        description: "Properties required for road traffic data"
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            description: "Base object for traffic data. Currently used for rail and road traffic data."
+                                            properties:
+                                              speed:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Average speed in km/h. Often proxied by the speed limit"
+                                              adt:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Annual average daily traffic"
+                                              adtDistribution:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Annual average daily traffic distribution. All values must sum to 100"
+                                                properties:
+                                                  dayPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the day (07:00-19:00). Number between 0 and 100"
+                                                  eveningPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the evening (19:00-23:00). Number between 0 and 100"
+                                                  nightPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the night (23:00-07:00). Number between 0 and 100"
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              heavyVehiclePercentage:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Percentage of heavy-duty vehicles, motor home vehicles, buses, with three or more axles. Number between 0 and 100"
+                                      "1":
+                                        x-forma-type: "all of"
+                                        description: "Properties required for rail traffic data"
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            description: "Base object for traffic data. Currently used for rail and road traffic data."
+                                            properties:
+                                              speed:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Average speed in km/h. Often proxied by the speed limit"
+                                              adt:
+                                                type: number
+                                                x-forma-type: number
+                                                description: "Annual average daily traffic"
+                                              adtDistribution:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Annual average daily traffic distribution. All values must sum to 100"
+                                                properties:
+                                                  dayPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the day (07:00-19:00). Number between 0 and 100"
+                                                  eveningPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the evening (19:00-23:00). Number between 0 and 100"
+                                                  nightPercentage:
+                                                    type: number
+                                                    x-forma-type: number
+                                                    description: "Percentage of traffic during the night (23:00-07:00). Number between 0 and 100"
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              railType:
+                                                type: string
+                                                x-forma-type: "enum:string"
+                                                description: |-
+                                                  Type of rail traffic. Note: The subway and train properties are used for the beta
+                                                  and will be removed in future releases.
+                                                  Possible values: train, subway, high_speed, regional, tram
+                                              vehicleLength:
+                                                type: number
+                                                x-forma-type: number
+                                                description: |-
+                                                  Length of the vehicle in meters. Note: This property is used for the beta and will
+                                                  be removed in future releases.
+                          representations:
+                            type: object
+                            x-forma-type: object
+                            description: |-
+                              Representations provide ways for an element to be interpreted. An
+                              element can have zero, one, or several representations which unlock
+                              different functionality.
+                              See:
+                              https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/forma-element-specification/#representations
+                            properties:
+                              "*":
+                                x-forma-type: "one of"
+                                type: object
+                                properties:
+                                  LinkedRepresentation:
+                                    type: object
+                                    x-forma-type: object
+                                    description: |-
+                                      The data for a linked representation must be fetched by
+                                      a separate API using the blob ID.
+                                    properties:
+                                      type:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Will always be: linked"
+                                      blobId:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "Blob ID. Used to retrieve the data for this representation."
+                                      selection:
+                                        x-forma-type: "one of"
+                                        description: |-
+                                          The underlying data for a representation can be shared
+                                          across multiple elements/representations.
+                                          This field, if present, should be used to select the relevant parts
+                                          from the data that belongs to this representation. The exact details
+                                          is specific for the representation/format, but in most cases this
+                                          is used with an ID in the data and comparing it against this value
+                                          using the specified operator.
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: equals"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "The relevant data for the representation will be under this value."
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: startsWith"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "Any value with this prefix is relevant for the representation."
+                                      properties:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Additional information about the representation."
+                                        properties:
+                                  EmbeddedJsonRepresentation:
+                                    type: object
+                                    x-forma-type: object
+                                    description: "The data for an embedded representation can be accessed directly under the data key."
+                                    properties:
+                                      type:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Will always be: embedded-json"
+                                      data:
+                                        type: object
+                                        x-forma-type: object
+                                      selection:
+                                        x-forma-type: "one of"
+                                        description: |-
+                                          The underlying data for a representation can be shared
+                                          across multiple elements/representations.
+                                          This field, if present, should be used to select the relevant parts
+                                          from the data that belongs to this representation. The exact details
+                                          is specific for the representation/format, but in most cases this
+                                          is used with an ID in the data and comparing it against this value
+                                          using the specified operator.
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: equals"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "The relevant data for the representation will be under this value."
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: startsWith"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "Any value with this prefix is relevant for the representation."
+                                      properties:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Additional information about the representation."
+                                        properties:
+                                  EmbeddedBinaryRepresentation:
+                                    type: object
+                                    x-forma-type: object
+                                    description: "The data for an embedded representation can be accessed directly under the data key."
+                                    properties:
+                                      type:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Will always be: embedded-binary"
+                                      data:
+                                        type: string
+                                        x-forma-type: string
+                                      selection:
+                                        x-forma-type: "one of"
+                                        description: |-
+                                          The underlying data for a representation can be shared
+                                          across multiple elements/representations.
+                                          This field, if present, should be used to select the relevant parts
+                                          from the data that belongs to this representation. The exact details
+                                          is specific for the representation/format, but in most cases this
+                                          is used with an ID in the data and comparing it against this value
+                                          using the specified operator.
+                                        type: object
+                                        properties:
+                                          "0":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: equals"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "The relevant data for the representation will be under this value."
+                                          "1":
+                                            type: object
+                                            x-forma-type: object
+                                            properties:
+                                              type:
+                                                type: object
+                                                x-forma-type: object
+                                                description: "Will always be: startsWith"
+                                              value:
+                                                type: string
+                                                x-forma-type: string
+                                                description: "Any value with this prefix is relevant for the representation."
+                                      properties:
+                                        type: object
+                                        x-forma-type: object
+                                        description: "Additional information about the representation."
+                                        properties:
+                          children:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                urn:
+                                  type: string
+                                  x-forma-type: string
+                                  description: |-
+                                    Unique Resource Name (URN) for an element, used to identify a specific
+                                    revision of an element.
+                                    The element URN scheme is urn:adsk-forma-elements:{system}:{authcontext}:{id}:{revision}.
+                                key:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "Unique id under parent. Used to build up paths. Prefer short values for space efficiency."
+                                transform:
+                                  type: array
+                                  items:
+                                    type: number
+                                  x-forma-type: "array: number"
+                                  description: |-
+                                    Flat array of 16 numbers representing column-major 4x4 affine matrix.
+                                    Translation values use metres as unit.
+                                    The matrix is applied to the element’s geometry, and the resulting
+                                    geometry is then transformed by the parent’s matrix.
+
+                                    See:
+                                    https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/forma-element-specification/#transformation-matrix
+                                name:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "User defined naming of this specific reference, typically used to distinguish elements in eg. UI listings"
+                            x-forma-type: "array: object"
+                            description: |-
+                              An element can include other elements as children, which results in
+                              a tree structure. Elements may be referenced multiple times, with
+                              different transforms and under different parents.
+                              See:
+                              https://aps.autodesk.com/en/docs/forma/v1/working-with-forma/element-system/forma-element-specification/#children
+        "302":
+          description: "Clients should follow redirects, as the response might be stored somewhere else"
+          headers:
+            Location:
+              schema:
+                type: string
+                x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/element-getelement-GET"
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"

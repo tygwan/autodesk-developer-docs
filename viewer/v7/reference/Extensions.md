@@ -1,0 +1,13 @@
+---
+title: "Extensions"
+url_path: reference/Extensions
+surface: viewer-sdk
+document_kind: reference
+category: "Extensions"
+---
+# Extensions
+
+Each class in the Extension namespace is like a plug-in for Viewer SDK. The extensions provide a collection of classes you can use if you need to add specialized functionality to Viewer SDK. You can also create your own extensions if you need functionality not included by default. You probably won’t need to write your own extension, but if you do have a special requirement check out this tutorial on [writing your own extension](https://aps.autodesk.com/en/docs/viewer/v7/developers_guide/viewer_basics/extensions/).
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/Extensions

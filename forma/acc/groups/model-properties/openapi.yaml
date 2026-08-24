@@ -1,0 +1,3874 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Model Properties"
+  version: v1
+  description: |-
+    Forma APIs — Model Properties.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/index/v2/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: "Model Properties"
+x-forma-common-base: "/construction/index/v2/projects"
+paths:
+  "/construction/index/v2/projects/{projectId}/diffs:batch-status":
+    post:
+      operationId: index-v2-diff-jobs-batch-status-post
+      summary: "Retrieve the job status for several jobs in a single request"
+      description: "Retrieve the job status for several jobs in a single request."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-force-regenerate-cache
+          in: header
+          description: "If set to true, force regeneration of S3 cache."
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  diffs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        projectId:
+                          type: string
+                          x-forma-type: string
+                          description: "project id."
+                        diffId:
+                          type: string
+                          x-forma-type: string
+                          description: "diff id."
+                        queryId:
+                          type: string
+                          x-forma-type: string
+                          description: "query id."
+                        type:
+                          x-forma-type: "enum: string"
+                          description: |-
+                            type.
+                            Possible values: DIFF
+                        state:
+                          x-forma-type: "enum: string"
+                          description: |-
+                            job status.
+                            Possible values: PROCESSING, FINISHED, FAILED
+                        selfUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "unique url for this job status."
+                        prevVersionUrns:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The previous file versions used in this index."
+                        curVersionUrns:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The current file versions used in this index."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: timestamp.
+                        retryAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: timestamp.
+                        stats:
+                          type: object
+                          x-forma-type: object
+                          description: "some higher level diff statistics."
+                          properties:
+                            added:
+                              type: integer
+                              x-forma-type: int
+                              description: "number of objects added."
+                            removed:
+                              type: integer
+                              x-forma-type: int
+                              description: "number of objects removed."
+                            modified:
+                              type: integer
+                              x-forma-type: int
+                              description: "number of objects modified."
+                        manifestUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the diff manifest."
+                        fieldsUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the diff fields."
+                        propertiesUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the diff properties."
+                        queryResultsUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the query result."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              errors:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    field:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The field which failed validation."
+                                    title:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "A short title for the error."
+                                    detail:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                                    type:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The error code."
+                                x-forma-type: "array: object"
+                                description: "A set of specific validation errors that need to be fixed."
+                          x-forma-type: "array: object"
+                          description: errors.
+                    x-forma-type: "array: object"
+                    description: diffs.
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-jobs-batch-status-post"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                diffs:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      prevVersionUrn:
+                        type: string
+                        x-forma-type: string
+                        description: "file version urn."
+                      curVersionUrn:
+                        type: string
+                        x-forma-type: string
+                        description: "file version urn."
+                      query:
+                        type: object
+                        x-forma-type: object
+                        description: "SQL AST for binary expression/filter"
+                      columns:
+                        type: object
+                        x-forma-type: object
+                        description: "SQL AST for describing columns/projections"
+                    required:
+                      - curVersionUrn
+                      - prevVersionUrn
+                  x-forma-type: "array: object"
+                  description: |-
+                    diffs.
+                    Min items: 1 Max items: 1000
+              required:
+                - diffs
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}/fields":
+    get:
+      operationId: index-v2-diff-fields-get
+      summary: "Retrieve a specific fields dictionary associated with a diff index"
+      description: "Retrieve a specific fields dictionary associated with a diff index. Once created, the fields dictionary is immutable. The response will set a long expiration HTTP header for efficient client-side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    x-forma-type: string
+                    description: "The unique identifier for the attribute in file version."
+                  category:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute category, can be null."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      field data type.
+                      Possible values: Unknown, Boolean, Integer, Double, Blob, DbKey, String, LocalizableString, DateTime, GeoLocation, Position
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute name."
+                  uom:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute data type context or unit of measurement, e.g., “m”, “ft”, “m^2”, “kip/inch^2”."
+        "303":
+          description: "Redirect Method"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    x-forma-type: string
+                    description: "The unique identifier for the attribute in file version."
+                  category:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute category, can be null."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      field data type.
+                      Possible values: Unknown, Boolean, Integer, Double, Blob, DbKey, String, LocalizableString, DateTime, GeoLocation, Position
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute name."
+                  uom:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute data type context or unit of measurement, e.g., “m”, “ft”, “m^2”, “kip/inch^2”."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field that failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-fields-get"
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}/manifest":
+    get:
+      operationId: index-v2-diff-manifest-get
+      summary: "Retrieve a specific manifest associated with a diff index"
+      description: "Retrieve a specific manifest associated with a diff index. Since the manifest, once created, is immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  schema:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      current schema version.
+                      Possible values: 2.0.0
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "project ID."
+                  status:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      manifest status.
+                      Possible values: Failed, Running, Succeeded
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "creation timestampe."
+                  seedFiles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        lineageId:
+                          type: string
+                          x-forma-type: string
+                          description: "lineage ID."
+                        lineageUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "lineage URN."
+                        versionUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "file version URN."
+                        databases:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "DB ID."
+                              offsets:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the offsets file."
+                              attributes:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the attributes file."
+                              values:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the values file."
+                              mapping:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the mapping file."
+                              ids:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the IDs file."
+                          x-forma-type: "array: object"
+                          description: databases.
+                        views:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "view ID."
+                              urn:
+                                type: string
+                                x-forma-type: string
+                                description: "file version URN."
+                              is3d:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: "is this a 3D view?."
+                              viewableName:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable name."
+                              viewableId:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable ID."
+                              viewableGuid:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable GUID."
+                          x-forma-type: "array: object"
+                          description: views.
+                    x-forma-type: "array: object"
+                    description: "current seed files."
+                  prev:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        lineageId:
+                          type: string
+                          x-forma-type: string
+                          description: "lineage ID."
+                        lineageUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "lineage URN."
+                        versionUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "file version URN."
+                        databases:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "DB ID."
+                              offsets:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the offsets file."
+                              attributes:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the attributes file."
+                              values:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the values file."
+                              mapping:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the mapping file."
+                              ids:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the IDs file."
+                          x-forma-type: "array: object"
+                          description: databases.
+                        views:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "view ID."
+                              urn:
+                                type: string
+                                x-forma-type: string
+                                description: "file version URN."
+                              is3d:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: "is this a 3D view?."
+                              viewableName:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable name."
+                              viewableId:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable ID."
+                              viewableGuid:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable GUID."
+                          x-forma-type: "array: object"
+                          description: views.
+                    x-forma-type: "array: object"
+                    description: "previous seed files."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: "errors if the index processing has failed."
+                  stats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        addedObjects:
+                          type: integer
+                          x-forma-type: int
+                          description: "The number of design elements added between the compared model versions."
+                        removedObjects:
+                          type: integer
+                          x-forma-type: int
+                          description: "The number of design elements removed between the compared model versions."
+                        changedObjects:
+                          type: integer
+                          x-forma-type: int
+                          description: "The number of design elements which have update property values or altered geometry."
+                        contentLength:
+                          type: integer
+                          x-forma-type: int
+                          description: "The compressed file size in bytes of the index. This file can be downloaded via the diff properties endpoint."
+                    x-forma-type: "array: object"
+                    description: "High level statistics about the diff index."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-manifest-get"
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}/properties":
+    get:
+      operationId: index-v2-diff-properties-get
+      summary: "Retrieve the specific properties of the given diff"
+      description: "Retrieve the specific properties of the given diff. Since the properties for a diff index, once created, are immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      object change type.
+                      Possible values: OBJECT_ADDED, OBJECT_REMOVED, OBJECT_CHANGED
+                  prev:
+                    type: object
+                    x-forma-type: object
+                    description: "common properties index properties."
+                    properties:
+                      lmvId:
+                        type: integer
+                        x-forma-type: int
+                        description: "Object database id from the original seed file property database (_objects_id.id)."
+                      dbId:
+                        type: string
+                        x-forma-type: string
+                        description: "Property database id (the property database the object originated from)."
+                      props:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property keyed values."
+                      propsHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether object properties have changed between different versions."
+                      propsIgnored:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property values that are not considered for property change tracking."
+                      geomHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether the object geometry has changed between different versions."
+                      bboxMin:
+                        x-forma-type: "array: int"
+                        description: "minimum [x, y, z]-coords of the 3D-bbox."
+                      bboxMax:
+                        x-forma-type: "array: int"
+                        description: "maximum [x, y, z]-coords of the 3D-bbox."
+                      views:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: "List of corresponding view IDs in the index manifest that this object is visible in."
+        "303":
+          description: "Redirect Method"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      object change type.
+                      Possible values: OBJECT_ADDED, OBJECT_REMOVED, OBJECT_CHANGED
+                  prev:
+                    type: object
+                    x-forma-type: object
+                    description: "common properties index properties."
+                    properties:
+                      lmvId:
+                        type: integer
+                        x-forma-type: int
+                        description: "Object database id from the original seed file property database (_objects_id.id)."
+                      dbId:
+                        type: string
+                        x-forma-type: string
+                        description: "Property database id (the property database the object originated from)."
+                      props:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property keyed values."
+                      propsHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether object properties have changed between different versions."
+                      propsIgnored:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property values that are not considered for property change tracking."
+                      geomHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether the object geometry has changed between different versions."
+                      bboxMin:
+                        x-forma-type: "array: int"
+                        description: "minimum [x, y, z]-coords of the 3D-bbox."
+                      bboxMax:
+                        x-forma-type: "array: int"
+                        description: "maximum [x, y, z]-coords of the 3D-bbox."
+                      views:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: "List of corresponding view IDs in the index manifest that this object is visible in."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-properties-get"
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}/queries/{queryId}/properties":
+    get:
+      operationId: index-v2-diff-query-properties-get
+      summary: "Retrieve the query specific properties of the given diff"
+      description: "Retrieve the query specific properties of the given diff. Since the diff properties, once created, are immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: queryId
+          in: path
+          required: true
+          description: "The query ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "Minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "Maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      object change type.
+                      Possible values: OBJECT_ADDED, OBJECT_REMOVED, OBJECT_CHANGED
+                  prev:
+                    type: object
+                    x-forma-type: object
+                    description: "common properties index properties."
+                    properties:
+                      lmvId:
+                        type: integer
+                        x-forma-type: int
+                        description: "Object database id from the original seed file property database (_objects_id.id)."
+                      dbId:
+                        type: string
+                        x-forma-type: string
+                        description: "Property database id (the property database the object originated from)."
+                      props:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property keyed values."
+                      propsHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether object properties have changed between different versions."
+                      propsIgnored:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property values that are not considered for property change tracking."
+                      geomHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether the object geometry has changed between different versions."
+                      bboxMin:
+                        x-forma-type: "array: int"
+                        description: "minimum [x, y, z]-coords of the 3D-bbox."
+                      bboxMax:
+                        x-forma-type: "array: int"
+                        description: "maximum [x, y, z]-coords of the 3D-bbox."
+                      views:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: "List of corresponding view IDs in the index manifest that this object is visible in."
+        "303":
+          description: "Redirect Method"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      object change type.
+                      Possible values: OBJECT_ADDED, OBJECT_REMOVED, OBJECT_CHANGED
+                  prev:
+                    type: object
+                    x-forma-type: object
+                    description: "common properties index properties."
+                    properties:
+                      lmvId:
+                        type: integer
+                        x-forma-type: int
+                        description: "Object database id from the original seed file property database (_objects_id.id)."
+                      dbId:
+                        type: string
+                        x-forma-type: string
+                        description: "Property database id (the property database the object originated from)."
+                      props:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property keyed values."
+                      propsHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether object properties have changed between different versions."
+                      propsIgnored:
+                        type: object
+                        x-forma-type: object
+                        description: "Property database property values that are not considered for property change tracking."
+                      geomHash:
+                        type: string
+                        x-forma-type: string
+                        description: "Hash used to determine whether the object geometry has changed between different versions."
+                      bboxMin:
+                        x-forma-type: "array: int"
+                        description: "minimum [x, y, z]-coords of the 3D-bbox."
+                      bboxMax:
+                        x-forma-type: "array: int"
+                        description: "maximum [x, y, z]-coords of the 3D-bbox."
+                      views:
+                        type: array
+                        items:
+                          type: string
+                        x-forma-type: "array: string"
+                        description: "List of corresponding view IDs in the index manifest that this object is visible in."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-query-properties-get"
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}/queries/{queryId}":
+    get:
+      operationId: index-v2-diff-query-job-status-get
+      summary: "Depending on the state different properties might be present or missing"
+      description: "Depending on the state different properties might be present or missing. E.g., if the diff job is not finished yet, the results link might be missing, but the retryAt property will be present. If the processing failed for some reason, the errors property will contain some information. Once the final result of the diff job has been determined (either finished or failed), the status is assumed to be immutable and the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: queryId
+          in: path
+          required: true
+          description: "The query ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    x-forma-type: string
+                    description: "project id."
+                  diffId:
+                    type: string
+                    x-forma-type: string
+                    description: "diff id."
+                  queryId:
+                    type: string
+                    x-forma-type: string
+                    description: "query id."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      type.
+                      Possible values: DIFF
+                  state:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      job status.
+                      Possible values: PROCESSING, FINISHED, FAILED
+                  selfUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "unique url for this job status."
+                  prevVersionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The previous file versions used in this index."
+                  curVersionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The current file versions used in this index."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  retryAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  stats:
+                    type: object
+                    x-forma-type: object
+                    description: "Some higher level diff index statistics."
+                    properties:
+                      added:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects added."
+                      removed:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects removed."
+                      modified:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects modified."
+                  manifestUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff manifest."
+                  fieldsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff fields."
+                  propertiesUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff properties."
+                  queryResultsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the query result."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: errors.
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-query-job-status-get"
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}/queries":
+    post:
+      operationId: index-v2-diff-query-post
+      summary: "Applies the given query to the given properties index"
+      description: "Applies the given query to the given properties index."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-force-regenerate-cache
+          in: header
+          description: "If set to true, force regeneration of S3 cache."
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    x-forma-type: string
+                    description: "project id."
+                  diffId:
+                    type: string
+                    x-forma-type: string
+                    description: "diff id."
+                  queryId:
+                    type: string
+                    x-forma-type: string
+                    description: "query id."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      type.
+                      Possible values: DIFF
+                  state:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      job status.
+                      Possible values: PROCESSING, FINISHED, FAILED
+                  selfUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "unique url for this job status."
+                  prevVersionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The previous file versions used in this index."
+                  curVersionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The current file versions used in this index."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  retryAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  stats:
+                    type: object
+                    x-forma-type: object
+                    description: "some higher level diff statistics."
+                    properties:
+                      added:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects added."
+                      removed:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects removed."
+                      modified:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects modified."
+                  manifestUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff manifest."
+                  fieldsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff fields."
+                  propertiesUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff properties."
+                  queryResultsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the query result."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: errors.
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-query-post"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                query:
+                  type: object
+                  x-forma-type: object
+                  description: "SQL AST for binary expression/filter"
+                columns:
+                  type: object
+                  x-forma-type: object
+                  description: "SQL AST for describing columns/projections"
+              required:
+                - query
+  "/construction/index/v2/projects/{projectId}/diffs/{diffId}":
+    get:
+      operationId: index-v2-diff-status-get
+      summary: "Retrieve the diff status for the given diff ID"
+      description: "Retrieve the diff status for the given diff ID. Depending on the state different properties might be present or missing. E.g., if the diff job is not finished yet, the manifest, fields, and properties links might be missing, but the retryAt property will be present. If the processing failed for some reason, the errors property will contain some information. Once the final result of the diff job has been determined (either finished or failed), the status is assumed to be immutable and the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: diffId
+          in: path
+          required: true
+          description: "The diff ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    x-forma-type: string
+                    description: "project id."
+                  diffId:
+                    type: string
+                    x-forma-type: string
+                    description: "diff id."
+                  queryId:
+                    type: string
+                    x-forma-type: string
+                    description: "query id."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      type.
+                      Possible values: DIFF
+                  state:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      job status.
+                      Possible values: PROCESSING, FINISHED, FAILED
+                  selfUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "unique url for this job status."
+                  prevVersionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The previous file versions used in this index."
+                  curVersionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The current file versions used in this index."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  retryAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  stats:
+                    type: object
+                    x-forma-type: object
+                    description: "some higher level diff statistics."
+                    properties:
+                      added:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects added."
+                      removed:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects removed."
+                      modified:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects modified."
+                  manifestUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff manifest."
+                  fieldsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff fields."
+                  propertiesUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the diff properties."
+                  queryResultsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the query result."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: errors.
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-diff-status-get"
+  "/construction/index/v2/projects/{projectId}/indexes:batch-status":
+    post:
+      operationId: index-v2-index-jobs-batch-status-post
+      summary: "Retrieve the job status for several jobs in a single request"
+      description: "Retrieve the job status for several jobs in a single request."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-force-regenerate-cache
+          in: header
+          description: "If set to true, force regeneration of S3 cache."
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  indexes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        projectId:
+                          type: string
+                          x-forma-type: string
+                          description: "project id."
+                        indexId:
+                          type: string
+                          x-forma-type: string
+                          description: "index id."
+                        queryId:
+                          type: string
+                          x-forma-type: string
+                          description: "query id."
+                        type:
+                          x-forma-type: "enum: string"
+                          description: |-
+                            type.
+                            Possible values: INDEX
+                        state:
+                          x-forma-type: "enum: string"
+                          description: |-
+                            job status.
+                            Possible values: PROCESSING, FINISHED, FAILED
+                        selfUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "unique url for this indexing job status."
+                        versionUrns:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "list all versions this index depends upon."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: timestamp.
+                        retryAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: timestamp.
+                        stats:
+                          type: object
+                          x-forma-type: object
+                          description: "some higher level index statistics."
+                          properties:
+                            objects:
+                              type: integer
+                              x-forma-type: int
+                              description: "number of objects contained in the properties index."
+                        manifestUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the index manifest."
+                        fieldsUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the index fields."
+                        propertiesUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the index properties."
+                        queryResultsUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "url for downloading the query result."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              errors:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    field:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The field which failed validation."
+                                    title:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "A short title for the error."
+                                    detail:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                                    type:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "The error code."
+                                x-forma-type: "array: object"
+                                description: "A set of specific validation errors that need to be fixed."
+                          x-forma-type: "array: object"
+                          description: errors.
+                    x-forma-type: "array: object"
+                    description: |-
+                      indexes.
+                      Min items: 1 Max items: 1000
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-jobs-batch-status-post"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                versions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      versionUrn:
+                        type: string
+                        x-forma-type: string
+                        description: "file version urn."
+                      query:
+                        type: object
+                        x-forma-type: object
+                        description: "SQL AST for binary expression/filter"
+                      columns:
+                        type: object
+                        x-forma-type: object
+                        description: "SQL AST for describing columns/projections"
+                    required:
+                      - versionUrn
+                  x-forma-type: "array: object"
+                  description: |-
+                    versions.
+                    Min items: 1 Max items: 1000
+              required:
+                - versions
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}/fields":
+    get:
+      operationId: index-v2-index-fields-get
+      summary: "Retrieve a specific fields dictionary associated with a properties index"
+      description: "Retrieve a specific fields dictionary associated with a properties index. Since the fields dictionary, once created, is immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    x-forma-type: string
+                    description: "The unique identifier for the attribute in file version."
+                  category:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute category, can be null."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      field data type.
+                      Possible values: Unknown, Boolean, Integer, Double, Blob, DbKey, String, LocalizableString, DateTime, GeoLocation, Position
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute name."
+                  uom:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute data type context or unit of measurement, e.g., “m”, “ft”, “m^2”, “kip/inch^2”."
+        "303":
+          description: "Redirect Method"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    x-forma-type: string
+                    description: "The unique identifier for the attribute in file version."
+                  category:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute category, can be null."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      field data type.
+                      Possible values: Unknown, Boolean, Integer, Double, Blob, DbKey, String, LocalizableString, DateTime, GeoLocation, Position
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute name."
+                  uom:
+                    type: string
+                    x-forma-type: string
+                    description: "The property database attribute data type context or unit of measurement, e.g., “m”, “ft”, “m^2”, “kip/inch^2”."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-fields-get"
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}/manifest":
+    get:
+      operationId: index-v2-index-manifest-get
+      summary: "Retrieve a specific manifest associated with a properties index"
+      description: "Retrieve a specific manifest associated with a properties index. Since the manifest, once created, is immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  schema:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      current schema version.
+                      Possible values: 2.0.0
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "project ID."
+                  status:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      manifest status.
+                      Possible values: Failed, Running, Succeeded
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "creation timestamp."
+                  seedFiles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        lineageId:
+                          type: string
+                          x-forma-type: string
+                          description: "lineage ID."
+                        lineageUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "lineage URN."
+                        versionUrn:
+                          type: string
+                          x-forma-type: string
+                          description: "file version URN."
+                        databases:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "DB ID."
+                              offsets:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the offsets file."
+                              attributes:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the attributes file."
+                              values:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the values file."
+                              mapping:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the mapping file."
+                              ids:
+                                type: string
+                                x-forma-type: string
+                                description: "OSS path for the IDs file."
+                          x-forma-type: "array: object"
+                          description: databases.
+                        views:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                                description: "view ID."
+                              urn:
+                                type: string
+                                x-forma-type: string
+                                description: "file version URN."
+                              is3d:
+                                type: boolean
+                                x-forma-type: boolean
+                                description: "is this a 3D view?."
+                              viewableName:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable name."
+                              viewableId:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable ID."
+                              viewableGuid:
+                                type: string
+                                x-forma-type: string
+                                description: "viewable GUID."
+                          x-forma-type: "array: object"
+                          description: views.
+                    x-forma-type: "array: object"
+                    description: "seed files."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: errors.
+                  stats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        objects:
+                          type: integer
+                          x-forma-type: int
+                          description: "The number of design elements (rows) in this index"
+                        contentLength:
+                          type: integer
+                          x-forma-type: int
+                          description: "The compressed file size in bytes of the index. This file can be downloaded via the index properties endpoint"
+                    x-forma-type: "array: object"
+                    description: "High level statistics about the diff index"
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-manifest-get"
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}/properties":
+    get:
+      operationId: index-v2-index-properties-get
+      summary: "Retrieve the specific properties index"
+      description: "Retrieve the specific properties index. Since the properties index, once created, is immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "Minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "Maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+        "303":
+          description: "Redirect Method"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "Minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "Maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-properties-get"
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}/queries/{queryId}/properties":
+    get:
+      operationId: index-v2-index-query-properties-get
+      summary: "Retrieve the query specific properties index"
+      description: "Retrieve the query specific properties index. Since the properties index, once created, is immutable, the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: queryId
+          in: path
+          required: true
+          description: "The query ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+        "303":
+          description: "Redirect Method"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  lmvId:
+                    type: integer
+                    x-forma-type: int
+                    description: "Object database id from the original seed file property database (_objects_id.id)."
+                  dbId:
+                    type: string
+                    x-forma-type: string
+                    description: "Property database id (the property database the object originated from)."
+                  props:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property keyed values."
+                  propsHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether object properties have changed between different versions."
+                  propsIgnored:
+                    type: object
+                    x-forma-type: object
+                    description: "Property database property values that are not considered for property change tracking."
+                  geomHash:
+                    type: string
+                    x-forma-type: string
+                    description: "Hash used to determine whether the object geometry has changed between different versions."
+                  bboxMin:
+                    type: object
+                    x-forma-type: object
+                    description: "minimum [x, y, z]-coords of the 3D-bbox."
+                  bboxMax:
+                    type: object
+                    x-forma-type: object
+                    description: "maximum [x, y, z]-coords of the 3D-bbox."
+                  views:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "List of corresponding view IDs in the index manifest that this object is visible in."
+                  svf2Id:
+                    type: integer
+                    x-forma-type: int
+                    description: "The stable SVF2 ID of the object."
+                  lineageId:
+                    type: string
+                    x-forma-type: string
+                    description: "The lineage ID of the object; the (svf2Id, lineageId)-pair allows to track a specific object across several versions."
+                  externalId:
+                    type: string
+                    x-forma-type: string
+                    description: "The external ID of the object."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-query-properties-get"
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}/queries/{queryId}":
+    get:
+      operationId: index-v2-index-query-job-status-get
+      summary: "Depending on the state different properties might be present or missing"
+      description: "Depending on the state different properties might be present or missing. E.g. if the indexing job is not finished yet, the results link might be missing, but the retryAt property will be present. Or if the processing failed for some reason, the errors property will contain some information. Once the final result of the indexing job has been determined (either finished or failed), the status is assumed to be immutable and the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: queryId
+          in: path
+          required: true
+          description: "The query ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    x-forma-type: string
+                    description: "project id."
+                  indexId:
+                    type: string
+                    x-forma-type: string
+                    description: "index id."
+                  queryId:
+                    type: string
+                    x-forma-type: string
+                    description: "query id."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      type.
+                      Possible values: INDEX
+                  state:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      job status.
+                      Possible values: PROCESSING, FINISHED, FAILED
+                  selfUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "unique url for this indexing job status."
+                  versionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "list all versions this index depends upon."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  retryAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  stats:
+                    type: object
+                    x-forma-type: object
+                    description: "Some higher level index statistics."
+                    properties:
+                      objects:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects contained in the properties index."
+                  manifestUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index manifest."
+                  fieldsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index fields."
+                  propertiesUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index properties."
+                  queryResultsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the query result."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: errors.
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-query-job-status-get"
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}/queries":
+    post:
+      operationId: index-v2-index-query-post
+      summary: "Applies the given query on the given properties index"
+      description: "Applies the given query on the given properties index."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-force-regenerate-cache
+          in: header
+          description: "If set to true, force regeneration of S3 cache."
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    x-forma-type: string
+                    description: "project id."
+                  indexId:
+                    type: string
+                    x-forma-type: string
+                    description: "index id."
+                  queryId:
+                    type: string
+                    x-forma-type: string
+                    description: "query id."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      type.
+                      Possible values: INDEX
+                  state:
+                    x-forma-type: "enum: string"
+                    description: |-
+                      job status.
+                      Possible values: PROCESSING, FINISHED, FAILED
+                  selfUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "unique url for this indexing job status."
+                  versionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "list all versions this index depends upon."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  retryAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  stats:
+                    type: object
+                    x-forma-type: object
+                    description: "some higher level index statistics."
+                    properties:
+                      objects:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects contained in the properties index."
+                  manifestUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index manifest."
+                  fieldsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index fields."
+                  propertiesUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index properties."
+                  queryResultsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the query result."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field:
+                                type: string
+                                x-forma-type: string
+                                description: "The field which failed validation."
+                              title:
+                                type: string
+                                x-forma-type: string
+                                description: "A short title for the error."
+                              detail:
+                                type: string
+                                x-forma-type: string
+                                description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                              type:
+                                type: string
+                                x-forma-type: string
+                                description: "The error code."
+                          x-forma-type: "array: object"
+                          description: "A set of specific validation errors that need to be fixed."
+                    x-forma-type: "array: object"
+                    description: errors.
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "415":
+          description: "Unsupported Media Type"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-query-post"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                query:
+                  type: object
+                  x-forma-type: object
+                  description: "SQL AST for binary expression/filter"
+                columns:
+                  type: object
+                  x-forma-type: object
+                  description: "SQL AST for describing columns/projections"
+              required:
+                - query
+  "/construction/index/v2/projects/{projectId}/indexes/{indexId}":
+    get:
+      operationId: index-v2-index-status-get
+      summary: "Retrieve the indexing status for the given index ID"
+      description: "Retrieve the indexing status for the given index ID. Depending on the state different properties might be present or missing. E.g. if the indexing job is not finished yet, the manifest, fields, and properties links might be missing, but the retryAt property will be present. If the processing failed for some reason, the errors property will contain some information. Once the final result of the indexing job has been determined (either finished or failed), the status is assumed to be immutable and the response will set a long expiration HTTP header for efficient client side caching."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The project ID."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: indexId
+          in: path
+          required: true
+          description: "The index ID."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-ads-region
+          in: header
+          description: |-
+            The region to which your request should be routed. If not set, the request is routed automatically but may incur a small latency increase.
+            Possible values: US, EMEA. For the full list of supported regions, see the Regions page.
+          schema:
+            x-forma-type: "enum: string"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    x-forma-type: string
+                    description: "project id."
+                  indexId:
+                    type: string
+                    x-forma-type: string
+                    description: "index id."
+                  queryId:
+                    type: string
+                    x-forma-type: string
+                    description: "query id."
+                  type:
+                    x-forma-type: "enum: string"
+                    description: type.
+                  state:
+                    x-forma-type: "enum: string"
+                    description: "job status."
+                  selfUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "unique url for this indexing job status."
+                  versionUrns:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "list all versions this index depends upon."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  retryAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: timestamp.
+                  stats:
+                    type: object
+                    x-forma-type: object
+                    description: "some higher level index statistics."
+                    properties:
+                      objects:
+                        type: integer
+                        x-forma-type: int
+                        description: "number of objects contained in the properties index."
+                  manifestUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index manifest."
+                  fieldsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index fields."
+                  propertiesUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the index properties."
+                  queryResultsUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "url for downloading the query result."
+                    properties:
+                      type:
+                        type: string
+                        x-forma-type: string
+                        description: "The error code."
+                      title:
+                        type: string
+                        x-forma-type: string
+                        description: "A short title for the error."
+                      detail:
+                        type: string
+                        x-forma-type: string
+                        description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                      errors:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            field:
+                              type: string
+                              x-forma-type: string
+                              description: "The field which failed validation."
+                            title:
+                              type: string
+                              x-forma-type: string
+                              description: "A short title for the error."
+                            detail:
+                              type: string
+                              x-forma-type: string
+                              description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                            type:
+                              type: string
+                              x-forma-type: string
+                              description: "The error code."
+                        x-forma-type: "array: object"
+                        description: "A set of specific validation errors that need to be fixed."
+        "401":
+          description: Unauthorized
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    x-forma-type: string
+                    description: "The error code."
+                  title:
+                    type: string
+                    x-forma-type: string
+                    description: "A short title for the error."
+                  detail:
+                    type: string
+                    x-forma-type: string
+                    description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          x-forma-type: string
+                          description: "The field which failed validation."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "A short title for the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "A more detailed, human readable description of the error, assuming that this message is not localized and is therefore EN-US. UI consumers can use the error.type value to provide a localized version of this error for presentation."
+                        type:
+                          type: string
+                          x-forma-type: string
+                          description: "The error code."
+                    x-forma-type: "array: object"
+                    description: "A set of specific validation errors that need to be fixed."
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/index-v2-index-status-get"
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"

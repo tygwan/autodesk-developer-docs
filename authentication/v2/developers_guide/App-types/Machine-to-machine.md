@@ -1,0 +1,52 @@
+---
+title: "Server-to-Server App"
+url_path: developers_guide/App-types/Machine-to-machine
+product: "Authentication API"
+surface: "authentication-v2"
+protocol: "Documentation"
+document_kind: "guide"
+api_version: "v2"
+section: "developers_guide"
+category: "App-types"
+---
+# Server-to-Server App
+
+Choose the **Server-to-Server** application type when you are creating a server-side application with no end user. It uses the _Client Credentials grant type_, where your application stores its client ID and client secret safely, and then passes those details to APS in exchange for a two-legged access token.
+
+## Client Credentials Grant Type
+
+At a high-level, the _Client Credentials grant type_ has only two steps:
+- Your application passes its client credentials to the APS Authorization Server.
+- If the credentials are accurate, the Authorization Server responds with an access token.
+
+We use the Client Credentials type in this case as it is intended for server-side (confidential) client applications with no end user, which normally describes server-to-server communication. See [Client Credentials grant type](https://aps.autodesk.com/en/docs/oauth/v2/reference/http/gettoken-POST) for more details, and an example.
+
+![../../../_images/server-to-server.svg](https://developer.doc.autodesk.com/bPlouYTd/cloud-platform-id-pubdocs-master-756267/_images/server-to-server.svg)
+
+There are a number of concepts that you need to be familiar with relevant to this application type and grant type:
+
+| Term | Meaning |
+| --- | --- |
+| app | The “app”, or “application”, is the code that you’re writing that calls APS APIs. It can be a web application, a headless server process, a mobile app, or even embedded firmware. Within the APS developer portal, your application is registered in the My Apps section.
+
+Sometimes “app” refers to your code; other times, it refers to the entity registered in the Dev Portal. It will be clear from context which is meant.
+
+When you register your application in the APS developer portal, you select the APIs that you want to bind it to. This ensures that even if you lose control of your authentication credentials, calls cannot be made on your behalf to APIs the application was not designed for.
+
+A registered application has assigned to it credentials called a “client ID” and “client secret.” These are analogous to a username and password, except that you do not select them; APS assigns them to your application. Your application uses these to obtain access tokens. |
+| client ID | The “client ID” is essentially your application’s username and can be found in the My Apps section of the Autodesk DevPortal. It is a 32-character alphanumeric string (e.g., 5zw90va0UuwMKTnPS5sLsdgZjDkVYXN7). Your application passes it as the value for the _client_id_ query parameter, and APS returns it in the _client_id_ attribute in the returned JSON payload.
+
+Other platforms, sometimes call this a “consumer key” or “API key.” |
+| client secret | The “client secret” is essentially your application’s password and can be found next to the client ID in the My Apps section of the Autodesk DevPortal. It is a 16-character alphanumeric string (e.g., 7I6uN1rjneirxiMW), and your application passes it as the value for the _client_secret_ query parameter.
+
+Other platforms sometimes call this a “consumer secret” or “API secret.” |
+| two-legged authentication | This is often considered the default type of authentication, and it is the simplest. When your application needs to call the API without having to access resources that require an end user’s permission (for example, translating a design file from one format to another), the communication is directly between your application and APS.
+
+This kind of authentication is called “two-legged” because your application and APS are the two “legs.” |
+| three-legged authentication | Three-legged authentication is not supported with the Server-to-Server application type as communication does not involve the third leg (the end user). |
+| access token | APS returns an access token (sometimes just “token” or “bearer token”) at the end of a successful authentication. APS uses JSON Web Tokens (JWT), which are alphanumeric strings of variable length (including periods to separate their different parts), that the application uses in subsequent API calls to the platform. The platform keeps track of what resources the token is entitled to access, and either allows or denies access at call time.
+
+Tokens have a limited lifespan and expire after a specified number of seconds. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/App-types/Machine-to-machine

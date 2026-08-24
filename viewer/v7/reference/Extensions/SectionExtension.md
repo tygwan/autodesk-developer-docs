@@ -1,0 +1,135 @@
+---
+title: "SectionExtension"
+url_path: reference/Extensions/SectionExtension
+surface: viewer-sdk
+document_kind: reference
+category: "Extensions"
+---
+# SectionExtension
+
+## new SectionExtension(viewer, options)
+
+The SectionExtension provides ways to cut the geometry using planes or a cube. The extension adds a toolbar button to access the feature.
+
+The extension id is: `Autodesk.Section`
+
+### Parameters
+
+| viewer*[Viewer3D](https://aps.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/) | Viewer instance |
+| --- | --- |
+| options*object | Configurations for the extension |
+
+### Examples
+
+```
+viewer.loadExtension('Autodesk.Section')
+```
+
+# Methods
+
+## toggle()
+
+Toggles activeness of section planes.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | Whether the section plane is active or not. |
+
+## getSectionStyle()
+
+Returns the current type of plane that will cut-though the geometry.
+
+### Returns
+
+| type | description |
+| --- | --- |
+| null, string | Either “X” or “Y” or “Z” or “BOX” or null. |
+
+## setSectionStyle(style, preserveSection)
+
+Sets the Section plane style.
+
+### Parameters
+
+| style*string | Accepted values are ‘X’, ‘Y’, ‘Z’ and ‘BOX’ (in Caps) |
+| --- | --- |
+| preserveSectionboolean | Whether sending the current style value resets the cut planes. |
+
+## getState(viewerState)
+
+Gets the extension state as a plain object. Invoked automatically by viewer.getState()
+
+### Parameters
+
+| viewerState*object | Object to inject extension values. |
+| --- | --- |
+
+## restoreState(viewerState)
+
+Restores the extension state from a given object. Invoked automatically by viewer.restoreState()
+
+### Parameters
+
+| viewerState*object | Viewer state. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | True if restore operation was successful. |
+
+## setSectionBox(box)
+
+Set a section box around the passed in box. This method will also enable the section tool.
+
+### Parameters
+
+| box*[Autodesk.Viewing.Math.Box3](https://aps.autodesk.com/en/docs/viewer/v7/reference/Math/Box3/) | used to set the section box. |
+| --- | --- |
+
+## setSectionPlane(normal, point, enableRotationGizmo)
+
+Place a section plane on the Intersection. This method will also enable the section tool.
+
+### Parameters
+
+| normal*[Autodesk.Viewing.Math.Vector3](https://aps.autodesk.com/en/docs/viewer/v7/reference/Math/Vector3/) | plane normal. |
+| --- | --- |
+| point*[Autodesk.Viewing.Math.Vector3](https://aps.autodesk.com/en/docs/viewer/v7/reference/Math/Vector3/) | position to place the plane. |
+| enableRotationGizmo* |   |
+
+## activate(mode)
+
+Activates a section plane for user to interact with. It performs the same action as the UI button.
+
+### Parameters
+
+| mode*string | Accepted values are ‘x’, ‘y’, ‘z’ and ‘box’ (in lowercase) |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | true if the activation was successful. |
+
+## deactivate(keepCutPlanes)
+
+Removes the section plane/box from the 3D canvas.
+
+### Parameters
+
+| keepCutPlanes* | keep existing cut planes when deactivating the tool. Default is false. |
+| --- | --- |
+
+### Returns
+
+| type | description |
+| --- | --- |
+| boolean | returns true if deactivated, false otherwise. |
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/viewer/v7/reference/Extensions/SectionExtension

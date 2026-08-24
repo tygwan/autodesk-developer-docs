@@ -1,0 +1,3171 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Sheets"
+  version: v1
+  description: |-
+    Forma APIs — Sheets.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /construction/sheets/v1/projects
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: Sheets
+x-forma-common-base: "/construction/sheets/v1/projects"
+paths:
+  "/construction/sheets/v1/projects/{projectId}/collections/{collectionId}":
+    get:
+      operationId: sheets-collections-collectionId-GET
+      summary: "Retrieves a specific collection by its unique ID"
+      description: "Retrieves a specific collection by its unique ID."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: collectionId
+          in: path
+          required: true
+          description: "The ID of the collection, To find the collection ID, call GET collections."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The unique identifier of the collection."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the collection was created."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The Autodesk ID of the user who created the collection."
+                  createdByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who created the collection."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the collection was last updated."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The Autodesk ID of the user who last updated the collection."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the collection."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-collections-collectionId-GET"
+  "/construction/sheets/v1/projects/{projectId}/collections":
+    get:
+      operationId: sheets-collections-GET
+      summary: "Retrieves information about all the collections in a project"
+      description: "Retrieves information about all the collections in a project. You can use GET sheets to return all the sheets associated with a specific collection."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The starting point for the results, specified by item number. The default value is 0. For example, use offset=3 to start the results from the third item."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: "The number of results to return in the response."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The unique identifier of the collection."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the collection was created."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who created the collection."
+                        createdByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who created the collection."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the collection was last updated."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The Autodesk ID of the user who last updated the collection."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the collection."
+                    x-forma-type: "array: object"
+                    description: "The list of collections."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Pagination information for paged data."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results to return in the response."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The item number from which the results begin."
+                      previousUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the previous page of results."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the next page of results."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results available."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-collections-GET"
+  "/construction/sheets/v1/projects/{projectId}/exports/{exportId}":
+    get:
+      operationId: sheets-exports-exportId-GET
+      summary: Exports
+      description: "Retrieves the status of a PDF sheet export job, as well as the signed URL required to download the exported file once the export process is complete."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: exportId
+          in: path
+          required: true
+          description: "The ID of the export job. The export ID is generated when you initialize an export job using POST exports."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of a user on whose behalf your API request is acting. Required for 2-legged OAuth2 with user impersonation.
+            The app has access to all users specified by the administrator in the SaaS integrations UI. When you provide this header, the API call is limited to acting on behalf of the specified user.
+
+            You can use either the user’s Forma ID (id) or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the sheets export job."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The status of the sheets export job.
+                      Possible values: successful, processing, failed
+                  result:
+                    type: object
+                    x-forma-type: object
+                    description: |-
+                      The result of a completed export job.
+
+                      - If the status is successful, a downloadable signed URL will be included in the result.output object.
+
+                      - If the status value is failed (e.g., because some files were deleted), the result.error object will include details of the error.
+                    properties:
+                      output:
+                        type: object
+                        x-forma-type: object
+                        description: "Details about the downloadable signed URL."
+                        properties:
+                          signedUrl:
+                            type: string
+                            x-forma-type: string
+                            description: "The signed URL that you can use to download the PDF file. Note that it expires in one hour."
+                      error:
+                        type: object
+                        x-forma-type: object
+                        description: "Information about the error."
+                        properties:
+                          code:
+                            type: string
+                            x-forma-type: string
+                            description: "The code of the error."
+                          title:
+                            type: string
+                            x-forma-type: string
+                            description: "The title of the error."
+                          detail:
+                            type: string
+                            x-forma-type: string
+                            description: "The details of the error."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-exports-exportId-GET"
+  "/construction/sheets/v1/projects/{projectId}/exports":
+    post:
+      operationId: sheets-exports-POST
+      summary: "Exports up to 1000 sheets from the from the Sheets tool in Forma Build into a new downloadble PDF file"
+      description: "Exports up to 1000 sheets from the from the Sheets tool in Forma Build into a new downloadble PDF file."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of a user on whose behalf your API request is acting. Required for 2-legged OAuth2 with user impersonation.
+            The app has access to all users specified by the administrator in the SaaS integrations UI. When you provide this header, the API call is limited to acting on behalf of the specified user.
+
+            You can use either the user’s Forma ID (id) or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "202":
+          description: Accepted
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the export job. Use the ID to poll GET exports/:exportId to check the job’s status. When the job is complete, you can retrieve the data you need to download the exported sheets."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: "The status of the export job; will always be: processing"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-exports-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                options:
+                  type: object
+                  x-forma-type: object
+                  description: |-
+                    The criteria for the markups and links that should be included with the exported sheets.
+                    Note that unpublished markups are only visible to their creator.
+                  properties:
+                    outputFileName:
+                      type: string
+                      x-forma-type: string
+                      description: "The name of the file that will be generated by the export process. Note that this name should not include the file extension. The maximum character limit for this field is 255 characters."
+                    standardMarkups:
+                      type: object
+                      x-forma-type: object
+                      description: |-
+                        The list of types of standard markups and their associated links that you want to include in the export.
+                        By default markups will be exported and hyperlinks will not be exported.
+                      properties:
+                        includePublishedMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: (default) include all published standard markups in the exported sheets. Note that published markups are visible to all project members.
+                            false: export sheets without including published standard markups.
+                        includeUnpublishedMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: (default) standard markups that are visible only to their creators will be included in the exported sheets.
+                            false: exported sheets will exclude unpublished markups.
+                        includeMarkupLinks:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: include links in the markups. Supported links are links to Sheets, Files, RFIs, Forms, Submittals, and Assets.
+                            false: (default) do not include links in markups.
+
+                            Note that if both includePublishedMarkups and includeUnpublishedMarkups are set to false, this parameter will be treated as false.
+                    issueMarkups:
+                      type: object
+                      x-forma-type: object
+                      description: "The list of types of issue markups to export."
+                      properties:
+                        includePublishedMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: published issue markups will be included in the exported sheets.
+                            false: (default) published issue markups will not be included in the exported sheets.
+                        includeUnpublishedMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: include issue markups in the exported sheets that are visible only to their creators or assignees.
+                            false: (default) export sheets without including unpublished issue markups.
+                    photoMarkups:
+                      type: object
+                      x-forma-type: object
+                      description: "The list of types of photo markups to export."
+                      properties:
+                        includePublishedMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: published photo markups will be included in the exported sheets.
+                            false: (default) published photo markups will not be included in the exported sheets.
+                        includeUnpublishedMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: include photo markups in the exported sheets that are visible only to their creators or assignees.
+                            false: (default) export sheets without including unpublished photo markups.
+                    assetMarkups:
+                      type: object
+                      x-forma-type: object
+                      description: "The options for Assets markups to export."
+                      properties:
+                        includeMarkups:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            true: include all Assets markups in the exported sheets.
+                            false: (Default) export sheets without including any Assets markups.
+                sheets:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: "The list of sheet UUIDs that you want to include in the export. A maximum of 1000 sheets can be included."
+  "/construction/sheets/v1/projects/{projectId}/sheets:batch-delete":
+    post:
+      operationId: sheets-sheetsbatch-delete-POST
+      summary: "Deletes a list of sheets"
+      description: "Deletes a list of sheets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-sheetsbatch-delete-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The IDs of the sheets to delete. To find the sheet IDs, call GET sheets.
+
+                    - The max number of items is 200.
+              required:
+                - ids
+  "/construction/sheets/v1/projects/{projectId}/sheets:batch-get":
+    post:
+      operationId: sheets-sheetsbatch-get-POST
+      summary: "Retrieves a list of sheets by IDs"
+      description: "Retrieves a list of sheets by IDs."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the sheet."
+                        number:
+                          type: string
+                          x-forma-type: string
+                          description: "The number of the sheet."
+                        versionSet:
+                          type: object
+                          x-forma-type: object
+                          description: "Basic version set data. For a complete collection of version set data, call GET version-sets."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The ID of the version set."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The name of the version set.
+                                Max length: 255
+                            issuanceDate:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The issuance date of the version set in ISO-8601 format (YYYY-MM-DD)."
+                            deleted:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                - true if the version set has been deleted.
+
+                                - false if the version set has not been deleted.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the sheet was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who created the sheet."
+                        createdByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who created the sheet."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the sheet was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last updated the sheet."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the sheet."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the sheet."
+                        uploadFileName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the source file from which the sheet was generated."
+                        uploadId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the upload that generated the sheet."
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The tags of the sheet."
+                        paperSize:
+                          type: array
+                          items:
+                            type: number
+                          x-forma-type: "array: number"
+                          description: "The size of the sheet in pixels."
+                        isCurrent:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            - true if the sheet is the version with the most recent issuance date. This is only relevant if you uploaded multiple versions of the same sheet that were assigned the same number. The current sheet is the sheet with the most recent issuance date.
+
+                            - false if the sheet is not the version with the most recent issuance date.
+                        deleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            - true if the sheet has been deleted.
+
+                            - false if the sheet has not been deleted.
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the sheet was deleted, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        deletedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who deleted the sheet."
+                        deletedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who deleted the sheet."
+                        viewable:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the sheet relevant for loading the sheet to the Viewer. See Add Viewer to an HTML Page for more information."
+                          properties:
+                            urn:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The URN of the viewable resources. Multiple sheets created by the same original file may share the same viewable URN.
+                                When loading the sheet to the viewer, this URN should be used as the documentId to get the manifest.
+                            guid:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The GUID of the viewable resources.
+                                When loading the sheet to the viewer, this GUID should be used to find the related geometry node of the sheet.
+                        collection:
+                          type: object
+                          x-forma-type: object
+                          description: "The collection object, if assigned. If no collection is assigned, this value is null."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The unique identifier of the collection."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI.
+                                Max length: 255
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-sheetsbatch-get-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The IDs of the sheets to retrieve.
+
+                    - The max number of items is 200.
+              required:
+                - ids
+  "/construction/sheets/v1/projects/{projectId}/sheets:batch-restore":
+    post:
+      operationId: sheets-sheetsbatch-restore-POST
+      summary: "Restores deleted sheets"
+      description: "Restores deleted sheets. The sheet is restored to the version set it was associated with when it was deleted."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the sheet."
+                    x-forma-type: "array: object"
+                    description: "The list of sheets that were successfully restored."
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        sheetId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the sheet that was not restored."
+                        code:
+                          type: string
+                          x-forma-type: string
+                          description: "The code of the error."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the error."
+                        detail:
+                          type: string
+                          x-forma-type: string
+                          description: "Details about the error."
+                    x-forma-type: "array: object"
+                    description: |-
+                      The list of sheets that were not restored.
+                      Sheets are usually not restored because a sheet with the same number exists in the version set.
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-sheetsbatch-restore-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The IDs of the sheets to restore.
+                    To find the IDs of deleted sheets you want to restore, call GET sheets using the isDeleted=true filter.
+
+                    - The max number of items is 200.
+              required:
+                - ids
+  "/construction/sheets/v1/projects/{projectId}/sheets:batch-update":
+    post:
+      operationId: sheets-sheetsbatch-update-POST
+      summary: "Updates a list of sheets"
+      description: "Updates a list of sheets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the sheet."
+                    x-forma-type: "array: object"
+                    description: "The IDs of the updated sheets."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-sheetsbatch-update-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    To find the IDs of the sheets you want to update, call GET sheets.
+
+                    - The max number of items is 200.
+                updates:
+                  type: object
+                  x-forma-type: object
+                  description: "The list of updates."
+                  properties:
+                    number:
+                      type: string
+                      x-forma-type: string
+                      description: |-
+                        The new sheet number.
+                        Only available for single sheet update.
+
+                        - The number should not contain these reserved characters: <, >, :, ", /, \, |, ?, *, \n, \r, \t, \0, \f, '.
+
+                        - You cannot assign the following reserved names to the number: CON, PRN, AUX, NUL, COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9, LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, and LPT9.
+
+                        - You cannot put a period at the end of the number.
+
+                        - The number should not be space only.
+
+                        - The max length is 255.
+
+                        The API will format the number in the following ways before applying it to the sheet:
+
+                        - Remove spaces at the end and beginning of the number.
+
+                        - Reduce multiple continuous spaces to a single space.
+
+                        Max length: 255
+                    title:
+                      type: string
+                      x-forma-type: string
+                      description: |-
+                        The new title of the sheet.
+                        Only available for single sheet.
+
+                        - The title should not be space only.
+
+                        - The max length is 255.
+
+                        The API will format the title in the following ways before applying it to the sheet:
+
+                        - Remove spaces at the end and beginning of the title.
+
+                        - Reduce multiple continuous spaces to a single space.
+
+                        Max length: 255
+                    versionSetId:
+                      type: string
+                      x-forma-type: string
+                      description: "The ID of the new version set."
+                    addTags:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: |-
+                        The tags to be attached to the sheets.
+
+                        - The max length is 100.
+
+                        - The tags should not be space only.
+
+                        - After applying addTags and removeTags, the number of remain tags of the sheets should not exceed 100.
+
+                        The API will format the tags in the following ways before applying them to the sheets:
+
+                        - Remove spaces at the end and beginning of the tags.
+
+                        - Reduce multiple continuous spaces to a single space.
+
+                        - The tags are case insensitive. Upper case letters will be transformed to lower case.
+                    removeTags:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                      description: |-
+                        The tags to be detached from the sheets.
+
+                        - The max length is 100.
+
+                        - The tags should not be space only.
+
+                        The API will format the tags in the following ways before comparing them to the existing tags:
+
+                        - Remove spaces at the end and beginning of the tags.
+
+                        - Reduce multiple continuous spaces to a single space.
+
+                        - The tags are case insensitive. Upper case letters will be transformed to lower case.
+              required:
+                - ids
+  "/construction/sheets/v1/projects/{projectId}/sheets":
+    get:
+      operationId: sheets-sheets-GET
+      summary: "Retrieves information about the sheets in a project"
+      description: "Retrieves information about the sheets in a project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: currentOnly
+          in: query
+          description: |-
+            - true to only return versions of the sheets with the newest issuance date (this includes future issuance dates). This is only relevant if you uploaded multiple versions of the same sheet that were assigned the same number identifier. If you do not assign a value to the version set ID filter (filter[versionSetId]) this defaults to true.
+
+            - false to return all sheets in the project.
+
+            If you specify a value for the version set ID filter (filter[versionSetId]) this defaults to false.
+            If you do not specify a version set, the default is true.
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: "filter[versionSetId]"
+          in: query
+          description: "Filter sheets by the version set ID. If you assign a value to this filter, currentOnly defaults to false. If you do not assign a value, currentOnly default to true."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[tags]"
+          in: query
+          description: |-
+            Filter sheets by tags. You can filter by multiple tags. For example,
+            filter[tags]=architecture&filter[tags]=structure returns sheets that include both architecture and structure tags.
+            Use filter[tags]=__UNTAGGED to only return sheets without any tags.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: fields
+          in: query
+          description: |-
+            Specify which attributes you want to appear in the response. You can specify multiple attributes.
+            For example, to only return the sheet ID and sheet number in the response, use fields=id&fields=number.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: searchText
+          in: query
+          description: |-
+            Search for sheets with the specified text. The API only searches in the number and title attributes.
+            You can specify a string or part of a string. The search is case sensitive.
+            You can only use one search string per call. For example, searchText=kitchen.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: withAllTags
+          in: query
+          description: |-
+            - true to return sheets that contain all search tags.
+
+            - false to return sheets that contain at least one tag.
+
+            If filter[tags]=__UNTAGGED is already in query parameters, withAllTags does not work.
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: isDeleted
+          in: query
+          description: |-
+            - true to only return deleted sheets.
+
+            - false to only return non-deleted sheets.
+
+            The default value is false. You cannot retrieve both deleted and non-deleted sheets in one call.
+          schema:
+            type: boolean
+            x-forma-type: boolean
+        - name: offset
+          in: query
+          description: "The starting point for the results, specified by item number. The default value is 0. For example, use offset=3 to start the results from the third item."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: "The number of results to return in the response. Acceptable values: 1-100. Default value: 100."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: collectionId
+          in: query
+          description: |-
+            Filter by sheet collection. If not provided, only results in the ungrouped collection are returned.
+            Possible values:
+
+            - The UUID of an existing collection: Returns only the results within that collection.
+
+            - * Returns results from all collections.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the sheet."
+                        number:
+                          type: string
+                          x-forma-type: string
+                          description: "The number of the sheet."
+                        versionSet:
+                          type: object
+                          x-forma-type: object
+                          description: "Basic version set data. For a complete collection of version set data, call GET version-sets."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The ID of the version set."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The name of the version set.
+                                Max length: 255
+                            issuanceDate:
+                              type: string
+                              format: date-time
+                              x-forma-type: "datetime: ISO 8601"
+                              description: "The issuance date of the version set in ISO-8601 format (YYYY-MM-DD)."
+                            deleted:
+                              type: boolean
+                              x-forma-type: boolean
+                              description: |-
+                                - true if the version set has been deleted.
+
+                                - false if the version set has not been deleted.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the sheet was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who created the sheet."
+                        createdByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who created the sheet."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the sheet was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last updated the sheet."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the sheet."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the sheet."
+                        uploadFileName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the source file from which the sheet was generated."
+                        uploadId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the upload that generated the sheet."
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The tags of the sheet."
+                        paperSize:
+                          type: array
+                          items:
+                            type: number
+                          x-forma-type: "array: number"
+                          description: "The size of the sheet in pixels."
+                        isCurrent:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            - true if the sheet is the version with the most recent issuance date. This is only relevant if you uploaded multiple versions of the same sheet that were assigned the same number. The current sheet is the sheet with the most recent issuance date.
+
+                            - false if the sheet is not the version with the most recent issuance date.
+                        deleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            - true if the sheet has been deleted.
+
+                            - false if the sheet has not been deleted.
+                        deletedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the sheet was deleted, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        deletedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who deleted the sheet."
+                        deletedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who deleted the sheet."
+                        viewable:
+                          type: object
+                          x-forma-type: object
+                          description: "Information about the sheet relevant for loading the sheet to the Viewer. See Add Viewer to an HTML Page for more information."
+                          properties:
+                            urn:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The URN of the viewable resources. Multiple sheets created by the same original file may share the same viewable URN.
+                                When loading the sheet to the viewer, this URN should be used as the documentId to get the manifest.
+                            guid:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The GUID of the viewable resources.
+                                When loading the sheet to the viewer, this GUID should be used to find the related geometry node of the sheet.
+                        collection:
+                          type: object
+                          x-forma-type: object
+                          description: "The collection object, if assigned. If no collection is assigned, this value is null."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The unique identifier of the collection."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI.
+                                Max length: 255
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Pagination information for paged data."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results to return in the response."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The item number from which the results begin."
+                      previousUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the previous page of results."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the next page of results."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results available."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-sheets-GET"
+  "/construction/sheets/v1/projects/{projectId}/storage":
+    post:
+      operationId: sheets-storage-POST
+      summary: "Creates a storage location in the Object Storage Service (OSS) for you to upload the file to"
+      description: "Creates a storage location in the Object Storage Service (OSS) for you to upload the file to. This endpoint is typically used during the process of uploading files to the Forma Sheets tool."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The URN of the storage.
+                      Note that in Sheets each project has its own OSS bucket,
+                      it is recommended to extract bucket key from storage URN every time before you call OSS APIs.
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-storage-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of the file.
+                    Currently Sheets tool only supports PDF files.
+
+                    Max length: 255
+  "/construction/sheets/v1/projects/{projectId}/uploads/{uploadId}/review-sheets:publish":
+    post:
+      operationId: sheets-review-sheetspublish-POST
+      summary: "Publishes uploaded review sheets"
+      description: "Publishes uploaded review sheets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: uploadId
+          in: path
+          required: true
+          description: "The ID of the upload. The upload ID is generated when you create an upload object."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-review-sheetspublish-POST"
+  "/construction/sheets/v1/projects/{projectId}/uploads/{uploadId}/review-sheets":
+    get:
+      operationId: sheets-review-sheets-GET
+      summary: "Retrieves a list of review sheets"
+      description: |-
+        Retrieves a list of review sheets. This endpoint is typically used during the process of uploading files to the Forma Sheets tool.
+        It enables you to review the sheets that you uploaded before publishing them. For more details, see the Upload Sheets tutorial.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: uploadId
+          in: path
+          required: true
+          description: "The ID of the upload. The upload ID is generated when you create an upload object."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: offset
+          in: query
+          description: "The starting point for the results, specified by item number. The default value is 0. For example, use offset=3 to start the results from the third item."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: "The number of results to return in the response."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the review sheet."
+                        page:
+                          type: number
+                          x-forma-type: number
+                          description: "The page number of the source file from which the review sheet was generated."
+                        fileName:
+                          type: string
+                          x-forma-type: string
+                          description: "The source file name of the review sheet."
+                        number:
+                          type: string
+                          x-forma-type: string
+                          description: "The number of the review sheet."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the review sheet."
+                        deleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            - true if the review sheet has been deleted.
+
+                            - false if the review sheet has not been deleted.
+
+                            Note that if the review sheet has been deleted, it will not be published.
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The tags of the review sheet."
+                        rotation:
+                          type: number
+                          x-forma-type: number
+                          description: "The rotation of the review sheet. Possible values: 0, 90, 180, 270."
+                        processingState:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The processing state of the review sheet. Possible values:
+
+                            - PROCESSING: the review sheet is being processed.
+
+                            - AUDITING: the review sheet is being audited.
+
+                            - ROTATING: the review sheet is being rotated.
+
+                            - READY: the review sheet is ready for updating or publishing.
+
+                            - FAILED: the processing of the review sheet failed.
+
+                            - PUBLISHING the review sheet is publishing.
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Pagination information for paged data."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results to return in the response."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The item number from which the results begin."
+                      previousUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the previous page of results."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the next page of results."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results available."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-review-sheets-GET"
+    patch:
+      operationId: sheets-review-sheets-PATCH
+      summary: "Updates review sheets"
+      description: "Updates review sheets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: uploadId
+          in: path
+          required: true
+          description: "The ID of the upload. The upload ID is generated when you create an upload object."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the review sheet."
+                        page:
+                          type: number
+                          x-forma-type: number
+                          description: "The page number of the source file from which the review sheet was generated."
+                        fileName:
+                          type: string
+                          x-forma-type: string
+                          description: "The source file name of the review sheet."
+                        number:
+                          type: string
+                          x-forma-type: string
+                          description: "The number of the review sheet."
+                        title:
+                          type: string
+                          x-forma-type: string
+                          description: "The title of the review sheet."
+                        deleted:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: |-
+                            - true if the review sheet has been deleted.
+
+                            - false if the review sheet has not been deleted.
+
+                            Note that if the review sheet has been deleted, it will not be published.
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The tags of the review sheet."
+                        rotation:
+                          type: number
+                          x-forma-type: number
+                          description: "The rotation of the review sheet. Possible values: 0, 90, 180, 270."
+                        processingState:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The processing state of the review sheet. Possible values:
+
+                            - PROCESSING: the review sheet is being processed.
+
+                            - AUDITING: the review sheet is being audited.
+
+                            - ROTATING: the review sheet is being rotated.
+
+                            - READY: the review sheet is ready for updating or publishing.
+
+                            - FAILED: the processing of the review sheet failed.
+
+                            - PUBLISHING the review sheet is publishing.
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-review-sheets-PATCH"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  x-forma-type: string
+                  description: "The ID of the review sheet to update."
+                number:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The new number of the review sheet. Note the following limitations:
+
+                    - The number should not contain these reserved characters: <, >, :, ", /, \\, |, ?, *, \n, \r, \t, \0, \f, '.
+
+                    - You cannot assign the following reserved names to the number: CON, PRN, AUX, NUL, COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9, LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, and LPT9.
+
+                    - You cannot put a period at the end of the number.
+
+                    - The number should not be space only.
+
+                    - The max length is 255.
+
+                    The API will format the number in the following ways before applying it to the review sheet:
+
+                    - Remove spaces at the end and beginning of the number.
+
+                    - Reduce multiple continuous spaces to a single space.
+
+                    Max length: 255
+                title:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The new title of the review sheet.
+
+                    - The title should not be space only.
+
+                    - The max length is 255.
+
+                    The API will format the title in the following ways before applying it to the review sheet:
+
+                    - Remove spaces at the end and beginning of the title.
+
+                    - Reduce multiple continuous spaces to a single space.
+
+                    Max length: 255
+                deleted:
+                  type: boolean
+                  x-forma-type: boolean
+                  description: |-
+                    - true if you want to delete the review sheet.
+
+                    - false if you want to restore the review sheet.
+
+                    Note that if the review sheet has been deleted, it will not be published.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The new tags of the review sheet.
+
+                    - The max length is 100.
+
+                    - The tags should not be space only.
+
+                    - The max number of items is 50.
+
+                    The API will format the tags in the following ways before applying them to the review sheet:
+
+                    - Remove spaces at the end and beginning of the tags.
+
+                    - Reduce multiple continuous spaces to a single space.
+
+                    - The tags are case insensitive. Upper case letters will be transformed to lower case.
+
+                    Note that the tags that you specify overwrite existing tags.
+              required:
+                - id
+  "/construction/sheets/v1/projects/{projectId}/uploads/{uploadId}/thumbnails:batch-get":
+    post:
+      operationId: sheets-thumbnailsbatch-get-POST
+      summary: "Retrieves a list of thumbnails for the specified review sheets"
+      description: "Retrieves a list of thumbnails for the specified review sheets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: uploadId
+          in: path
+          required: true
+          description: "The ID of the upload. The upload ID is generated when you create an upload object."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reviewSheetId:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the review sheet the thumbnail belongs to."
+                        size:
+                          type: array
+                          items:
+                            type: integer
+                          x-forma-type: "array: integer"
+                          description: "The width and height of the thumbnail."
+                        signedUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "The URL of the thumbnail. It is an AWS S3 signed URL and will expire in 1 hour."
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-thumbnailsbatch-get-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                reviewSheetIds:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The IDs of the review sheets you want to get the thumbnails from.
+                    To find the review sheet IDs, call GET review-sheets.
+
+                    - The max number of items is 100.
+                type:
+                  type: string
+                  x-forma-type: "enum:string"
+                  description: |-
+                    The size type of the thumbnails. Possible values:
+
+                    - big: the max size will be 512 pixels.
+
+                    - small: the max size will be 256 pixels.
+
+                    - tiny: the max size will be 64 pixels.
+              required:
+                - reviewSheetIds
+                - type
+  "/construction/sheets/v1/projects/{projectId}/uploads/{uploadId}":
+    get:
+      operationId: sheets-uploads-uploadId-GET
+      summary: "Checks the processing status of a specific uploaded file"
+      description: "Checks the processing status of a specific uploaded file."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: uploadId
+          in: path
+          required: true
+          description: "The ID of the upload. The upload ID is generated when you create an upload object."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the upload."
+                  versionSetId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the version set where the upload creates sheets to."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The status of the upload. Possible values:
+
+                      - PENDING: the uploaded files are waiting for to be processed.
+
+                      - PROCESSING: the uploaded files are being processed.
+
+                      - IN_REVIEW: the file upload process is complete. The sheets are ready for review. You can now call GET review-sheets, PATCH review-sheets, or POST review-sheets:publish.
+
+                      - FAILED: the file upload process failed. One of the final status of an upload.
+
+                      - UPDATING_VERSION_SET: the target version set is being updated.
+
+                      - PUBLISHING: the review sheets are being published.
+
+                      - PUBLISHED: the review sheets have been published.
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the upload was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who created the upload."
+                  createdByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who created the upload."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the upload was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who last updated the upload."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the upload."
+                  publishedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when all the review sheets of the upload were published, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  publishedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who published all the review sheets of the upload."
+                  publishedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who published all the review sheets of the upload."
+                  publishedCount:
+                    type: integer
+                    x-forma-type: int
+                    description: "The number of files that have been published by the upload."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-uploads-uploadId-GET"
+  "/construction/sheets/v1/projects/{projectId}/uploads":
+    get:
+      operationId: sheets-uploads-GET
+      summary: "Checks the processing status of all the uploaded files in the project"
+      description: "Checks the processing status of all the uploaded files in the project."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The starting point for the results, specified by item number. The default value is 0. For example, use offset=3 to start the results from the third item."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: "The number of results to return in the response."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: "Sort the uploads by createdAt or issuanceDate. You need to add whether to sort in ascending (asc) or descending (desc) order. For example, sort=issuanceDate desc."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the upload."
+                        versionSetId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the version set where the upload creates sheets to."
+                        status:
+                          type: string
+                          x-forma-type: "enum:string"
+                          description: |-
+                            The status of the upload. Possible values:
+
+                            - PENDING: the uploaded files are waiting for to be processed.
+
+                            - PROCESSING: the uploaded files are being processed.
+
+                            - IN_REVIEW: the file upload process is complete. The sheets are ready for review. You can now call GET review-sheets, PATCH review-sheets, or POST review-sheets:publish.
+
+                            - FAILED: the file upload process failed. One of the final status of an upload.
+
+                            - UPDATING_VERSION_SET: the target version set is being updated.
+
+                            - PUBLISHING: the review sheets are being published.
+
+                            - PUBLISHED: the review sheets have been published.
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the upload was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who created the upload."
+                        createdByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who created the upload."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the upload was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last updated the upload."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the upload."
+                        publishedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when all the review sheets of the upload were published, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        publishedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who published all the review sheets of the upload."
+                        publishedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who published all the review sheets of the upload."
+                        publishedCount:
+                          type: integer
+                          x-forma-type: int
+                          description: "The number of files that have been published by the upload."
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Pagination information for paged data."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results to return in the response."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The item number from which the results begin."
+                      previousUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the previous page of results."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the next page of results."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results available."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-uploads-GET"
+    post:
+      operationId: sheets-uploads-POST
+      summary: "Creates an Forma upload object"
+      description: |-
+        Creates an Forma upload object. This endpoint splits the files into separate sheets.
+        It is typically used during the process of uploading files to Forma Sheets tool.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the upload."
+                  versionSetId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the version set where the upload creates sheets to."
+                  status:
+                    type: string
+                    x-forma-type: "enum:string"
+                    description: |-
+                      The status of the upload. Possible values:
+
+                      - PENDING: the uploaded files are waiting for to be processed.
+
+                      - PROCESSING: the uploaded files are being processed.
+
+                      - IN_REVIEW: the file upload process is complete. The sheets are ready for review. You can now call GET review-sheets, PATCH review-sheets, or POST review-sheets:publish.
+
+                      - FAILED: the file upload process failed. One of the final status of an upload.
+
+                      - UPDATING_VERSION_SET: the target version set is being updated.
+
+                      - PUBLISHING: the review sheets are being published.
+
+                      - PUBLISHED: the review sheets have been published.
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the upload was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who created the upload."
+                  createdByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who created the upload."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the upload was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who last updated the upload."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the upload."
+                  publishedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when all the review sheets of the upload were published, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  publishedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who published all the review sheets of the upload."
+                  publishedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who published all the review sheets of the upload."
+                  publishedCount:
+                    type: integer
+                    x-forma-type: int
+                    description: "The number of files that have been published by the upload."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-uploads-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                versionSetId:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The ID of the version set you want to upload the sheets to.
+                    To create a new version set, call POST version-sets.
+                    To find the ID of an existing version set, call GET version-sets.
+                files:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      storageType:
+                        type: string
+                        x-forma-type: "enum:string"
+                        description: "The storage type of the file. Will always be OSS."
+                      storageUrn:
+                        type: string
+                        x-forma-type: string
+                        description: "The storage URN of the file."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The name of the file.
+                          Currently the Sheets tool only supports PDF files.
+
+                          To create a storage URN, call POST storage.
+
+                          Max length: 255
+                    required:
+                      - name
+                      - storageType
+                      - storageUrn
+                  x-forma-type: "array: object"
+                  description: "The list of files to be processed by the upload."
+              required:
+                - files
+                - versionSetId
+  "/construction/sheets/v1/projects/{projectId}/version-sets:batch-delete":
+    post:
+      operationId: sheets-version-setsbatch-delete-POST
+      summary: "Deletes a list of version sets"
+      description: "Deletes a list of version sets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-version-setsbatch-delete-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The IDs of the version set to delete. To find the version set IDs, call GET version-sets.
+
+                    - The max number of items is 10.
+              required:
+                - ids
+  "/construction/sheets/v1/projects/{projectId}/version-sets:batch-get":
+    post:
+      operationId: sheets-version-setsbatch-get-POST
+      summary: "Retrieves a list of version sets"
+      description: "Retrieves a list of version sets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the version set."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the version set."
+                        issuanceDate:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The issuance date of the version set, in ISO-8601 date format (YYYY-MM-DD)."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the version set was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who created the version set."
+                        createdByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who created the version set."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the version set was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last updated the version set."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the version set."
+                        collection:
+                          type: object
+                          x-forma-type: object
+                          description: "The collection object, if assigned. If no collection is assigned, this value is null."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The unique identifier of the collection."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI.
+                                Max length: 255
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-version-setsbatch-get-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The IDs of the version sets to retrieve.
+
+                    - The max number of items is 200.
+  "/construction/sheets/v1/projects/{projectId}/version-sets/{versionSetId}":
+    patch:
+      operationId: sheets-version-sets-versionSetId-PATCH
+      summary: "Updates a version set"
+      description: "Updates a version set."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: versionSetId
+          in: path
+          required: true
+          description: "The ID of the version set. To find the version set ID, call GET version-sets."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the version set."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the version set."
+                  issuanceDate:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The issuance date of the version set, in ISO-8601 date format (YYYY-MM-DD)."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the version set was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who created the version set."
+                  createdByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who created the version set."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the version set was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who last updated the version set."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the version set."
+                  collection:
+                    type: object
+                    x-forma-type: object
+                    description: "The collection object, if assigned. If no collection is assigned, this value is null."
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        x-forma-type: "string: UUID"
+                        description: "The unique identifier of the collection."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI.
+                          Max length: 255
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-version-sets-versionSetId-PATCH"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of the version set.
+
+                    - The max length is 255.
+
+                    - Should not be space only.
+
+                    These handlings will be applied to the name before using it to create version set:
+
+                    - Spaces at the end or beginning will be removed.
+
+                    - Continuous spaces inside will be reduced to one.
+
+                    Max length: 255
+                issuanceDate:
+                  type: string
+                  format: date-time
+                  x-forma-type: "datetime: ISO 8601"
+                  description: "The issuance date of the version set, in ISO-8601 date format (YYYY-MM-DD)."
+  "/construction/sheets/v1/projects/{projectId}/version-sets":
+    get:
+      operationId: sheets-version-sets-GET
+      summary: "Retrieves a list of version sets"
+      description: "Retrieves a list of version sets."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: offset
+          in: query
+          description: "The starting point for the results, specified by item number. The default value is 0. For example, use offset=3 to start the results from the third item."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: limit
+          in: query
+          description: "The maximum number of results to return per page. The default is 200."
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sort
+          in: query
+          description: "Sort the version sets by issuanceDate or name. You need to add whether to sort in ascending (asc) or descending (desc) order. For example, sort=issuanceDate desc."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: collectionId
+          in: query
+          description: |-
+            Filter by sheet collection. If not provided, only results in the ungrouped collection are returned.
+            Possible values:
+
+            - The UUID of an existing collection: Returns only the results within that collection.
+
+            - * Returns results from all collections.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the version set."
+                        name:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the version set."
+                        issuanceDate:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The issuance date of the version set, in ISO-8601 date format (YYYY-MM-DD)."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the version set was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who created the version set."
+                        createdByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who created the version set."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The time when the version set was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last updated the version set."
+                        updatedByName:
+                          type: string
+                          x-forma-type: string
+                          description: "The name of the user who last updated the version set."
+                        collection:
+                          type: object
+                          x-forma-type: object
+                          description: "The collection object, if assigned. If no collection is assigned, this value is null."
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              x-forma-type: "string: UUID"
+                              description: "The unique identifier of the collection."
+                            name:
+                              type: string
+                              x-forma-type: string
+                              description: |-
+                                The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI.
+                                Max length: 255
+                    x-forma-type: "array: object"
+                    description: "The list of results."
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Pagination information for paged data."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The number of results to return in the response."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The item number from which the results begin."
+                      previousUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the previous page of results."
+                      nextUrl:
+                        type: string
+                        x-forma-type: string
+                        description: "The URL for the next page of results."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results available."
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-version-sets-GET"
+    post:
+      operationId: sheets-version-sets-POST
+      summary: "Creates a version set"
+      description: "Creates a version set."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: "The ID of the project. Use the Data Management API to retrieve the project ID. For more information, see the Retrieve a Project ID tutorial. You can use a project ID either with a “b.” prefix or without a “b.” prefix. For instance, a project ID of “b.a4be0c34a-4ab7” can also be referred to as “a4be0c34a-4ab7”."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: x-user-id
+          in: header
+          description: |-
+            The ID of the user on whose behalf the API request is made. This header is optional when using a 2-legged OAuth2, but required if using 2-legged OAuth2 with user impersonation.
+            When using 2-legged OAuth2 without user impersonation, your app has access to all users defined by the administrator in the SaaS integrations UI. However, when user impersonation is enabled, the API call is restricted to act only on behalf of the specified user. This header is not relevant for 3-legged OAuth2.
+
+            You can use either the user’s Forma ID (id), or their Autodesk ID (autodeskId).
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the version set."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the version set."
+                  issuanceDate:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The issuance date of the version set, in ISO-8601 date format (YYYY-MM-DD)."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the version set was created, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who created the version set."
+                  createdByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who created the version set."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The time when the version set was last updated, in ISO-8601 format (YYYY-MM-DDTHH:mm:ss.SSSZ)."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who last updated the version set."
+                  updatedByName:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the user who last updated the version set."
+                  collection:
+                    type: object
+                    x-forma-type: object
+                    description: "The collection object, if assigned. If no collection is assigned, this value is null."
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        x-forma-type: "string: UUID"
+                        description: "The unique identifier of the collection."
+                      name:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          The name of the collection. This corresponds to the Name column in the Forma Sheets Collections Settings UI.
+                          Max length: 255
+        "400":
+          description: "Bad Request"
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "409":
+          description: Conflict
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/sheets-version-sets-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The name of the version set.
+
+                    - The max length is 255.
+
+                    - Should not be space only.
+
+                    These handlings will be applied to the name before using it to create version set:
+
+                    - Spaces at the end or beginning will be removed.
+
+                    - Continuous spaces inside will be reduced to one.
+
+                    Max length: 255
+                issuanceDate:
+                  type: string
+                  format: date-time
+                  x-forma-type: "datetime: ISO 8601"
+                  description: "The issuance date of the version set, ISO-8601 date format (YYYY-MM-DD)."
+              required:
+                - issuanceDate
+                - name
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"

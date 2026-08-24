@@ -1,0 +1,33 @@
+{
+  "status": "complete",
+  "manifestNodes": 807,
+  "sourcePages": 780,
+  "emittedSourcePages": 780,
+  "endpointPages": 67,
+  "guidePages": 16,
+  "referencePages": 693,
+  "sdkReferencePages": 692,
+  "changelogPages": 4,
+  "unclassifiedPages": 0,
+  "byKind": {
+    "changelog": 4,
+    "endpoint": 67,
+    "guide": 10,
+    "reference": 1,
+    "sdk-reference": 692,
+    "tutorial": 6
+  },
+  "bySection": {
+    "change_history": 4,
+    "developers_guide": 10,
+    "reference": 760,
+    "tutorials": 6
+  },
+  "referenceFamilies": {
+    "dot-net-sdk-dm": 305,
+    "dot-net-sdk-oss": 44,
+    "http": 68,
+    "typescript-sdk-dm": 304,
+    "typescript-sdk-oss": 39
+  }
+}

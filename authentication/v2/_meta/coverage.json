@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "manifestNodes": 73,
+  "sourcePages": 63,
+  "emittedSourcePages": 63,
+  "endpointPages": 7,
+  "guidePages": 19,
+  "referencePages": 37,
+  "sdkReferencePages": 36,
+  "changelogPages": 0,
+  "unclassifiedPages": 0,
+  "byKind": {
+    "endpoint": 7,
+    "guide": 12,
+    "reference": 1,
+    "sdk-reference": 36,
+    "tutorial": 7
+  },
+  "bySection": {
+    "developers_guide": 12,
+    "reference": 44,
+    "tutorials": 7
+  },
+  "referenceFamilies": {
+    "dot-net-sdk": 19,
+    "http": 8,
+    "typescript-sdk": 17
+  }
+}

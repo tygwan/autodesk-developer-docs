@@ -1,0 +1,36 @@
+{
+  "status": "complete",
+  "manifestNodes": 214,
+  "sourcePages": 195,
+  "emittedSourcePages": 195,
+  "guidePages": 44,
+  "referencePages": 151,
+  "operations": 41,
+  "schemaReferences": 109,
+  "unclassifiedPages": 0,
+  "byKind": {
+    "graphql-endpoint": 1,
+    "guide": 44,
+    "input": 29,
+    "interface": 2,
+    "mutation": 6,
+    "object": 74,
+    "query": 35,
+    "scalar": 1,
+    "union": 3
+  },
+  "bySection": {
+    "changelog": 1,
+    "code-samples": 5,
+    "developers_guide": 15,
+    "graphqlendpoint": 1,
+    "inputs": 29,
+    "interfaces": 2,
+    "mutations": 6,
+    "objects": 74,
+    "queries": 35,
+    "scalars": 1,
+    "tutorials": 23,
+    "unions": 3
+  }
+}

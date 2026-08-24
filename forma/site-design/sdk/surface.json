@@ -1,0 +1,1021 @@
+{
+  "package": "forma-embedded-view-sdk",
+  "version": "0.93.0",
+  "publishedAt": "2026-04-07T13:45:44.007Z",
+  "entrypoints": [
+    ".",
+    "./analysis",
+    "./areaMetrics",
+    "./auto",
+    "./camera",
+    "./colorbar",
+    "./design-tool",
+    "./elements",
+    "./elements/types",
+    "./experimental",
+    "./extensions",
+    "./generators",
+    "./geodata",
+    "./geometry",
+    "./integrate-elements",
+    "./library",
+    "./predictive-analysis",
+    "./project",
+    "./proposal",
+    "./render",
+    "./scene/selection",
+    "./settings",
+    "./sun",
+    "./terrain"
+  ],
+  "rootMethods": [
+    {
+      "name": "ping",
+      "signature": "ping(): Promise<string>;"
+    },
+    {
+      "name": "getIframeMessenger",
+      "signature": "getIframeMessenger(): IframeMessenger;",
+      "doc": "@hidden\n@internal"
+    },
+    {
+      "name": "getProjectId",
+      "signature": "getProjectId(): string;"
+    },
+    {
+      "name": "getExtensionId",
+      "signature": "getExtensionId(): string;"
+    },
+    {
+      "name": "getRegion",
+      "signature": "getRegion(): \"EMEA\" | \"US\";",
+      "doc": "Get the region for which the current Forma Site Design project is hosted.\nIf you're using the Forma Site Design API, you need to use this to determine\nthe `X-Ads-Region` header value. The possible values are `US` and `EMEA`\n@returns \"EMEA\" or \"US\""
+    },
+    {
+      "name": "getPresentationUnitSystem",
+      "signature": "getPresentationUnitSystem(): Promise<\"metric\" | \"imperial\">;",
+      "doc": "Get the preferred presentation unit system for the project.\nIt is important to note that all programmatic interfaces operate with metric units.\nThis value should be used to determine the default unit system for the UI.\nIf this value is imperial, you should convert and dispaly results in imperial units in the UI."
+    },
+    {
+      "name": "getCanEdit",
+      "signature": "getCanEdit(): Promise<boolean>;",
+      "doc": "Check for access to perform edit operations in the current project.\n\n@example\n```js\nconst canEdit = await Forma.getCanEdit()\nif (canEdit) {\n await Forma.proposal.addElement({ urn })\n} else {\n  console.log(\"User need to have collaborator or admin role to add elements\")\n}\n```"
+    },
+    {
+      "name": "getCanViewHub",
+      "signature": "getCanViewHub(): Promise<boolean>;",
+      "doc": "Check for access to view the current project's hub\n@example\n```js\nconst canViewHub = await Forma.getCanViewHub()\nif (canViewHub) {\n  const projectData = await Forma.project.get()\n  await Forma.extensions.storage.getTextObject({\n    key: \"some-key\",\n    authcontext: projectData.hubId\n  })\n}\n```"
+    },
+    {
+      "name": "getCanEditHub",
+      "signature": "getCanEditHub(): Promise<boolean>;",
+      "doc": "Check for access to edit the current project's hub\n@example\n```js\nconst canViewHub = await Forma.getCanEditHub()\nif (canEditHub) {\n  const projectData = await Forma.project.get()\n  await Forma.extensions.storage.setObject({\n    key: \"some-key\",\n    authcontext: projectData.hubId,\n    data: \"some awesome data\"\n  })\n}\n```"
+    },
+    {
+      "name": "getEmbeddedViewId",
+      "signature": "getEmbeddedViewId(): string;",
+      "doc": "Retrieve the embedded view ID used to identify this embedded view.\n\nYou can set a custom embedded view ID when dynamically opening\nan embedded view inside a floating panel."
+    },
+    {
+      "name": "setRequestHandler",
+      "signature": "setRequestHandler(name: string, handler: RequestHandler): void;",
+      "doc": "@hidden\n@internal\n\n@remarks\nThis method allows only one handler to be registered per action.\nRegistering a new handler for the same action will replace the existing handler."
+    },
+    {
+      "name": "deleteRequestHandler",
+      "signature": "deleteRequestHandler(name: string): boolean;",
+      "doc": "@hidden\n@internal"
+    },
+    {
+      "name": "setEventHandler",
+      "signature": "setEventHandler(name: string, handler: EventHandler): void;",
+      "doc": "@hidden\n@internal\n\n@remarks\nThis method allows only one handler to be registered per action.\nRegistering a new handler for the same action will replace the existing handler."
+    },
+    {
+      "name": "deleteEventHandler",
+      "signature": "deleteEventHandler(name: string): boolean;",
+      "doc": "@hidden\n@internal"
+    },
+    {
+      "name": "setSubscribeHandler",
+      "signature": "setSubscribeHandler(name: string, handler: SubscribeHandler): void;",
+      "doc": "@hidden\n@internal\n\n@remarks\nThis method allows only one handler to be registered per action.\nRegistering a new handler for the same action will replace the existing handler."
+    },
+    {
+      "name": "deleteSubscribeHandler",
+      "signature": "deleteSubscribeHandler(name: string): boolean;",
+      "doc": "@hidden\n@internal"
+    },
+    {
+      "name": "openFloatingPanel",
+      "signature": "openFloatingPanel(options: { embeddedViewId: string; url: string; /** * Title shown for the floating panel. */ title?: string | undefined; /** * The initial size of the floating panel. * * The panel will be shrinked if it cannot fit within the main area. */ preferredSize?: { width: number; height: number; } | undefined; /** * The initial position of the floating panel. */ placement?: { type: \"right\"; /** * Offset from the top position of the current embedded view. * * This allows to position the floating panel at the * same top position as e.g. a clicked button. * * `Element.getBoundingClientRect().top` can be used to * calculate a value for this. * * @defaultValue 0 */ offsetTop?: number | undefined; } | { type: \"fullscreen\"; } | { /** * Position the floating panel in center of the available view. */ type: \"center\"; } | undefined; /** * Absolute URL to an icon. * * The icon will be displayed as a square (currently 24x24 pixels). * * @defaultValue A generic icon. */ iconUrl?: string | undefined; /** * Hide the icon. * * @defaultValue false */ hideIcon?: boolean | undefined; /** * Disable the minimize functionality. * * @defaultValue false */ disableMinimize?: boolean | undefined; /** * Disable the resize functionality. * * @defaultValue false */ disableResize?: boolean | undefined; /** * Minimum width for a resizable floating panel. * * This is the width of the embedded view, so the actual * panel width will be larger to include the spacing around. * * Can not be specified below the default value. * * Can not be specified above 400. * * @defaultValue 100 */ minimumWidth?: number | undefined; /** * Minimum height for a resizable floating panel. * * This is the height of the embedded view, so the actual * panel height will be larger to include the header and * spacing around. * * Can not be specified below the default value. * * Can not be specified above 400. * * @defaultValue 60 */ minimumHeight?: number | undefined; }): Promise<void>;",
+      "doc": "Open another embedded view in a floating panel.\n\nThe embedded view will be owned by the current embedded view,\nand automatically closed when the current embedded view is closed.\n\nTo wait for the embedded view to be ready or being closed, listen to\nthe relevant events via onEmbeddedViewStateChange\nbefore invoking this method. Methods such as createMessagePort\nwill automatically wait for the embedded view to be ready.\n\nIf the URL is invalid or the embedded view cannot be initialized,\nthe state of the embedded view will remain open and not connected,\nuntil the user closes the panel which triggers the closed state.\n\n@experimental"
+    },
+    {
+      "name": "closeEmbeddedView",
+      "signature": "closeEmbeddedView(options: { embeddedViewId: string; }): Promise<void>;",
+      "doc": "Close an embedded view belonging to this extension.\n\nCurrently only floating panels can be closed.\n\nIf the embedded view is not open this will still resolve successfully.\n\n@experimental"
+    },
+    {
+      "name": "onEmbeddedViewStateChange",
+      "signature": "onEmbeddedViewStateChange(handler: (payload: { embeddedViewId: string; state: \"opened\" | \"connected\" | \"disconnected\" | \"closed\"; }) => void): Promise<CreateSubscriptionResult>;",
+      "doc": "Listen to when the state of an embedded view belonging to the current\nextension changes.\n\n@experimental"
+    },
+    {
+      "name": "onLocaleUpdate",
+      "signature": "onLocaleUpdate(handler: (payload: { locale: string; }) => void): Promise<CreateSubscriptionResult>;",
+      "doc": "Subscribe to locale updates.\n\nThe handler will be called when the locale updates or locale becomes ready.\n\n@example\n```js\nconst i18n = ... // your i18n library\n\nvoid Forma.onLocaleUpdate(({ locale }) => {\n  i18n.setLocale(locale)\n})\n```\n\n@param handler function to be called when the locale updates\n@returns { unsubscribe: () => void } object with an `unsubscribe` method to stop subscribing to the event"
+    },
+    {
+      "name": "onEmbeddedViewClosing",
+      "signature": "onEmbeddedViewClosing(handler: (payload: { timeoutDuration: number; }) => Promise<void>): CreateSubscriptionResult;",
+      "doc": "Register a handler to be called when the embedded view is closing.\nIt will be called before the embedded view is removed from the DOM.\nThe handler must resolve before the timeout duration.\n\n@example\nconst { unsubscribe } = Forma.onEmbeddedViewClosing(async ({ timeoutDuration }) => {\n   await new Promise((resolve) => setTimeout(() => {\n     console.log(`The embedded view will be removed from DOM within ${timeoutDuration}ms`)\n     resolve(null)\n   }, 5000))\n})\n\n// Later, when you want to stop listening for changes:\nunsubscribe()\n\n@param handler function to be called when the embedded view is closing. The handler must resolve before the timeout duration.\n@returns { unsubscribe: () => void } object with an `unsubscribe` method to stop subscribing to the event\n\n@remarks\nThis will not function when the user closes the tab or browser gracefully.\nTo ensure robustness, please also handle these events.\nLearn more at [Window: beforeunload event](https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event).\n\n@experimental"
+    },
+    {
+      "name": "createMessagePort",
+      "signature": "createMessagePort(options: { /** * The ID of the embedded view to communicate with. */ embeddedViewId: string; /** * Optional name for the port. Can be used if setting * up multiple ports to distinguish between them. */ portName?: string | undefined; }): Promise<MessagePort>;",
+      "doc": "Create a MessagePort that can be used to communicate directly with\nanother embedded view belonging to the current extension.\n\nThe other embedded view must have called the onMessagePort method\nduring initialization for this to succeeed.\n\n@see https://developer.mozilla.org/en-US/docs/Web/API/Channel_Messaging_API\n@experimental"
+    },
+    {
+      "name": "onMessagePort",
+      "signature": "onMessagePort(handler: (payload: { portName?: string | undefined; port: MessagePort; }) => void): () => void;",
+      "doc": "Receive a MessagePort initiated from createMessagePort.\n\nThe first time this is called, the handler will receive any\nqueued message ports.\n\n@returns A function that can be used to unsubscribe.\n\n@experimental"
+    }
+  ],
+  "namespaces": [
+    {
+      "ns": "analysis",
+      "className": "AnalysisApi",
+      "file": "dist/internal/analysis.d.ts",
+      "methods": [
+        {
+          "name": "list",
+          "signature": "list(request: { /** * Authcontext to use with the request. As of now, the currently * open project id is both default and only allowed value. */ authcontext?: string | undefined; /** * First part of root element URN -- enables filtering based on URN pattern. */ elementUrnPrefix?: string | undefined; /** * Allowedlist of analysis types (such as sun, noise and wind) to filter for. */ analysisTypes?: string[] | undefined; }): Promise<Analysis[]>;",
+          "doc": "Fetch analysis records connected to the currently open proposal.\n\n@returns\nList of relevant analysis records.\n\n@example\n// Fetch all sun analysis records.\n// Filter to only include those in SUCCEEDED state.\nconst sunAnalyses = await Forma.analysis.list({ analysisTypes: [\"sun\"] })\nconst succeededSunAnalyses = sunAnalyses.filter(analysis => analysis.status === \"SUCCEEDED\")"
+        },
+        {
+          "name": "triggerNoise",
+          "signature": "triggerNoise(request: { /** * List of element paths to trigger noise analysis on. */ selectedElementPaths: string[]; /** * Root URN corresponding to the proposal which the selected element * paths belong to. Defaults to the currently open proposal. */ rootUrn?: string | undefined; }): Promise<Analysis>;",
+          "doc": "@beta\nTrigger a\n[noise analysis](https://aps.autodesk.com/en/docs/forma/v1/embedded-views/useful-concepts/analysis/noise/)\nbased on the traffic data connected to roads and railways in the proposal. Computes A-weighted decibel levels.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns Analysis record for the newly triggered analysis.\n\n@example\n// Trigger noise analysis on selected elements\nconst currentlySelected = await Forma.selection.getSelection()\nconst sunAnalysis = await Forma.analysis.triggerNoise({\n   selectedElementPaths: currentlySelected\n})\n@remarks\nNoise analysis is a Beta feature of Autodesk Forma Site Design."
+        },
+        {
+          "name": "triggerSun",
+          "signature": "triggerSun(request: { /** * List of element paths to trigger sun analysis on. */ selectedElementPaths: string[]; /** * Month of the year (1-12). */ month: number; /** * Day of the month (1-31). */ date: number; /** * Root URN corresponding to the proposal which the selected element * paths belong to. Defaults to the currently open proposal. */ rootUrn?: string | undefined; }): Promise<Analysis>;",
+          "doc": "Trigger a\n[sun analysis](https://aps.autodesk.com/en/docs/forma/v1/embedded-views/useful-concepts/analysis/sun/)\nfor a specific day of the year. Computes sun exposure in hours.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns\nAnalysis record for the newly triggered analysis.\n\n@example\n// Trigger sun analysis on selected elements for the summer solstice\nconst currentlySelected = await Forma.selection.getSelection()\nconst sunAnalysis = await Forma.analysis.triggerSun({\n   selectedElementPaths: currentlySelected,\n   month: 6,\n   date: 21\n})"
+        },
+        {
+          "name": "getSunAnalysis",
+          "signature": "getSunAnalysis(request: { /** * Unique identifier for the analysis */ analysisId: string; }): Promise<SunAnalysis>;",
+          "doc": "Fetch a specific sun analysis.\n\n@returns\nInformation about the sun analysis."
+        },
+        {
+          "name": "getNoiseAnalysis",
+          "signature": "getNoiseAnalysis(request: { /** * Unique identifier for the analysis */ analysisId: string; }): Promise<NoiseAnalysis>;",
+          "doc": "Fetch a specific noise analysis.\n\n@returns\nInformation about the noise analysis.\n\n@remarks\nNoise analysis is a Beta feature of Autodesk Forma Site Design."
+        },
+        {
+          "name": "getGroundGrid",
+          "signature": "getGroundGrid(request: { /** * Analysis record to fetch ground grid results for. */ analysis: Analysis; }): Promise<AnalysisGroundGrid | undefined>;",
+          "doc": "Fetch\n[ground grid result](https://aps.autodesk.com/en/docs/forma/v1/embedded-views/useful-concepts/analysis/)\nfor a sun or noise analysis.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns\nGround grid containing results for the requested analysis.\n\n@example\n// Fetch ground grid for the first listed succeeded sun analysis\nconst sunAnalyses = await Forma.analysis.list({ analysisTypes: [\"sun\"] })\nconst succeededSunAnalyses = sunAnalyses.filter(analysis => analysis.status === \"SUCCEEDED\")\nconst groundGrid = await Forma.analysis.getGroundGrid({ analysis: succeededSunAnalyses[0] })\n\n@remarks\nNoise analysis is a Beta feature of Autodesk Forma Site Design."
+        }
+      ]
+    },
+    {
+      "ns": "areaMetrics",
+      "className": "AreaMetricsApi",
+      "file": "dist/internal/areaMetrics.d.ts",
+      "methods": [
+        {
+          "name": "calculate",
+          "signature": "calculate(request: { /** * Selection of paths to calculate metrics for. */ paths?: string[]; }): Promise<AreaMetrics>;",
+          "doc": "Calculate area metrics for the given paths.\nIf no paths are given, the metrics will be calculated for all elements.\n\n@returns\nArea metrics for the given paths.\n\n@example\n// Calculate area metrics for selected elements\nconst currentlySelected = await Forma.selection.getSelection()\nconst areaMetrics = await Forma.areaMetrics.calculate({\n  paths: currentlySelected\n})"
+        }
+      ]
+    },
+    {
+      "ns": "auth",
+      "className": "AuthApi",
+      "file": "dist/internal/auth/auth.d.ts",
+      "methods": [
+        {
+          "name": "configure",
+          "signature": "configure(input: { /** * The client ID of your APS application. * * The APS application must be configured to use * Authorization Code grant type with PKCE. * * You can find your client ID in the developer portal at https://aps.autodesk.com/myapps/ */ clientId: string; /** * The OAuth callback URL of your APS application. * This must be a URL on the same domain (origin) as your embedded view. * * The URL can point to a blank page, as the mechanism will retrieve * the necessary information from the URL parameters itself and close * the page automatically. * * The URL must be added to your APS application's list of callback URLs * in the developer portal at https://aps.autodesk.com/myapps/ */ callbackUrl: string; /** * The scopes you need permission to * * For Forma Site Design APIs the following scopes are recommended and will be enforced: * - \"data:read\" * - \"data:write\" * * @see https://forge.autodesk.com/en/docs/oauth/v2/developers_guide/scopes/ */ scopes: string[]; }): void;",
+          "doc": "Configure your extension with the client id, login URL, and scope.\n\nThis should be done before calling any other methods on the auth provider as they will fail without\nany configuration.\n\n@example\n```typescript\nForma.auth.configure({\n  clientId: \"your-client-id\",\n  callbackUrl: \"http://localhost:8080/auth\", // this should be a blank html page\n  scopes: [\"data:read\", \"data:write\"],\n})\n\n// Now you can call acquireTokenSilent, acquireTokenPopup, or acquireTokenOverlay\nForma.auth.acquireTokenPopup().then((result) => {\n  console.log(\"Access token:\", result.accessToken)\n}\n```"
+        },
+        {
+          "name": "acquireTokenSilent",
+          "signature": "acquireTokenSilent(): Promise<{ accessToken: string; } | undefined>;",
+          "doc": "Get the current access token if it is valid and the token's userid, clientId and scope\nclaims are correct.\n\nIf the current token is expired, but have valid claims, the token will be refreshed.\n\n@returns object with access token if it is valid, otherwise undefined"
+        },
+        {
+          "name": "acquireTokenPopup",
+          "signature": "acquireTokenPopup(): Promise<{ accessToken: string; }>;",
+          "doc": "Acquire an access token by sending the user to the authorization server\nin a popup. When the user has authorized the application, the popup will\nredirect to the callback URL with a code in the URL. The code will be\nexchanged for an access token and stored in localStorage.\n\n@returns object with access token\n\n@example\n```typescript\nconst button = document.getElementById(\"login-button\")\nbutton.addEventListener(\"click\", () => {\n  Forma.auth.acquireTokenPopup().then((result) => {\n    console.log(\"Access token:\", result.accessToken)\n  })\n})\ndocument.body.appendChild(button)\n```\n\n@remarks\nThis method should only be invoked as part of a user interaction, such as\na button click, to avoid the browser blocking the popup request."
+        },
+        {
+          "name": "acquireTokenOverlay",
+          "signature": "acquireTokenOverlay(): Promise<{ accessToken: string; }>;",
+          "doc": "Get an access token by first rendering an overlay covering the full embedded\nview with a button to open a popup as with acquireTokenPopup.\n\nThis is a convenience method.\n\n@returns object with access token\n\n@example\n```ts\nconst { accessToken } = await Forma.auth.acquireTokenOverlay()\n```"
+        },
+        {
+          "name": "refreshCurrentToken",
+          "signature": "refreshCurrentToken(): Promise<{ accessToken: string; }>;",
+          "doc": "Get a newly refreshed access token if one already exists.\nThis can be useful if your api takes a long time and the\ncurrent token might expire in-flight.\n\nThis function should only be used if the user has already authorized,\nand will throw an error if there's no token available.\n\n@return a newly refreshed token\n\n@example\n```ts\nconst newToken = await Forma.auth.refreshToken()\n```"
+        }
+      ]
+    },
+    {
+      "ns": "camera",
+      "className": "CameraApi",
+      "file": "dist/internal/scene/camera.d.ts",
+      "methods": [
+        {
+          "name": "move",
+          "signature": "move(request: { /** Wanted position to move camera to. */ position: { x: number; y: number; z: number; }; /** Target to point camera towards. */ target?: { x: number; y: number; z: number; } | undefined; /** Zoom level to set camera to. */ zoom?: number | undefined; /** Duration of transition in milliseconds. */ transitionTimeMs?: number | undefined; }): Promise<void>;",
+          "doc": "Move camera view to a new position.\n\n@example\n// Move camera to view down on the center of the proposal from directly\n// above, spending 1 second on the transition.\nawait Forma.camera.move({\n  position: { x: 0, y: 0, z: 100 },\n  target: { x: 0, y: 0, z: 0 },\n  transitionTimeMs: 1000,\n})"
+        },
+        {
+          "name": "switchPerspective",
+          "signature": "switchPerspective(): Promise<void>;",
+          "doc": "Toggle between perspective and orthographic camera.\n\n@example\nawait Forma.camera.switchPerspective()"
+        },
+        {
+          "name": "capture",
+          "signature": "capture(request: { /** Width of the canvas to capture. */ width: number; /** Height of the canvas to capture. */ height: number; }): Promise<HTMLCanvasElement>;",
+          "doc": "Capture a screenshot of the current camera view as a canvas.\n\n@returns Canvas with the captured screenshot.\n\n@example\n// Capture a 100x100 pixel screenshot of the current camera view.\nconst canvas = await Forma.camera.capture({ width: 100, height: 100 })"
+        },
+        {
+          "name": "getCurrent",
+          "signature": "getCurrent(): Promise<CameraState>;",
+          "doc": "Fetch the current camera state in the designmode scene.\n\n@returns Current camera state.\n\n@example\nconst currentCameraState = await Forma.camera.getCurrent()"
+        },
+        {
+          "name": "subscribe",
+          "signature": "subscribe(callback: (payload: CameraState) => void): Promise<{ unsubscribe: () => void; }>;",
+          "doc": "Subscribe to camera changes.\n\n@example\nconst { unsubscribe } = await Forma.camera.subscribe((cameraState: CameraState) => {\n  console.log(\"Camera was updated\", cameraState)\n})\n// Later, when you want to stop listening for changes:\nunsubscribe()\n\n@param callback event handler for each camera change. Callback receives the new camera state as an argument.\n@returns { unsubscribe: () => void } object with an `unsubscribe` method to stop listening for changes"
+        }
+      ]
+    },
+    {
+      "ns": "colorbar",
+      "className": "ColorbarApi",
+      "file": "dist/internal/colorbar.d.ts",
+      "methods": [
+        {
+          "name": "add",
+          "signature": "add(request: { /** * Colors for each segment of the colorbar. The number of colors determine the number of segments the colorbar is divided into. */ colors: string[]; /** * Where to position the labels relative to the color segments. * * - `\"center\"` will place the label in the middle of the segment and requires the number of labels to be equal to the number of segments. * - `\"edge\"` will place the label between the segments and requires the number of labels to be 1 less than the number of segments. */ labelPosition?: \"center\" | \"edge\" | undefined; /** * Labels to show below the color segments. * * The number of `labels` must be equal to or 1 less than the number of `colors`, depending on the `labelPosition`. * * An empty string can be used to skip a label. With many colors, it is recommended to skip labels to avoid clutter. * * @example * const labels = [\"\", \"200\", \"\", \"400\", \"\", \"600\", \"\", \"800\", \"\"] */ labels?: string[] | undefined; /** * Unit label to be displayed on the left side of the component. * * @example * const unit = \"kWh/m²\" */ unit?: string | undefined; /** * Function to be called when the user changes the limits of the colorbar. * This function must be passed to make the colorbar limits interactive. * * @example * Filter analysis results when user interact with the colorbar and update the range limits. * ```ts * const onRangeFilterChange = (rangeFilter: { lowerIndex, upperIndex }) => { * const lowerValue = values[lowerIndex] * const upperValue = values[upperIndex] * myAnalysis.filterVisualsAndStatsByRange(lowerValue, upperValue) * } * ``` */ onRangeFilterChange?: ((rangeFilter: { lowerIndex: number; upperIndex: number; }) => void) | undefined; }): Promise<void>;",
+          "doc": "Add colorbar to the scene view.\n\nOnly one colorbar can be added at a time. Only the most recently added colorbar will be visible.\n\n     @example Wind comfort colorbar\n     Add wind comfort colorbar. The labels are centered below the segments.\n     ```ts\n     const comfortWindColors = [\"#B2F8DA\", \"#55DCA2\", \"#FED52A\", \"#FFA900\", \"#FF463A\"]\n     const comfortWindLabels = [\"Sitting\", \"Standing\", \"Strolling\", \"Walking\", \"Uncomfortable\"]\n     const labelPosition = \"center\"\n     await Forma.colorbar.add({colors: comfortWindColors, labelPosition, labels: comfortWindLabels})\n     ```\n     <img src=\"../media/colorbar_wind_comfort.png\" width=\"600px\"/>\n\n@example Solar energy interactive colorbar\nAdd interactive solar energy colorbar. Include colorbar unit showed to the left and labels on selected segment limits.\n```ts\nconst solarEnergyColors = [\"#662818\", \"#80321E\", \"#D94E06\", \"#E46306\", \"#EE7606\", \"#F88A06\", \"#FFA005\", \"#FFBC04\", \"#FFD603\", \"#FFF101\",]\nconst solarEnergyLabels = [\"\", \"700\", \"\", \"800\", \"\", \"900\", \"\", \"1000\", \"\"]\nconst labelPosition = \"edge\"\nconst filterAnalysis = (rangeFilter: {lowerIndex: number, upperIndex: number}) => {\n  // Do something with the range filter\n  console.log(rangeFilter)\n}\nawait Forma.colorbar.add({colors: solarEnergyColors, labelPosition, labels: solarEnergyLabels, unit: \"kWh/m²\", onRangeFilterChange: filterAnalysis})\n```\n<img src=\"../media/colorbar_solar_energy.gif\" width=\"600px\"/>"
+        },
+        {
+          "name": "remove",
+          "signature": "remove(): Promise<void>;",
+          "doc": "Removes the colorbar added by this embedded view from the scene view.\n\n@example\nawait Forma.colorbar.remove()"
+        }
+      ]
+    },
+    {
+      "ns": "designTool",
+      "className": "DesignToolApi",
+      "file": "dist/internal/scene/design-tool.d.ts",
+      "methods": [
+        {
+          "name": "getPoint",
+          "signature": "getPoint(): Promise<Vec3 | undefined>;",
+          "doc": "Activate tool for creating a point by clicking in the 3D scene.\n\nDoes not return until the user has selected a point or cancelled the operation (by clicking ESC).\n\n@returns The selected point, or `undefined` if the user cancelled the operation.\n\n@example\nconst point = await Forma.designTool.getPoint();"
+        },
+        {
+          "name": "getPolygon",
+          "signature": "getPolygon(): Promise<Vec3[] | undefined>;",
+          "doc": "Activate tools for creating a polygon.\n\nThere are several available tools for creating polygons:\n1. \"free-form\": Click repeatedly in the 3D scene to create a polygon with any number of vertices.\n2. \"rectangle\": Click two points to define the first side of a rectangle, and then a third point along a 90 degree angle to define the second side.\n3. \"circle\": Click a centre and then a point on the circumference to create a circle.\n4. \"pick\": Select an existing shape in the 3D scene and use it as the basis for a new polygon.\n\nDoes not return until the user has created a polygon or cancelled the operation (by clicking ESC).\n\n@returns The created polygon, or `undefined` if the user cancelled the operation.\n\n@example\nconst polygon = await Forma.designTool.getPolygon();"
+        },
+        {
+          "name": "getExtrudedPolygon",
+          "signature": "getExtrudedPolygon(): Promise<ExtrudedPolygon | undefined>;",
+          "doc": "Activate tool for creating an extruded polygon.\n\nSee getPolygon for available tools for creating polygons.\nOnce a polygon has been created, choose the height of the extrusion by clicking a final time.\n\nDoes not return until the user has created an extruded polygon or cancelled the operation (by clicking ESC).\n\n@returns The created extruded polygon, or `undefined` if the user cancelled the operation.\n\n@example\nconst extrudedPolygon = await Forma.designTool.getExtrudedPolygon();"
+        },
+        {
+          "name": "getLine",
+          "signature": "getLine(): Promise<Line | undefined>;",
+          "doc": "Activate tool for creating a line.\n\nClick repeatedly in the 3D scene to create a line with any number of vertices.\n\nDoes not return until the user has created a line or cancelled the operation (by clicking ESC).\n\n@returns The created Line, or `undefined` if the user cancelled the operation.\n\n@example\nconst line = await Forma.designTool.getLine();"
+        },
+        {
+          "name": "onEditStart",
+          "signature": "onEditStart(callback: () => void): Promise<{ unsubscribe: () => void; }>;",
+          "doc": "Subscribe to the 'start' event for edits with the drawing tools.\n\n@example\nconst { unsubscribe } = await Forma.designTool.onEditStart(() => {\n console.log('start event')\n});\n\n@param callback event handler to be called when editing starts\n@returns { unsubscribe: () => void } object with an `unsubscribe` method to stop listening"
+        },
+        {
+          "name": "onEditEnd",
+          "signature": "onEditEnd(callback: () => void): Promise<{ unsubscribe: () => void; }>;",
+          "doc": "Subscribe to the 'end' event for edits with the drawing tools.\n\n@example\nconst { unsubscribe } = await Forma.designTool.onEditEnd(() => {\n console.log('end event')\n});\n\n@param callback event handler to be called when editing ends\n@returns { unsubscribe: () => void } object with an `unsubscribe` method to stop listening"
+        }
+      ]
+    },
+    {
+      "ns": "elements",
+      "className": "ElementsApi",
+      "file": "dist/internal/elements.d.ts",
+      "methods": [
+        {
+          "name": "get",
+          "signature": "get(request: { urn: Urn; recursive?: boolean; }): Promise<{ element: FormaElement; elements: ElementResponse; }>;",
+          "doc": "Get an element by urn.\n\nThe method can return multiple elements. This can happen\nif the element has children that are bundled with it.\n\nThis method can also be used to include all the transitive children of the element\nby setting the recursive parameter to true.\n\n@example\n// Get the root element of the current proposal\nconst urn = await Forma.proposal.getRootUrn()\nconst { element, elements } = await Forma.elements.get({ urn })\n\n@returns\nA map from identifiers to elements.\nA single element for the requested element"
+        },
+        {
+          "name": "getByPath",
+          "signature": "getByPath(request: { rootUrn?: Urn; path: string; recursive?: boolean; }): Promise<{ element: FormaElement; elements: ElementResponse; }>;",
+          "doc": "Get an element hierarchy located at the path relative to the current\nroot. You default to current proposal by omitting the urn parameter.\n\n@example\n// Get all the building elements of the current proposal\nForma.selection.subscribe(({ paths }) => {\n  const { element, elements } = await Forma.elements.getByPath({ path: paths[0] })\n});\n\n@returns\nA map from identifiers to elements."
+        },
+        {
+          "name": "getWorldTransform",
+          "signature": "getWorldTransform(request: { path: string; }): Promise<{ transform: Transform; }>;",
+          "doc": "Get the world transform of an element relative to the root element.\n\nThe world transform is the affine transformation matrix that transforms\nthe element from its local coordinate system to the root coordinate system.\n\n@example\nconst { transform } = await Forma.elements.getWorldTransform({ path })\nconst { element } = await Forma.elements.getByPath({ path })\n\nif (element.representations?.footprint) {\n  const footprint = await Forma.elements.representations.footprint(element)\n\n  const { data: geojson } = footprint\n\n  void Forma.render.geojson.add({ geojson, transform })\n}\n\n@param request the path to element from root\n@returns The affine transformation matrix of the element"
+        },
+        {
+          "name": "editProperties",
+          "signature": "editProperties(request: { urn: Urn; propertiesJsonMergePatch: Record<string, Record<string, any> | null>; }): Promise<{ urn: Urn; }>;",
+          "doc": "Allows adding, editing and removing custom properties attached directly to elements.\nAll properties must live under a namespace which follows `\\w{1,20}:\\w{1,50}` pattern (e.g.`my:namespace`).\nThe properties are managed by [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7386) specification.\n\nRequires edit access to the project. See getCanEdit for more info.\n\n@example\n// Add two properties within a namespace to an element and replace its previous urn with the updated urn in a proposal\nconst addTwoProperties = {\n \"my:namespace\": {\n   \"myFirstProperty\": \"myFirstValue\"\n   \"mySecondProperty\": \"mySecondValue\"\n  }\n}\nconst result = await Forma.elements.editProperties({urn, propertiesJsonMergePatch: myProperties});\nawait Forma.proposal.replaceElement({path, urn: result.urn})\n\n@example\n// Change value of the first property and remove the second property at the same time\nconst changeFirstRemoveSecondProperty = {\n  \"my:namespace\": {\n    \"myFirstProperty\": \"veryDifferentValue\"\n    \"mySecondProperty\": null\n  }\n}\nconst result = await Forma.elements.editProperties({urn, propertiesJsonMergePatch: changeFirstRemoveSecondProperty});\nawait Forma.proposal.replaceElement({path, urn: result.urn})\n\n@example\n// Remove the whole namespace from the element\nconst removeWholeNamespace = {\n  \"my:namespace\": null\n}\nconst result = await Forma.elements.editProperties({urn, propertiesJsonMergePatch: removeWholeNamespace});\nawait Forma.proposal.replaceElement({path, urn: result.urn})"
+        }
+      ]
+    },
+    {
+      "ns": "elements.blobs",
+      "className": "BlobsApi",
+      "file": "dist/internal/elements.d.ts",
+      "methods": [
+        {
+          "name": "get",
+          "signature": "get(request: { /** BlobId of the blob you want. For example found through a linked representation */ blobId: string; }): Promise<{ data: ArrayBuffer; }>;",
+          "doc": "Retrieve a blob by its id.\n\nBlobs are binary data that can be used for various purposes.\nA common use case is together with linked representations\n\n@example\n```typescript\nconst { element } = await Forma.elements.get({\n  urn: \"urn:adsk-forma-elements:terrain:pro_cnusxrl4s1:c418dafe-1963-4160-9df5-239a49eef10b:1716818829774\",\n})\n\nif (element.representations?.volumeMesh?.type === \"linked\") {\n  const blobResponse = await Forma.elements.blobs.get({\n    blobId: element.representations.volumeMesh.blobId,\n  })\n  const arrayBuffer: ArrayBuffer = blobResponse.data\n}\n```\n\n@returns an object containing the ArrayBuffer of the blob as data"
+        }
+      ]
+    },
+    {
+      "ns": "elements.floorStack",
+      "className": "FloorStackApi",
+      "file": "dist/internal/elements.d.ts",
+      "methods": [
+        {
+          "name": "createFromFloors",
+          "signature": "createFromFloors(request: { /** The floors which define the building */ floors: Floor[]; /** The optional floor plans to define floors from */ plans?: Plan[]; }): Promise<{ urn: string; }>;",
+          "doc": "Create a 2.5D building from a stack of floors.\n\nBy 2.5D, we mean that the building only has vertical walls and flat roofs.\nThe floors are given from bottom to top.\n\nRequires edit access to the project. See getCanEdit for more info.\n\n@returns URN of the created building element."
+        },
+        {
+          "name": "createFromFloorsBatch",
+          "signature": "createFromFloorsBatch(request: { /** The floors which define the building */ floors: Floor[]; /** The optional floor plans to define floors from */ plans?: Plan[]; }[]): Promise<{ urns: string[]; }>;",
+          "doc": "Create multiple 2.5D buildings from stacks of floors.\n\nBy 2.5D, we mean that the building only has vertical walls and flat roofs.\nThe floors are given from bottom to top.\n\nRequires edit access to the project. See getCanEdit for more info.\n\n@returns URNs of the created building elements."
+        }
+      ]
+    },
+    {
+      "ns": "elements.representations",
+      "className": "RepresentationsApi",
+      "file": "dist/internal/representations.d.ts",
+      "methods": [
+        {
+          "name": "volumeMesh",
+          "signature": "volumeMesh(request: { /** The urn for the element */ urn: string; }): Promise<Representation.VolumeMesh | undefined>;",
+          "doc": "Get the volume mesh for the element, the volume mesh is a triangulated visual model.\nThe data is returned as a buffer of gltf data.\n\nRefer to the Typescript type of `element.representations.volumeMesh` for a\ndetailed description of the volume mesh representation.\n\nIf the `id` field is set, then the returned volume mesh is a batch where you\nneed to extract the mesh with the given id. The id is set as a name property\non the mesh inside the gltf file.\n\n@param request urn of the element\n\n@example\nconst { element } = await Forma.elements.get({ urn })\nif (element.representations?.volumeMesh) {\n  const volume = await Forma.elements.representations.volumeMesh(element)\n}\n\n@returns The volume mesh representation of the element"
+        },
+        {
+          "name": "footprint",
+          "signature": "footprint(request: { /** The urn for the element */ urn: string; }): Promise<Representation.Footprint | undefined>;",
+          "doc": "Get the footprint of the element, the footprint is a 2D representation of\nthe space the element occupies on the ground plane.\n\nRefer to the Typescript type of `element.representations.footprint` for a\ndetailed description of the footprint representation.\n\nIf the `id` field is set, then the returned footprints is a batch where you\nneed to extract the feature with the given id. The id is set as the id property\non the Feature inside the FeatureCollection.\n\n@param request urn of the element\n\n@example\nconst { element } = await Forma.elements.get({ urn })\nif (element.representations?.footprint) {\n  const {id, data} = await Forma.elements.representations.footprint(element)\n\n  const feature = data.features.find(f => f.id === id)\n}\n\n@returns The footprint representation of the element"
+        },
+        {
+          "name": "grossFloorAreaPolygons",
+          "signature": "grossFloorAreaPolygons(request: { /** The urn for the element */ urn: string; }): Promise<Representation.GrossFloorAreaPolygons | undefined>;",
+          "doc": "Get the gross floor area of the element as a set of 3d positined polygons.\n\nRefer to the Typescript type of `element.representations.grossFloorAreaPolygons` for a\ndetailed description of the gross floor area polygons representation.\n\n@param request urn of the element\n\n@example\nconst { element } = await Forma.elements.get({ urn })\nif (element.representations?.grossFloorAreaPolygons) {\n  const grossFloorAreaPolygons = await Forma.elements.representations.grossFloorAreaPolygons(element)\n}\n\n@returns The gross floor area polygons representation of the element"
+        },
+        {
+          "name": "graphBuilding",
+          "signature": "graphBuilding(request: { /** The urn for the element */ urn: string; }): Promise<Representation.GraphBuilding | undefined>;",
+          "doc": "The graph building describes the partitioning of space for a building. The representation is composed of an ordered set of vertically-aligned levels and an unordered set of units, which may span multiple levels.\n\nRefer to the Typescript type of `element.representations.graphBuilding` for a\ndetailed description of the graph building representation.\n\n@param request urn of the element\n\n@example\nconst { element } = await Forma.elements.get({ urn })\nif (element.representations?.graphBuilding) {\n  const graphBuilding = await Forma.elements.representations.graphBuilding(element)\n}\n\n@returns The graph building representation of the element"
+        }
+      ]
+    },
+    {
+      "ns": "experimental",
+      "className": "ExperimentalApi",
+      "file": "dist/internal/experimental/index.d.ts",
+      "methods": []
+    },
+    {
+      "ns": "experimental.analysis",
+      "className": "ExperimentalAnalysisApi",
+      "file": "dist/internal/experimental/analysis.d.ts",
+      "methods": [
+        {
+          "name": "putCatalogItem",
+          "signature": "putCatalogItem(request: { /** * An id for the analysis result to be put in the catalog. Provided back to the extension when it should display the result. * Must be a string between 1 and 128 characters long containing only ascii letters (a-z, A-Z), digits (0-9), hyphen (-) and underscore (_). * Using the same id in multiple calls for the same extension will update the item. */ analysisId: string; /** * Status of the analysis, possible values: SUCCEEDED, FAILED */ status: \"SUCCEEDED\" | \"FAILED\"; /** * The proposal URN the analysis result is for. */ elementUrn: string; }): Promise<void>;",
+          "doc": "Put an item in the catalog for an analysis result that the extension provides. This will make the result available in the list of analyses that has been run in Forma Site Design's UI.\n\n@returns\nEmpty body on success.\n\n@example\nawait Forma.experimental.analysis.putCatalogItem({\n  analysisId: \"6db10410-9f72-4cc1-b79a-be65230b9104\",\n  status: \"SUCCEEDED\",\n  elementUrn:\n    \"urn:adsk-forma-elements:proposal:pro_s3a28a18wi:1a79199e-7ce9-418e-8eb1-42a91ddab09a:1708350177957\",\n})"
+        }
+      ]
+    },
+    {
+      "ns": "experimental.housing",
+      "className": "ExperimentalHousingApi",
+      "file": "dist/internal/experimental/housing.d.ts",
+      "methods": [
+        {
+          "name": "createFromLine",
+          "signature": "createFromLine(request: { line: number[][]; buffer?: number; placementSide?: \"left\" | \"right\"; templateId?: string; }): Promise<{ urn: string; }>;"
+        },
+        {
+          "name": "listTemplates",
+          "signature": "listTemplates(): Promise<Template[]>;"
+        }
+      ]
+    },
+    {
+      "ns": "experimental.render",
+      "className": "ExperimentalRenderApi",
+      "file": "dist/internal/experimental/render.d.ts",
+      "methods": []
+    },
+    {
+      "ns": "experimental.render.element",
+      "className": "RenderElementApi",
+      "file": "dist/internal/experimental/renderElement.d.ts",
+      "methods": [
+        {
+          "name": "add",
+          "signature": "add(request: { /** A list of elements with their transforms */ elements: { urn: Urn; transform?: Transform; }[]; }): Promise<{ id: string; }>;",
+          "doc": "Add elements to the scene.\n\n@returns Unique identifier for this render call\n\n@example\nconst { id } = await Forma.render.element.add({ elements: [{ urn: <urn> }] }),"
+        },
+        {
+          "name": "update",
+          "signature": "update(request: { /** Id of group to update. Obtained when adding elements using the Forma.render.element.add function */ id: string; /** A list of elements with their transforms */ elements: { urn: Urn; transform?: Transform; }[]; }): Promise<void>;",
+          "doc": "Upsert an element in the scene. If the element does not exist, it will be added.\n\nThis method can also be used as an upsert.\n\n@example\nawait Forma.render.element.update({ id: \"myPreviousAddedGroup\", elements: [{ urn: <urn> }] })"
+        },
+        {
+          "name": "remove",
+          "signature": "remove(request: { /** Scene identifier of the Element object to remove. */ id: string; }): Promise<void>;",
+          "doc": "Remove an existing element group from the scene.\n\n@example\nawait Forma.render.element.remove({ id: \"myPreviousAddedGroup\" })"
+        },
+        {
+          "name": "cleanup",
+          "signature": "cleanup(): Promise<void>;",
+          "doc": "Remove all Elements added by this API from the scene.\n\nCalled automatically when the extension is unloaded\n\n@example\nawait Forma.render.element.cleanup()"
+        }
+      ]
+    },
+    {
+      "ns": "extensions",
+      "className": "ExtensionsApi",
+      "file": "dist/internal/extensions.d.ts",
+      "methods": []
+    },
+    {
+      "ns": "extensions.storage",
+      "className": "ExtensionsStorageApi",
+      "file": "dist/internal/extensions.d.ts",
+      "methods": [
+        {
+          "name": "setObject",
+          "signature": "setObject(request: { /** The key of the object. Max length: 200. Allowed characters: [a-zA-Z0-9!-_.*'()] */ key: string; /** Data to be stored. */ data: ArrayBuffer | string; /** * The authcontext you want to read the data under. * Only the current project or the project's hub are valid authcontext */ authcontext?: string; /** Optional metadata to be stored on the object. See {@link StorageObjectMetadata} for more information. */ metadata?: StorageObjectMetadata | undefined; }): Promise<void>;",
+          "doc": "Add or replace a storage object.\n\nRequires edit access. See getCanEdit for more info.\nIf you wish to store an object to the hub of the current project, the user needs\nedit access to the hub See getCanEditHub\n\n@example\n// STORE JSON\nconst myObject = {\n someData: \"someValue\"\n}\n\nawait Forma.extensions.storage.setObject({key: \"some-key\", data: JSON.stringify(myObject)})\n\n@example\n// STORE Float32Array\n\nfunction arrayToBuffer(array: Float32Array): ArrayBuffer {\n  const buffer = new ArrayBuffer(array.length * Float32Array.BYTES_PER_ELEMENT);\n  const arr = new Float32Array(buffer);\n  arr.set(array);\n  return arr;\n}\n\nconst arr = new Float32Array(100).fill(Math.random())\nawait Forma.extensions.storage.setObject({key: \"someKey\", data: arrayToBuffer(arr)})"
+        },
+        {
+          "name": "getTextObject",
+          "signature": "getTextObject(request: { /** The key of the object. */ key: string; /** * The authcontext of the data you want to read. * Only the current project Id or the project's hub ID are valid values. */ authcontext?: string; }): Promise<StorageObjectAsText | undefined>;",
+          "doc": "Utility function to fetch string objects without needing to decode an array buffer.\n\nIf you wish to get an object on the current project's hub, the user needs\nview access to the hub See getCanViewHub\n\n@returns The data parsed as UTF-8, including metadata if present.\n\n@example\n// READING JSON\nconst res = await Forma.extensions.storage.getTextObject({\n  key: \"some-key\",\n})\nif (!res) {\n   return\n}\nconst metadata = JSON.parse(data.metadata ?? \"{}\")\nconst data = res.data\n\n@example\nfunction loadImageFromEncodedPng(\n  url: string,\n): Promise<HtmlImageElement> {\n  return new Promise((resolve, reject) => {\n    const img = new Image()\n    img.onload = () => {\n      resolve(img)\n    }\n    img.onerror = () => {\n      reject(new Error(\"Failed to load image\"))\n    }\n    img.src = url\n  })\n}\n\nasync function createCanvasFromDataUrl(\n  url: string,\n): Promise<HtmlCanvasElement | void> {\n const canvas = document.createElement(\"canvas\")\n const ctx = canvas.getContext(\"2d\")\n const img = await loadImage(url)\n canvas.height = img.height\n canvas.width = img.width\n ctx.drawImage(ctx, img, 0, 0)\n return canvas\n}\n\nconst res = await Forma.extensions.storage.getTextObject({\n  key: \"some-png-key\",\n})\nif (!res) {\n   return\n}\nconst canvas = createCanvasFromDataUrl(res.data)"
+        },
+        {
+          "name": "getBinaryObject",
+          "signature": "getBinaryObject(request: { /** The key of the object. */ key: string; /** * The authcontext you want to read the data under. * Only the current project or the project's hub are valid authcontext */ authcontext?: string; }): Promise<StorageObject | undefined>;",
+          "doc": "Fetch the data for the specified key.\n\nUse this function when you're **not** fetching text data, such as geometry\nor analysis results.\n\nIf you wish to get an object on the current project's hub, the user needs\nview access to the hub See getCanViewHub\n\n@returns The data as an ArrayBuffer, including metadata if present.\n\n@example\nconst res = await Forma.extensions.storage.getBinaryObject({\n  key: \"my-float32-array\",\n})\nif (!res) {\n return\n}\nconst terrainSlope: Float32Array = new Float32Array(res.data)\nconst metadata = JSON.parse(res.metadata ?? \"{}\")"
+        },
+        {
+          "name": "listObjects",
+          "signature": "listObjects(request?: { /** Limit the response to only objects that starts with the key. */ prefix?: string | undefined; /** * The authcontext you want to read the data under. * Only the current project or the project's hub are valid authcontext */ authcontext?: string; }): Promise<{ results: StorageListObject[]; }>;",
+          "doc": "List all storage objects for the extension in the current authcontext.\n\n@returns List of filtered objects with relevant information.\n\n@example\nconst availableObjects = await Forma.extensions.storage.listObjects().results"
+        },
+        {
+          "name": "deleteObject",
+          "signature": "deleteObject(request: { /** The key of the object. */ key: string; /** * The authcontext you want to read the data under. * Only the current project or the project's hub are valid authcontext */ authcontext?: string; }): Promise<void>;",
+          "doc": "Delete object corresponding to the specified key.\n\nRequires edit access. See getCanEdit for more info.\nIf you wish to delete an object to the hub of the current project, the user needs\nedit access to the hub See getCanEditHub\n\n@example\n// Store a JSON object and delete it afterwards\nconst myObject = {\n someData: \"someValue\"\n}\nawait Forma.extensions.storage.setObject({key: \"some-key\", data: JSON.stringify(myObject)})\nawait Forma.extensions.storage.deleteObject({key: \"some-key\"}})"
+        }
+      ]
+    },
+    {
+      "ns": "generators",
+      "className": "GeneratorsApi",
+      "file": "dist/internal/generators.d.ts",
+      "methods": [
+        {
+          "name": "put",
+          "signature": "put(request: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; /** Generator resource model to create or replace. */ data: Generator; }): Promise<Generator>;",
+          "doc": "Create or replace a generator.\n\n@returns The created or replaced generator resource model."
+        },
+        {
+          "name": "list",
+          "signature": "list(request?: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; } | undefined): Promise<Generator[]>;",
+          "doc": "List out generators within the specified authcontext.\n\n@returns List of registered generators."
+        }
+      ]
+    },
+    {
+      "ns": "geoData",
+      "className": "GeoDataApi",
+      "file": "dist/internal/geodata.d.ts",
+      "methods": [
+        {
+          "name": "upload",
+          "signature": "upload(request: { /** * Data in GeoJSON format. */ data: FeatureCollection; geoLocation?: { /** * The spatial reference identifier (SRID) for the data. */ srid: number; /** * The reference point of the data in the given SRID. */ refPoint: [number, number]; }; /** * Specifies the type of data. */ dataType: \"buildings\" | \"roads\" | \"property-boundaries\"; /** * Information related to the licensing governing the use and transfer of this element. */ licensing?: Licensing; }): Promise<LibraryItem>;",
+          "doc": "Uploads buldings, roads or property boundaries as geojson to forma, does some internal processing and adds the data to the library.\nCurrently supports 2.5D buildings, roads and property boundaries.\n2.5D buildings will need an elevation and height property, which defaults to 0 and 3 meters.\n\n@returns The library item for uploaded data.\n\n@example\n      const response = await Forma.geoData.upload({\n        data: {\n          type: \"FeatureCollection\",\n          features: [\n            {\n              type: \"Feature\",\n              properties: {\n                height: 10,\n                elevation: 0\n              },\n              geometry: {\n                type: \"Polygon\",\n                coordinates: [\n                  [\n                    [-74.0060, 40.7128],\n                    [-74.0060, 40.7129],\n                    [-74.0059, 40.7129],\n                    [-74.0059, 40.7128],\n                    [-74.0060, 40.7128]\n                  ]\n                ]\n              }\n            }\n          ]\n        },\n        dataType: \"buildings\",\n        geoLocation: {\n          srid: 4326,\n          refPoint: [0, 0]\n        }\n      });"
+        }
+      ]
+    },
+    {
+      "ns": "geometry",
+      "className": "GeometryApi",
+      "file": "dist/internal/geometry.d.ts",
+      "methods": [
+        {
+          "name": "getPathsByCategory",
+          "signature": "getPathsByCategory(request: { /** Category to search for, such as \"buildings\" or \"site_limit\". */ category: string; /** Root URN of the proposal to obtain paths for. If not provided, the current proposal is used. */ urn?: string; }): Promise<string[]>;",
+          "doc": "Fetch paths of all elements in a proposal tagged with a specific category.\nTraverses the element tree to also find any nested children tagged as well.\n\n@returns\nList of paths to elements tagged with the given category.\n\n@example\n// Fetch all paths to buildings in the current proposal.\nconst buildingPaths = await Forma.geometry.getPathsByCategory({ category: \"buildings\" })"
+        },
+        {
+          "name": "getPathsForVirtualElements",
+          "signature": "getPathsForVirtualElements(request?: { /** Root URN of the proposal to obtain paths for. If not provided, the current proposal is used. */ urn?: string; }): Promise<string[]>;",
+          "doc": "Fetch the paths of all elements in a proposal with the property 'virtual' set to true.\nTraverses the element tree to also find any nested children tagged as well.\n\nThe virtual property can be used to describe something that isn't real,\nlike a constraint or an illustrative boy with balloon. If this is set,\nanalyses and possibly other modes will ignore the element.\n\n@returns\nList of paths to elements tagged as virtual.\n\n@example\n// Fetch paths to all elements in the current proposal that are virtual.\nconst virtualElementPaths = await Forma.geometry.getPathsForVirtualElements()"
+        },
+        {
+          "name": "getFootprint",
+          "signature": "getFootprint(request: { /** Path of the element to obtain footprint for, relative to root. */ path: string; /** Root URN of the proposal to obtain paths for. If not provided, the current proposal is used. */ urn?: string; }): Promise<Footprint | undefined>;",
+          "doc": "Fetch footprint representation of an element. Does not traverse children of\nthe element, so if any of them have footprint representations which\nare of interest they need to be fetched separately using their complete path.\n\n@returns\nFootprint representation of the element pointed to by the given path.\n\n@example\n// Fetch footprint of the first found proposal site limit.\nconst siteLimitPaths = await Forma.geometry.getPathsByCategory({ category: \"site_limit\" })\nconst siteLimitFootprint = await Forma.geometry.getFootprint({ path: siteLimitPaths[0] })"
+        },
+        {
+          "name": "getTriangles",
+          "signature": "getTriangles(request?: { /** * Path of the element to recursively obtain mesh for. * * The path is relative to the root URN. * * @defaultValue \"root\" * * @example \"root/a\" * */ path?: string; /** * Paths to elements that are recursively excluded from the resulting mesh. * * The paths are relative to the root URN. * * @defaultValue Empty list, i.e. no excluded paths. * * @example \"root/a/b\" * */ excludedPaths?: string[]; /** Root URN of the proposal to obtain paths for. If not provided, the current proposal is used. */ urn?: string; }): Promise<Float32Array>;",
+          "doc": "Fetch mesh representation of an element and its children. Traverses the\nelement tree to also find any nested children with the `volumeMesh` representation.\nAll found meshes are concatenated into a flat list of triangles.\n\n@returns\nMesh representation (list of triangles with vertex coordinates represented\nas `Float32`s) of the element pointed to by the given path and its children.\n\n@example\n// Fetch mesh representation for the entire proposal and count the number of triangles.\nconst mesh = await Forma.geometry.getTriangles()\nconst numberOfVertices = mesh.length / 3\nconst numberOfTriangles = numberOfVertices / 3\n\n@example\n// Fetch mesh representation for one of the elements with category building and its children.\nconst buildingPaths = await Forma.geometry.getPathsByCategory({category: \"building\"})\nif (buildingPaths.length > 0 ) {\n   const mesh = await Forma.geometry.getTriangles({path: buildingPaths[0]})\n}\n\n@example\n// Fetch mesh representation for the entire proposal except elements with category vegetation and their children.\nconst vegetationPaths = await Forma.geometry.getPathsByCategory({category: \"vegetation\"})\nconst mesh = await Forma.geometry.getTriangles({excludedPaths: vegetationPaths})"
+        },
+        {
+          "name": "getPathsInsidePolygons",
+          "signature": "getPathsInsidePolygons(request: { /** * The list of polygons that you want to check for overlap between */ polygons: [number, number][][]; }): Promise<string[]>;",
+          "doc": "Get all paths where the element's geometry has at least one vertex or point\ninside at least one of the provided polygons.\n\nUseful in cases where you need all buildings inside a site limit,\nwithout needing to do all the calculations yourself.\n\nFor elements under the proposal, if an element is inside the polygon,\nit is assumed that all its children are also inside the polygon.\nAdditionally, if a child is inside an element, it is assumed that\nthe parent is inside as well.\n\n@example\nconst polygon = someSiteLimitPolygon\nconst pathsInside = await Forma.analysis.selection.getPathsInsidePolygons({\n polygons: [someSiteLimitPolygon]\n})"
+        }
+      ]
+    },
+    {
+      "ns": "integrateElements",
+      "className": "IntegrateApi",
+      "file": "dist/internal/integrate.d.ts",
+      "methods": [
+        {
+          "name": "createElementHierarchy",
+          "signature": "createElementHierarchy(request: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; /** * Element hierarchy to add, consisting of a * root element and its children. */ data: CreateElementHierarchy; }): Promise<{ id: string; urn: string; revision: string; }>;",
+          "doc": "Create a hierarchy of elements in the integrate element system.\n\nMore information about the integrate element system can be seen\nat https://aps.autodesk.com/en/docs/forma/v1/http-specification/integrate-api/\n\nRequires edit access. See getCanEdit for more info.\n\n@deprecated Prefer using IntegrateApi.createElementV2 or IntegrateApi.batchIngestElementsV2 instead.\n\n@returns ID, URN, and revision of the root element created.\n\n@example\nconst upload = await Forma.integrateElements.uploadFile({\n  data: \"glb data here...\",\n})\n\nconst { urn } = await Forma.integrateElements.createElementHierarchy({\n  data: {\n    rootElement: \"root\",\n    elements: {\n      root: {\n        id: \"root\",\n        properties: {\n          geometry: {\n            type: \"File\",\n            format: \"glb\",\n            s3Id: upload.fileId,\n          },\n        },\n      },\n    },\n  },\n})\n\nconsole.log(`Created element: ${urn}`)",
+          "deprecated": true
+        },
+        {
+          "name": "createElementV2",
+          "signature": "createElementV2(request: CreateElementV2): Promise<{ urn: Urn; }>;",
+          "doc": "Create a new element.\n\nRequires edit access. See getCanEdit for more info.\n\n@example\nconst upload = await Forma.integrateElements.uploadFile({\n  data: \"glb data here...\",\n})\n\nconst { urn } = await Forma.integrateElements.createElementV2({\n  representations: {\n    volumeMesh: {\n      blobId: upload.blobId,\n    },\n  },\n})\n\n@returns URN of the created element."
+        },
+        {
+          "name": "updateElementV2",
+          "signature": "updateElementV2(request: UpdateElementV2): Promise<{ urn: Urn; }>;",
+          "doc": "Create a new element based on the existing element. The element must\nbelong to integrate system.\n\nThe update will be merged onto the existing element. The merge happens\nfor each individual property and representation, but not deeper.\nIf you want to remove a field you must set it to \\`null\\`.\n\nRequires edit access. See getCanEdit for more info.\n\n@example\nconst { urn } = await Forma.integrateElements.updateElementV2({\n  urn: existingUrn,\n  properties: {\n    foo: \"bar\",\n  },\n})\n\n@returns URN of the created element."
+        },
+        {
+          "name": "batchIngestElementsV2",
+          "signature": "batchIngestElementsV2(request: { /** * A list of operations to create or update elements. A maximum of 1000 items can be specified. */ items: (BatchIngestElementsV2.CreateElement | BatchIngestElementsV2.UpdateElement)[]; }): Promise<{ /** * Each item in the response corresponds to the item with the same index * in the request. */ items: (BatchIngestElementsV2.ResultOk | BatchIngestElementsV2.ResultFailed)[]; }>;",
+          "doc": "Create and/or update multiple elements in a batch.\n\nAs part of the same batch elements can reference each other to form\na hierarchy in a single request. You need to specify the element URN\nthat should be used to store the new element for this.\n\nThe response can be partial including failed items.\n\nRequires edit access. See getCanEdit for more info.\n\n@example\nconst upload = await Forma.integrateElements.uploadFile({\n  data: \"glb data here...\",\n})\n\nconst { items } = await Forma.integrateElements.batchIngestElementsV2({\n  items: [\n    {\n      operation: \"create\",\n      representations: {\n        volumeMesh: {\n          blobId: upload.blobId,\n        },\n      },\n    },\n    {\n      operation: \"update\",\n      urn: existingUrn,\n      properties: {\n        foo: \"bar\",\n      },\n    },\n  ],\n})\n// Handle failures."
+        },
+        {
+          "name": "uploadFile",
+          "signature": "uploadFile(request: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; /** * File data to upload. */ data: string | ArrayBuffer; }): Promise<{ fileId: string; blobId: string; }>;",
+          "doc": "Upload a file to the integrate file storage. Files stored here are can only\nbe retrieved in relation to an element. An example of this is uploading a\ngeometric file - e.g. GLB or GeoJSON files.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns Unique identifier for the uploaded file."
+        },
+        {
+          "name": "createUrn",
+          "signature": "createUrn(authcontext: string): Urn;",
+          "doc": "Create a new URN to be used for an element in Integrate API.\n\n@example\nconst urn = createUrn(\"pro_japoqu38nx\")"
+        }
+      ]
+    },
+    {
+      "ns": "library",
+      "className": "LibraryApi",
+      "file": "dist/internal/library.d.ts",
+      "methods": [
+        {
+          "name": "createItem",
+          "signature": "createItem(request: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; /** Content of the item to create. */ data: LibraryItemData; }): Promise<LibraryItem>;",
+          "doc": "Add data to Library as a new item.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns The newly created item.\n\n@example\nconst urn = mockRegisterElementInSystem() // See e.g. integrate-elements module\nconst item = await Forma.library.createItem({\n data: { name: \"My new item\", status: \"success\", urn: urn }\n})"
+        },
+        {
+          "name": "updateItem",
+          "signature": "updateItem(request: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; /** ID of the item to update. */ id: string; /** Updated content for the relevant item. */ data: LibraryItemData; }): Promise<LibraryItem>;",
+          "doc": "Update an existing library item.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns The updated item."
+        },
+        {
+          "name": "deleteItem",
+          "signature": "deleteItem(request: { /** * Authcontext to use with the request. * * As of now, the currently open project id is both default * and only allowed value. */ authcontext?: string | undefined; /** ID of the item to delete. */ id: string; }): Promise<void>;",
+          "doc": "Delete an existing library item.\n\nRequires edit access. See getCanEdit for more info."
+        }
+      ]
+    },
+    {
+      "ns": "predictiveAnalysis",
+      "className": "PredictiveAnalysisApi",
+      "file": "dist/internal/predictive-analysis.d.ts",
+      "methods": [
+        {
+          "name": "getWindParameters",
+          "signature": "getWindParameters(): Promise<WindParameters>;",
+          "doc": "This function returns the wind parameters used by Forma Site Design to predict wind conditions.\nIt includes a wind rose with 8 directions and a surface roughness."
+        },
+        {
+          "name": "predictWind",
+          "signature": "predictWind(request: { /** HeightMaps represent a height raster for a given area. */ heightMaps: HeightMaps; /** Windrose with 8 directions. Value used by Forma Site Design can be retrieved using `getWindParameters`. */ windRose: { data: WindDirectionData[]; height: number; }; /** Type of wind results to predict. Only wind comfort supported for now. */ type: \"comfort\"; /** Surface roughness. Value used by Forma Site Design can be retrieved using `getWindParameters`. */ roughness: number; /** Read more about [Comfort scales](https://help.autodeskforma.com/en/articles/6994344-how-to-analyze-pedestrian-wind-comfort). */ comfortScale: \"lawson_lddc\" | \"davenport\" | \"lawson\" | \"lawson_2001\" | \"nen8100\" | \"cstb\"; }): Promise<PredictiveAnalysisGroundGrid>;",
+          "doc": "Predict wind conditions using Forma Site Design's rapid wind model.\nRead more about rapid wind at [Forma Site Design Help](https://help.autodeskforma.com/en/articles/6977396-rapid-wind-analysis).\n\n@returns 2d grid of wind conditions. For wind comfort values are 0-4 where lower is better conditions.\n\n@example\nconst windRose = await Forma.prediction.getWindParameters()\n// See HeightMaps for more infor on how to create heightMaps\nconst heightMaps = computeHeightMaps(terrainGeometry, terrainAndBuildingsGeometry)\nconst prediction = await Forma.prediction.predictWind({\n heightMaps,\n windRose,\n type: \"comfort\",\n roughness: windRose.roughness,\n comfortScale: \"lawson_lddc\",\n})\n// calculate statistics, mix with other grids, etc."
+        }
+      ]
+    },
+    {
+      "ns": "project",
+      "className": "ProjectApi",
+      "file": "dist/internal/project.d.ts",
+      "methods": [
+        {
+          "name": "get",
+          "signature": "get(): Promise<Project>;",
+          "doc": "Fetch all project metadata.\n\n@returns The project metadata.\n\n@example\nconst projectMetadata = await Forma.project.get()"
+        },
+        {
+          "name": "getCountryCode",
+          "signature": "getCountryCode(): Promise<string | undefined>;",
+          "doc": "Fetch project country code.\n\n@hidden\n@deprecated Use countryCode from get instead.\n\n@returns Country code for the project.\n\n@example\nconst countryCode = await Forma.project.getCountryCode()",
+          "deprecated": true
+        },
+        {
+          "name": "getGeoLocation",
+          "signature": "getGeoLocation(): Promise<[number, number] | undefined>;",
+          "doc": "Fetch project location (latitude and longitude).\n\n@returns Geolocation for the project as [latitude, longitude].\n\n@example\nconst [latitude, longitude] = await Forma.project.getGeoLocation()"
+        },
+        {
+          "name": "getTimezone",
+          "signature": "getTimezone(): Promise<string | undefined>;",
+          "doc": "Fetch project timezone.\n\n@hidden\n@deprecated Use timezone from get instead.\n\n@returns Timezone for the project.\n\n@example\nconst timezone = await Forma.project.getTimezone()",
+          "deprecated": true
+        }
+      ]
+    },
+    {
+      "ns": "proposal",
+      "className": "ProposalApi",
+      "file": "dist/internal/proposal.d.ts",
+      "methods": [
+        {
+          "name": "getRootUrn",
+          "signature": "getRootUrn(): Promise<Urn>;",
+          "doc": "Fetch the top level URN for the proposal.\n\n@returns Root URN\n\n@example\nconst rootUrn = await Forma.proposal.getRootUrn()"
+        },
+        {
+          "name": "getId",
+          "signature": "getId(): Promise<string>;",
+          "doc": "Fetch the unique identifier of the proposal.\n\n@returns Proposal ID\n\n@example\nconst proposalId = await Forma.proposal.getId()"
+        },
+        {
+          "name": "addElement",
+          "signature": "addElement(request: { /** * URN of the element to add. */ urn: string; /** * Path to element whose children the new element should be added to. * * Currently the only supported parents are * - top-level of proposal (`\"root\"`) * - a base layer (`\"root/<base key>\"`) * * Defaults to \"root\". */ parentPath?: string; /** * Flattened list of a standard 4x4 affine transform matrix in column-major order, to position the element relative to its parent. * * When the parent is proposal root, the project reference point is used as origin. * * Defaults to equivalent of 4x4 identity matrix. */ transform?: number[]; /** * Name of the element. */ name?: string; }): Promise<{ path: string; }>;",
+          "doc": "Add a new element to the proposal element tree.\n\nRequires edit access. See getCanEdit for more info.\n\n@returns { path: string } object with the path of the new element\n\n@example\nconst urn = mockRegisterElementInSystem() // See e.g. integrate-elements module\nconst { path } = await Forma.proposal.addElement({ urn })"
+        },
+        {
+          "name": "replaceElement",
+          "signature": "replaceElement(request: { /** * Path of the element you want to replace. * * The path is relative to the proposal element and starts with \"root/\". * * Currently, the only supported parents are * - top-level of proposal (`\"root\"`) * - a base layer (`\"root/<base key>\"`) * * This will be the same value as the path returned from {@link ProposalApi.addElement | addElement}. */ path: string; /** * URN of the new element. */ urn: string; }): Promise<void>;",
+          "doc": "Replace an element in the proposal.\n\nRequires edit access. See getCanEdit for more info.\n\n@example\nconst urn = mockRegisterElementInSystem() // See e.g. integrate-elements module\nconst { path } = await Forma.proposal.addElement({ urn })\nconst newUrn = mockRegisterElementInSystem() // See e.g. integrate-elements module\nawait Forma.proposal.replaceElement({ path, newUrn })"
+        },
+        {
+          "name": "removeElement",
+          "signature": "removeElement(request: { /** * Path of the element you want to remove. * * The path is relative to the proposal element and starts with \"root/\". * * Currently, the only supported parents are * - top-level of proposal (`\"root\"`) * - a base layer (`\"root/<base key>\"`) * * This will be the same value as the path returned from {@link ProposalApi.addElement | addElement}. */ path: string; }): Promise<void>;",
+          "doc": "Remove an element in the proposal.\n\nRequires edit access. See getCanEdit for more info.\n\n@example\nRemove the first of the selected elements\n```ts\nconst selection = await Forma.selection.getSelection()\nif (selection.length > 0) {\n   await Forma.proposal.removeElement({ path: selection[0] })\n}\n```"
+        },
+        {
+          "name": "replaceTerrain",
+          "signature": "replaceTerrain(request: { /** GLB file. */ glb: ArrayBuffer; }): Promise<void>;",
+          "doc": "Replace existing terrain on the proposal.\n\nRequires edit access. See getCanEdit for more info.\n\n@remarks\nThis method is not supported for non-internal terrains.\nUse Forma.terrain.isInternal to check whether\nthe terrain is internal before calling this method.\n\n@example\nconst glb = createGlbSomehow()\nawait Forma.proposal.replaceTerrain({ glb })"
+        },
+        {
+          "name": "updateElements",
+          "signature": "updateElements(request: { operations: ({ type: \"add\"; /** * Path to element whose children the new element should be added to. * * Currently, the only supported parents are * - top-level of proposal (`\"root\"`) * - a base layer (`\"root/<base key>\"`) */ parentPath?: string; /** * URN of the element to add. */ urn: string; /** * Name of the element. */ name?: string; /** * Flattened list of a standard 4x4 affine transform matrix in column-major order, to position the element relative to its parent. */ transform?: number[]; } | { type: \"replace\"; /** * Path of the element to replace. * * Currently, the only supported paths are * - top-level of proposal (`\"root/<key>\"`) * - a base layer (`\"root/<base key>/<key>\"`) */ path: string; /** * URN of the new element. */ urn: string; } | { type: \"remove\"; /** * Path of the element to remove. * * Currently, the only supported paths are * - top-level of proposal (`\"root/<key>\"`) * - a base layer (`\"root/<base key>/<key>\"`) */ path: string; })[]; }): Promise<({ path: string; } | null)[]>;",
+          "doc": "Executes a batch of element operations (`add`, `replace`, `remove`) within a single proposal.\nFor more info see addElement, replaceElement and removeElement.\n\nThis method allows for efficient bulk modifications of elements by combining multiple add, replace, and/or remove operations into a single call.\nOperations are performed in the sequence they are provided. This method is useful for applying complex changes to a scene with minimal requests.\n\nNote: This operation requires edit access. Use getCanEdit to verify edit permissions.\n\n@param request - An array of objects detailing the operations to be performed.\nEach object should specify the `operation` type (`\"add\"`, `\"replace\"`, `\"remove\"`) and the required parameters.\n\n@returns A Promise that resolves to an array of results, one for each operation. For added elements, the result includes the new element path.\n\n@example\n// Example: Adding three new elements to the scene\nconst urn1 = mockRegisterElementInSystem(); // Register a new element and obtain its urn\nconst urn2 = mockRegisterElementInSystem(); // Register another new element\nconst urn3 = mockRegisterElementInSystem(); // Register another new element\n\nconst addElementOperations = [\n  { type: \"add\", urn: urn1 },\n  { type: \"add\", urn: urn2 },\n  { type: \"add\", urn: urn3 },\n];\n\n// Example: Modifying three existing elements in the scene i.e. replacing the element at the first path\n// with the second element and removing the elements at the second and third paths\nconst results = await Forma.proposal.updateElements({ operations: addElementOperations })\nconst paths = results.map((result) => result?.path);\nconsole.log(`Added elements at paths: ${paths.join(\", \")}`);\n\nconst modifyElementOperations = [\n  { type: \"replace\", urn: urn2, path: paths[0] },\n  { type: \"remove\", path: paths[1] },\n  { type: \"remove\", path: paths[2] },\n];\n\nawait Forma.proposal.updateElements({ operations: modifyElementOperations })\n\n@throws {Error} If the user does not have edit access, provides invalid paths or attempts to modify terrain element."
+        },
+        {
+          "name": "subscribe",
+          "signature": "subscribe(callback: (payload: { rootUrn: string; }) => void, options?: { debouncedPersistedOnly?: boolean; }): Promise<{ unsubscribe: () => void; }>;",
+          "doc": "Subscribe to changes in the proposal.\n\nBy default this will be called for every change in the proposal, including changes that might not be persisted as a separate change.\n\nThis can be changed by setting the `debouncedPersistedOnly` option to true, in which case the callback will only be called after the proposal is persisted as well.\nIf multiple changes are made in quick succession, the callback will be called only once for all changes.\n\n@example\nForma.proposal.subscribe(\n  async ({ rootUrn }) => {\n    console.log(`Proposal ${rootUrn} has been created and persisted`)\n  },\n  {\n    debouncedPersistedOnly: true,\n  },\n)\n@param callback event handler for each proposal change\n@param options.debouncedPersistedOnly - if true, the callback will be called only after the proposal is persisted.\n@returns { unsubscribe } - Object with an `unsubscribe` function to stop listening to events."
+        },
+        {
+          "name": "awaitProposalPersisted",
+          "signature": "awaitProposalPersisted(): Promise<void>;",
+          "doc": "This function is resolved when the currently loaded proposal is properly persisted in the system.\nThe underlying host application can operate optimistically and return values before the proposal is persisted.\nWhile other APIs require the proposal to be persisted before they can be used. Examples of such APIs are the elements API.\n\nIf you subscribe to proposal updates, you should likely instead look at the `debouncedPersistedOnly` option in the `subscribe` function."
+        },
+        {
+          "name": "getAll",
+          "signature": "getAll(): Promise<ProposalElement[]>;",
+          "doc": "This will get all proposals belongs to the current project.\n\n@returns ProposalElement[]\n\n@example\nconst proposals = await Forma.proposal.getAll()"
+        },
+        {
+          "name": "get",
+          "signature": "get(request: { proposalId: string; revision?: string; }): Promise<ProposalElement>;",
+          "doc": "This will get the proposal with the given ID and/or revision.\n\n@returns ProposalElement\n\n@example\nconst proposalId = await Forma.proposal.getId()\nconst proposal = await Forma.proposal.get({ proposalId: proposalId })"
+        },
+        {
+          "name": "create",
+          "signature": "create(request: { name: string; terrain: { urn: Urn; key: string; transform?: Transform; name?: string; }; base: { urn: Urn; key: string; transform?: Transform; name?: string; }; children: { urn: Urn; key: string; transform?: Transform; name?: string; }[]; }): Promise<{ urn: Urn; }>;",
+          "doc": "This will create a new proposal with the given name, terrain, base, and children.\n\n@returns { urn: Urn } object with the URN of the new proposal\n\n@example\nconst newProposal = await Forma.proposal.create({\n name: \"New Proposal\",\n terrain: { urn: \"urn:adsk-forma-elements:terrain:projectId:elementId:revision\", key: \"<key>\" },\n base: { urn: \"urn:adsk-forma-elements:base:projectId:elementId:revision\", key: \"<key>\" },\n children: [],\n})"
+        },
+        {
+          "name": "update",
+          "signature": "update(request: { proposalId: string; revision: string; proposal: { name?: string; terrain: { urn: Urn; key: string; transform?: Transform; name?: string; }; base: { urn: Urn; key: string; transform?: Transform; name?: string; }; children: { urn: Urn; key: string; transform?: Transform; name?: string; }[]; }; }): Promise<{ urn: Urn; }>;",
+          "doc": "This will update the proposal with the given ID and revision.\n\n@returns { urn: Urn } object with the URN of the updated proposal\n\n@example\nconst proposalId = await Forma.proposal.getId()\nconst updatedProposal = await Forma.proposal.update({\nproposalId: proposalId,\nrevision: \"revisionId\",\nproposal: {\n   name: \"Updated Proposal\",\n   terrain: { urn: \"urn:adsk-forma-elements:terrain:projectId:elementId:revision\", key: \"<key>\" },\n   base: { urn: \"urn:adsk-forma-elements:base:projectId:elementId:revision\", key: \"<key>\" },\n   children: [],\n }\n})"
+        },
+        {
+          "name": "delete",
+          "signature": "delete(request: { proposalId: string; }): Promise<void>;",
+          "doc": "This will delete the proposal with the given ID. And load the next available proposal in the canvas.\n\n@example\nconst proposalId = await Forma.proposal.getId()\nawait Forma.proposal.delete({\n proposalId: proposalId,\n})\n\n@remarks\nThis is a soft delete, meaning the proposal can be restored.\n\n@experimental"
+        },
+        {
+          "name": "duplicate",
+          "signature": "duplicate(request: { proposalId: string; revision?: string; }): Promise<ProposalElement>;",
+          "doc": "This will create a new proposal with the same elements as the original.\n\n@experimental\n\n@returns { urn: Urn } object with the URN of the duplicated proposal\n\n@example\nconst proposalId = await Forma.proposal.getId()\nconst duplicatedProposal = await Forma.proposal.duplicate({\n proposalId: proposalId,\n})"
+        },
+        {
+          "name": "switch",
+          "signature": "switch(request: { proposalId: string; revision?: string; }): Promise<void>;",
+          "doc": "Switch to a different proposal.\n\n@example\nconst proposals = await Forma.proposal.getAll()\nawait Forma.proposal.switch({\n proposalId: proposals[0].urn.split(\":\")[4],\n revision: proposals[0].urn.split(\":\")[5],\n})\n\n@remarks\nThis will switch to the proposal with the given ID and/or revision.\nIf your extension loads data from the proposal or operates on the current proposal in any way,\nyou should listen to the `proposal change` event using the subscribe method to know when the proposal has been switched.\nOtherwise, you might be operating on the wrong proposal or the proposal contextual data might be incorrect."
+        }
+      ]
+    },
+    {
+      "ns": "render",
+      "className": "RenderApi",
+      "file": "dist/internal/scene/render.d.ts",
+      "methods": [
+        {
+          "name": "hideElement",
+          "signature": "hideElement(request: { path: string; }): Promise<void>;",
+          "doc": "Hide an element from the scene.\n\n@example\nawait Forma.render.hideElement({ path: \"root/myElementPath\" })"
+        },
+        {
+          "name": "hideElementsBatch",
+          "signature": "hideElementsBatch(request: { paths: string[]; }): Promise<void>;",
+          "doc": "Hide a set of elements from the scene.\n\n@example\nawait Forma.render.hideElementsBatch({ paths: [\"root/myElement1\", \"root/myElement2\"] })"
+        },
+        {
+          "name": "unhideElement",
+          "signature": "unhideElement(request: { path: string; }): Promise<void>;",
+          "doc": "Unhide an element from the scene.\n\n@example\nawait Forma.render.unhideElement({ path: \"root/myElementPath\" })"
+        },
+        {
+          "name": "unhideElementsBatch",
+          "signature": "unhideElementsBatch(request: { paths: string[]; }): Promise<void>;",
+          "doc": "Unhide a set of elements from the scene.\n\n@example\nawait Forma.render.unhideElementsBatch({ paths: [\"root/myElement1\", \"root/myElement2\"] })"
+        },
+        {
+          "name": "setElementsVisibility",
+          "signature": "setElementsVisibility(request: { paths: { path: string; visible: boolean; }[]; }): Promise<void>;",
+          "doc": "Hides or unhides elements from the scene based on the `visible` parameter for each path.\n\n@example\nawait Forma.render.setElementsVisibility( { [ { \"root/myElement1\", true}, { \"root/myElement2\", false} ] } )"
+        },
+        {
+          "name": "unhideAllElements",
+          "signature": "unhideAllElements(): Promise<void>;",
+          "doc": "Unhide all elements added by the hideElements function of this API from the scene.\n\nCalled automatically when the extension is unloaded.\n\n@example\nawait Forma.render.unhideAllElements()"
+        },
+        {
+          "name": "addMesh",
+          "signature": "addMesh(request: { /** Data describing the mesh to be added. */ geometryData: GeometryData; /** Transform to position the element relative to the project reference point. Defaults to identity matrix. */ transform?: Transform | undefined; }): Promise<{ id: string; }>;",
+          "doc": "Add a mesh to the scene.\n\n@returns Unique identifier of the mesh object in the scene.\n\n@example\nconst {id} = await Forma.render.addMesh({ geometryData }),"
+        },
+        {
+          "name": "updateMesh",
+          "signature": "updateMesh(request: { /** Scene identifier of the mesh object to update. */ id: string; /** Updated data describing the mesh. */ geometryData: GeometryData; /** Updated transform to apply. */ transform?: Transform | undefined; }): Promise<void>;",
+          "doc": "Upsert an mesh in the scene. If the mesh does not exist, it will be added.\n\n@example\nawait Forma.render.updateMesh({ id: \"myPreviouslyAddedGlbId\", geometryData })"
+        },
+        {
+          "name": "remove",
+          "signature": "remove(request: { /** Scene identifier of the mesh object to remove. */ id: string; }): Promise<void>;",
+          "doc": "Remove an existing mesh from the scene.\n\n@example\nawait Forma.render.remove({ id: \"myPreviouslyAddedMeshId\" })"
+        },
+        {
+          "name": "cleanup",
+          "signature": "cleanup(): Promise<void>;",
+          "doc": "Remove all meshes added by this API from the scene.\n\nCalled automatically when the extension is unloaded.\n\n@example\nawait Forma.render.cleanup()"
+        }
+      ]
+    },
+    {
+      "ns": "render.elementColors",
+      "className": "ElementColorApi",
+      "file": "dist/internal/scene/element-colors.d.ts",
+      "methods": [
+        {
+          "name": "set",
+          "signature": "set(request: { /** The internal paths of elements and their colors. */ pathsToColor: Map<string, string>; }): Promise<{ id: string; }>;",
+          "doc": "Set color override on the speficied elements.\nThe color is set as a hex string, e.g. `#ff0000` in the sRGB color space.\n\n@example\nvoid Forma.selection.subscribe(({ paths }) => {\n  Forma.render.elementColors.clearAll()\n  const pathsToColor = new Map<string, string>()\n  for (const path of paths) {\n    pathsToColor.set(path, \"#00ff00\")\n  }\n  Forma.render.elementColors.set({ pathsToColor })\n})"
+        },
+        {
+          "name": "clear",
+          "signature": "clear(request: { /** The internal paths of elements and their colors. */ paths: string[]; }): Promise<{ id: string; }>;",
+          "doc": "Clear color override on the speficied elements."
+        },
+        {
+          "name": "clearAll",
+          "signature": "clearAll(): Promise<{ id: string; }>;",
+          "doc": "Clear color override on the speficied elements."
+        }
+      ]
+    },
+    {
+      "ns": "render.geojson",
+      "className": "RenderGeojsonApi",
+      "file": "dist/internal/scene/renderGeoJson.d.ts",
+      "methods": [
+        {
+          "name": "add",
+          "signature": "add(request: { /** Feature collection of a geojson, Right now, we only support LineString and Polygon */ geojson: FeatureCollection<LineString | Polygon>; /** Transform to position the element relative to the project reference point. Defaults to identity matrix. */ transform?: Transform | undefined; }): Promise<{ id: string; }>;",
+          "doc": "Add a Geojson to the scene.\n\n@returns Unique identifier of the Geojson object in the scene.\n\n@example\nconst {id} = await Forma.render.geojson.add({ geojson }),"
+        },
+        {
+          "name": "update",
+          "signature": "update(request: { /** Scene identifier of the Geojson object to update (or create). */ id: string; /** Feature collection of a geojson, Right now, we only support LineString and Polygon */ geojson: FeatureCollection<LineString | Polygon>; /** Transform to position the element relative to the project reference point. Defaults to identity matrix. */ transform?: Transform | undefined; }): Promise<void>;",
+          "doc": "Upsert an geojson in the scene. If the geojson does not exist, it will be added.\n\nThis method can also be used as an upsert.\n\n@example\nawait Forma.render.geojson.update({ id: \"myPreviouslyAddedGeojsonId\", geojson, isImperial, transform })"
+        },
+        {
+          "name": "remove",
+          "signature": "remove(request: { /** Scene identifier of the Geojson object to remove. */ id: string; }): Promise<void>;",
+          "doc": "Remove an existing Geojson from the scene.\n\n@example\nawait Forma.render.geojson.remove({ id: \"myPreviouslyAddedGeojsonId\" })"
+        },
+        {
+          "name": "cleanup",
+          "signature": "cleanup(): Promise<void>;",
+          "doc": "Remove all Geojsons added by this API from the scene.\n\nCalled automatically when the extension is unloaded\n\n@example\nawait Forma.render.geojson.cleanup()"
+        }
+      ]
+    },
+    {
+      "ns": "render.glb",
+      "className": "RenderGlbApi",
+      "file": "dist/internal/scene/renderGlb.d.ts",
+      "methods": [
+        {
+          "name": "add",
+          "signature": "add(request: { /** Binary .glb file as an ArrayBuffer */ glb: ArrayBuffer; }): Promise<{ id: string; }>;",
+          "doc": "Add a GLB to the scene.\n\n@returns Unique identifier of the GLB object in the scene.\n\n@example\nconst {id} = await Forma.render.glb.add({ glb }),"
+        },
+        {
+          "name": "update",
+          "signature": "update(request: { /** Scene identifier of the GLB object to update (or create). */ id: string; /** Binary .glb file as an ArrayBuffer */ glb: ArrayBuffer; }): Promise<void>;",
+          "doc": "Upsert an mesh in the scene. If the mesh does not exist, it will be added.\n\nThis method can also be used as an upsert.\n\n@example\nawait Forma.render.glb.update({ id: \"myPreviouslyAddedGlbId\", glb })"
+        },
+        {
+          "name": "remove",
+          "signature": "remove(request: { /** Scene identifier of the GLB object to remove. */ id: string; }): Promise<void>;",
+          "doc": "Remove an existing GLB from the scene.\n\n@example\nawait Forma.render.glb.remove({ id: \"myPreviouslyAddedGlbId\" })"
+        },
+        {
+          "name": "cleanup",
+          "signature": "cleanup(): Promise<void>;",
+          "doc": "Remove all GLBs added by this API from the scene.\n\nCalled automatically when the extension is unloaded\n\n@example\nawait Forma.render.glb.cleanup()"
+        }
+      ]
+    },
+    {
+      "ns": "selection",
+      "className": "SelectionApi",
+      "file": "dist/internal/selection.d.ts",
+      "methods": [
+        {
+          "name": "getSelection",
+          "signature": "getSelection(): Promise<string[]>;",
+          "doc": "Get selected elements.\n\n@returns List of paths to elements currently selected in the scene.\n\n@example\n// Fetch all paths to selected elements in the current proposal.\n// Count how many of them are buildings.\nconst selectedPaths = await Forma.selection.getSelection()\nconst buildingPaths = await Forma.geometry.getPathsByCategory({ category: \"buildings\" })\nconst selectedBuildingPaths = selectedPaths.filter(path => buildingPaths.includes(path))\nconst numberOfSelectedBuildings = selectedBuildingPaths.length"
+        },
+        {
+          "name": "subscribe",
+          "signature": "subscribe(callback: (payload: { paths: string[]; }) => void): Promise<{ unsubscribe: () => void; }>;",
+          "doc": "Subscribe to selection changes.\n\n@example\nconst { unsubscribe } = await Forma.selection.subscribe(({ paths }) => {\n console.log(paths)\n});\n\n@param callback event handler for each selection change\n@returns { unsubscribe: () => void } object with an `unsubscribe` method to stop listening"
+        }
+      ]
+    },
+    {
+      "ns": "settings",
+      "className": "SettingsApi",
+      "file": "dist/internal/settings.d.ts",
+      "methods": [
+        {
+          "name": "get",
+          "signature": "get(): Promise<SettingsResponse>;",
+          "doc": "Fetch all building functions for the project, including the three built-in\ndefaults (residential, commercial, unspecified).\n\n@returns All building functions for the project.\n\n@example\nconst { buildingFunctions } = await Forma.settings.get()"
+        }
+      ]
+    },
+    {
+      "ns": "settings.buildingFunctions",
+      "className": "BuildingFunctionsApi",
+      "file": "dist/internal/settings.d.ts",
+      "methods": [
+        {
+          "name": "add",
+          "signature": "add(params: { /** Display name for the new building function. */ name: string; /** Optional hex color string, e.g. \"#FF5733\". */ color?: HexColorString; }): Promise<SettingsResponse>;",
+          "doc": "Add a new building function to the project.\n\n@returns All building functions after the addition.\n\n@example\nconst { buildingFunctions } = await Forma.settings.buildingFunctions.add({ name: \"Retail\", color: \"#FF5733\" })"
+        },
+        {
+          "name": "update",
+          "signature": "update(params: { /** ID of the building function to update. */ id: string; /** New display name. */ name: string; /** New hex color string, e.g. \"#FF5733\". */ color?: HexColorString; }): Promise<SettingsResponse>;",
+          "doc": "Update an existing project-level building function by ID.\nReturns an error if the ID belongs to a built-in building function.\n\n@returns All building functions after the update.\n\n@example\nconst { buildingFunctions } = await Forma.settings.buildingFunctions.update({ id: \"abc123\", name: \"Updated name\" })"
+        },
+        {
+          "name": "delete",
+          "signature": "delete(params: { /** ID of the building function to delete. */ id: string; }): Promise<SettingsResponse>;",
+          "doc": "Delete a project-level building function by ID.\nReturns an error if the ID belongs to a built-in building function.\n\n@returns All building functions after the deletion.\n\n@example\nconst { buildingFunctions } = await Forma.settings.buildingFunctions.delete({ id: \"abc123\" })"
+        }
+      ]
+    },
+    {
+      "ns": "sun",
+      "className": "SunApi",
+      "file": "dist/internal/scene/sun.d.ts",
+      "methods": [
+        {
+          "name": "getDate",
+          "signature": "getDate(): Promise<Date>;",
+          "doc": "Fetch the `Date` corresponding to the current position of the sun in the scene.\n\n@remarks\nSince `Date` objects in JavaScript are based on the instance where the script is run,\nit is important to capture the discrepancy between the machine local time and the time\nat the project location. We recommend using a library such as\n[Luxon](https://moment.github.io/luxon/) to handle this\n-- their website has a lot of good documentation on the intricacies of time zones.\n\n@returns Date for the current sun position.\n\n@example\nimport { DateTime } from \"luxon\";\n\nconst projectTimezone = await Forma.project.getTimezone();\nconst projectDate = await Forma.sun.getDate()\nconst currentDate = DateTime.fromJSDate(currentDate, { zone: projectTimezone });"
+        },
+        {
+          "name": "setDate",
+          "signature": "setDate(request: { /** Date corresponding to the wanted sun position. */ date: Date; }): Promise<void>;",
+          "doc": "Set the position of the sun in the scene.\n\n@remarks\nSince `Date` objects in JavaScript are based on the instance where the script is run,\nit is important to capture the discrepancy between the machine local time and the time\nat the project location. We recommend using a library such as\n[Luxon](https://moment.github.io/luxon/) to handle this\n-- their website has a lot of good documentation on the intricacies of time zones.\n\n@example\nimport { DateTime } from \"luxon\";\n\nconst projectTimezone = await Forma.project.getTimezone();\nconst wantedDate = DateTime.fromISO(\"2023-07-01T13:37:00\", { zone: projectTimezone });\nawait Forma.sun.setDate({ date: wantedDate.toJSDate() });"
+        }
+      ]
+    },
+    {
+      "ns": "terrain",
+      "className": "TerrainApi",
+      "file": "dist/internal/scene/terrain.d.ts",
+      "methods": [
+        {
+          "name": "getBbox",
+          "signature": "getBbox(): Promise<Bbox>;",
+          "doc": "Fetch the bounding box for the terrain.\n\n@returns Axis-aligned bounding box for the terrain.\nMore specifically, the minimum and maximum (x,y,z) values, in the local coordinate system."
+        },
+        {
+          "name": "getElevationAt",
+          "signature": "getElevationAt(request: { /** The X-coordinate of the point in the local coordinate system. */ x: number; /** The Y-coordinate of the point in the local coordinate system. */ y: number; }): Promise<number>;",
+          "doc": "Retrieves the elevation of the terrain (in meters above sea level) at a specific point within the scene.\n\nIf the coordinates are outside the terrain mesh, it returns the minimum elevation in the terrain."
+        },
+        {
+          "name": "isInternal",
+          "signature": "isInternal(): Promise<boolean>;",
+          "doc": "Returns whether the terrain is internal.\n\n@remarks\nInternal terrain is managed fully within Forma Site Design.\nNon-internal terrain can potentially be coming from other cloud applications,\nincluding Revit Cloud Model and other Forma Connected Clients.\n\nCertain operations such as addPads,\napplyPads, and\nreplaceTerrain are only supported\nfor internal terrains."
+        },
+        {
+          "name": "getPads",
+          "signature": "getPads(): Promise<TerrainPad[]>;",
+          "doc": "Retrieves all terrain pads defined in the current terrain.\n\n@remarks\nTerrain pads are flat areas applied to the terrain surface.\n\nEach pad defines a polygon boundary at a specific elevation. The terrain mesh\nwithin the polygon is modified to match the pad's elevation. An optional slope\nangle defines how the terrain transitions from surrounding areas to the pad.\n\n@returns An array of TerrainPad objects representing all terrain pads.\nReturns an empty array if no pads are defined on the terrain.\n\n@example\n```typescript\n// Retrieve all terrain pads\nconst pads = await Forma.terrain.getPads();\n\n// Log information about each pad\nfor (const pad of pads) {\n  console.log(`Pad ID: ${pad.id}`);\n  console.log(`  Elevation: ${pad.elevation}m`);\n  console.log(`  Vertices: ${pad.coordinates.length}`);\n  if (pad.slopeAngle !== undefined) {\n    console.log(`  Slope angle: ${pad.slopeAngle}°`);\n  }\n}\n```"
+        },
+        {
+          "name": "addPads",
+          "signature": "addPads(pads: TerrainPad[]): Promise<void>;",
+          "doc": "Adds new terrain pads to the existing pads on the terrain.\n\n@remarks\nThis method appends the provided pads to the current set of terrain pads\nwithout removing or modifying existing ones. Use this when you want to\nincrementally add new flat areas to the terrain while preserving existing pads.\n\nThis method is only supported when the terrain is internal.\nUse isInternal to check whether the terrain is internal.\n\nEach pad must specify its slope using either `slopeAngle` (in degrees) or\n`slopePercentage`, but not both.\n\n@param pads - Array of terrain pads to add.\n\n@example\n```typescript\n// Add multiple pads with different slope specifications\nawait Forma.terrain.addPads([\n  {\n    id: \"7ab85ec80b3e2\",\n    coordinates: [\n      { x: 0, y: 0 },\n      { x: 100, y: 0 },\n      { x: 100, y: 100 },\n      { x: 0, y: 100 }\n    ],\n    elevation: 50,\n    applySlope: true,\n    slopeAngle: 30  // Using degrees\n  },\n  {\n    id: \"70234fcf791b2\",\n    coordinates: [\n      { x: 200, y: 0 },\n      { x: 300, y: 0 },\n      { x: 300, y: 100 },\n      { x: 200, y: 100 }\n    ],\n    elevation: 45,\n    applySlope: true,\n    slopePercentage: 50  // Using percentage\n  },\n  {\n    id: \"70234fcf791b3\",\n    coordinates: [\n      { x: 200, y: 0 },\n      { x: 300, y: 0 },\n      { x: 300, y: 100 },\n      { x: 200, y: 100 }\n    ],\n    elevation: 45,\n    applySlope: false // No slope applied; abrupt pad\n  }\n]);\n```\n\n@see TerrainApi.applyPads to replace all existing pads.\n@see TerrainApi.getPads to retrieve current pads."
+        },
+        {
+          "name": "applyPads",
+          "signature": "applyPads(pads: TerrainPad[]): Promise<void>;",
+          "doc": "Replaces all existing terrain pads with the provided array of pads.\n\n@remarks\nThis method unconditionally sets the terrain pads to the provided array,\nremoving any existing pads that are not included in the new array.\nUse this when you want complete control over the terrain pads, or when\nyou need to remove pads.\n\nThis method is only supported when the terrain is internal.\nUse isInternal to check whether the terrain is internal.\n\nTo remove all pads, call this method with an empty array.\n\n@param pads - Array of terrain pads to set. Pass an empty array to remove all pads.\n\n@example\n```typescript\n// Replace all pads with a new set\nawait Forma.terrain.applyPads([\n  {\n    id: \"7ab85ec80b3e2\",\n    coordinates: [\n      { x: 0, y: 0 },\n      { x: 100, y: 0 },\n      { x: 100, y: 100 },\n      { x: 0, y: 100 }\n    ],\n    elevation: 50,\n    applySlope: true,\n    slopeAngle: 30\n  }\n]);\n```\n\n@example\n```typescript\n// Remove all terrain pads\nawait Forma.terrain.applyPads([]);\n```\n\n@see TerrainApi.addPads to add pads without removing existing ones.\n@see TerrainApi.getPads to retrieve current pads."
+        }
+      ]
+    },
+    {
+      "ns": "terrain.groundTexture",
+      "className": "GroundTextureApi",
+      "file": "dist/internal/scene/terrain.d.ts",
+      "methods": [
+        {
+          "name": "add",
+          "signature": "add(request: { /** The name of the texture to add. */ name: string; /** The canvas to use as texture data. */ canvas: HTMLCanvasElement; /** x and y position denotes where to place the center of the canvas. z gives the order of the ground texture and overlapping textures with a larger z position will cover those with a smaller one. */ position: Position; /** The number of meters each pixel in the canvas represents. Defaults to 1 meter. */ scale?: Scale | undefined; }): Promise<void>;",
+          "doc": "Add a ground texture to the terrain.\n\n@example\n// Create canvas\nconst canvas = document.createElement(\"canvas\");\ncanvas.width = 100;\ncanvas.height = 100;\n\n// Fill canvas with blue color\nconst ctx = canvas.getContext(\"2d\");\nif (ctx) {\n   ctx.fillStyle = \"blue\";\n   ctx.fillRect(0, 0, 100, 100);\n\n   // Add canvas as ground texture to position (0, 0) in the local coordinate system.\n   // The texture will cover a 100x100 meter square area on the terrain,\n   // with lower left corner in (x: -50, y: -50) and upper right corner in (x: 50, y: 50).\n   await Forma.terrain.groundTexture.add({\n       name: \"myGroundTexture\",\n       canvas,\n       position: { x: 0, y: 0, z: 1 },\n       scale: { x: 1, y: 1 },\n     });\n}"
+        },
+        {
+          "name": "updateTextureData",
+          "signature": "updateTextureData(request: { /** The name of the texture to update. */ name: string; /** The canvas to use as updated texture data. */ canvas: HTMLCanvasElement; }): Promise<void>;",
+          "doc": "Update the texture data for an existing ground texture object.\n\n@example\n// Create a new canvas filled with red and update the ground texture with this new texture\nconst newCanvas = document.createElement(\"newCanvas\");\nnewCanvas.width = 100;\nnewCanvas.height = 100;\nconst ctx = newCanvas.getContext(\"2d\");\nif (ctx) {\n   ctx.fillStyle = \"red\";\n   ctx.fillRect(0, 0, 100, 100);\n   await Forma.terrain.groundTexture.updateTextureData({\n       name: \"myGroundTexture\",\n       canvas: newCanvas,\n   });\n}"
+        },
+        {
+          "name": "updatePosition",
+          "signature": "updatePosition(request: { /** The name of the texture to move. */ name: string; /** The position to move the ground texture to. x and y position denotes where to place the center of the canvas. z gives the order of the ground texture and overlapping textures with a larger z position will cover those with a smaller one. */ position: Position; }): Promise<void>;",
+          "doc": "Update the placement of an existing ground texture object.\n\n@example\n// Move \"myGroundTexture\" to (100, 100) in the local coordinate system.\nawait Forma.terrain.groundTexture.updatePosition({\n  name: \"myGroundTexture\",\n  position: { x: 100, y: 100, z: 1 }\n})"
+        },
+        {
+          "name": "remove",
+          "signature": "remove(request: { /** The name of the texture to remove. */ name: string; }): Promise<void>;",
+          "doc": "Remove an existing ground texture object.\n\n@example\n// Remove \"myGroundTexture\".\nawait Forma.terrain.groundTexture.remove({ name: \"myGroundTexture\" })"
+        }
+      ]
+    }
+  ],
+  "totalOperations": 149
+}

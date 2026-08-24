@@ -1,0 +1,22 @@
+---
+title: "TypeScript SDK Changelog"
+url_path: change_history/typescript-changelog
+product: "Model Derivative API"
+surface: "model-derivative-v2"
+protocol: "Documentation"
+document_kind: "changelog"
+api_version: "v2"
+section: "change_history"
+category: "typescript-changelog"
+---
+# TypeScript SDK Changelog
+
+## Release Date: 2025-02-17
+
+_Version 1.0.0_
+
+### Released
+- Initial public release of TypeScript SDK.
+
+---
+원본 문서: https://aps.autodesk.com/en/docs/model-derivative/v2/change_history/typescript-changelog

@@ -1,0 +1,1940 @@
+openapi: "3.1.0"
+info:
+  title: "Forma APIs — Data Connector"
+  version: v1
+  description: |-
+    Forma APIs — Data Connector.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/acc/v1
+    공통 base 경로: /data-connector/v1/accounts
+    **리전 — 호출 전 반드시 확인** 리전은 완전히 분리되어 있고 리소스 식별자가 호환되지 않습니다. ⚠️ **헤더 이름이 그룹마다 다릅니다.** Hub Admin 은 `Region`, Issues 는 `x-ads-region` 입니다. 이 문서의 "헤더" 표에 적힌 이름을 그대로 쓰세요. 통일해서 보내면 안 됩니다. 미지정 시 자동 라우팅되며 지연이 늘 수 있습니다. 자세한 판정은 `_errata` E-003 참고.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: "Data Connector"
+x-forma-common-base: "/data-connector/v1/accounts"
+paths:
+  "/data-connector/v1/accounts/{accountId}/jobs/{jobId}/data-listing":
+    get:
+      operationId: data-connector-jobs-jobId-data-listing-GET
+      summary: "Returns an array of information about the files contained within the data extract created by a specified job"
+      description: "Returns an array of information about the files contained within the data extract created by a specified job. The job must be spawned by a data request that was created by the authenticated user. The user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: jobId
+          in: path
+          required: true
+          description: "The job ID"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the file."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the file was created, presented in ISO 8601 format."
+                  size:
+                    type: integer
+                    x-forma-type: int
+                    description: "The size of the file in bytes."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-jobs-jobId-data-listing-GET"
+  "/data-connector/v1/accounts/{accountId}/jobs/{jobId}/data/{name}":
+    get:
+      operationId: data-connector-jobs-jobId-data-name-GET
+      summary: "Returns a signed URL that you can contact to retrieve a single specified file from a specified job’s data extract"
+      description: "Returns a signed URL that you can contact to retrieve a single specified file from a specified job’s data extract. You can examine a data extract’s available files, their names, and their sizes using GET jobs/:jobId/data-listing. The information it returns can help you plan what you would like to retrieve using this endpoint, useful if you want to retrieve only part of a data extract to avoid downloading large but unnecessary files. The user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: jobId
+          in: path
+          required: true
+          description: "The job ID"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: name
+          in: path
+          required: true
+          description: "Name of the file to retrieve"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  size:
+                    type: integer
+                    x-forma-type: int
+                    description: "The size of the file in bytes."
+                  name:
+                    type: string
+                    x-forma-type: string
+                    description: "The name of the file."
+                  signedUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "The signed URL to contact to download the specified file. Note that this URL will be valid for 60 seconds from the time of this response."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-jobs-jobId-data-name-GET"
+  "/data-connector/v1/accounts/{accountId}/jobs/{jobId}":
+    delete:
+      operationId: data-connector-jobs-jobId-DELETE
+      summary: "Cancels the specified running job spawned by a data request created by the authenticated user"
+      description: "Cancels the specified running job spawned by a data request created by the authenticated user. The user must have project administrator or executive overview permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: jobId
+          in: path
+          required: true
+          description: "The job ID"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-jobs-jobId-DELETE"
+    get:
+      operationId: data-connector-jobs-jobId-GET
+      summary: "Returns information about a specified job that was spawned by a data request created by the authenticated user"
+      description: "Returns information about a specified job that was spawned by a data request created by the authenticated user. The user must have project administrator or executive overview permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: jobId
+          in: path
+          required: true
+          description: "The job ID"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The job ID."
+                  requestId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the data request that spawned the job."
+                  accountId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The hub ID."
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The project ID."
+                  projectIdList:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "The list of project IDs"
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who created the data request that spawned this job."
+                  createdByEmail:
+                    type: string
+                    x-forma-type: string
+                    description: "The email address of the user who created the data request that spawned this job."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the job was created, presented in ISO 8601 format."
+                  status:
+                    type: string
+                    x-forma-type: string
+                    description: "The current status of the job. Possible values: queued, running, complete."
+                  completionStatus:
+                    type: string
+                    x-forma-type: string
+                    description: "The completion status for completed jobs. Possible values: success, failed, cancelled."
+                  startedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the job was started, presented in ISO 8601 format. If the job has not yet started, the value is null."
+                  completedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the job was completed, presented in ISO 8601 format. If the job has not yet completed, the value is null."
+                  sendEmail:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "Send a notification email when the job completes."
+                  progress:
+                    type: integer
+                    x-forma-type: int
+                    description: "Job progress indicator (0 to 100 percent)"
+                  lastDownloadedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The ID of the user who last downloaded this job data."
+                  lastDownloadedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The last date and time that a user downloaded this job data, in ISO 8601 format."
+                  startDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The start date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas that support date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+                  endDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The end date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas that support date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-jobs-jobId-GET"
+  "/data-connector/v1/accounts/{accountId}/jobs":
+    get:
+      operationId: data-connector-jobs-GET
+      summary: "Returns an array of Data Connector jobs spawned by requests from the authenticated user"
+      description: "Returns an array of Data Connector jobs spawned by requests from the authenticated user. The array can contain all jobs associated with a specified project, or all jobs associated with all projects in the user’s hub. The user must have project administrator or executive overview permissions:"
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: sort
+          in: query
+          description: "The sort order of returned data connector objects. Possible values: asc ascending by date (earliest to latest date), desc descending by date (latest to earliest date)."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: limit
+          in: query
+          description: "The number of data connector objects to return. Default value: 20"
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The number of data objects to skip before starting to starting to collect the result set. Default value: 0"
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: projectId
+          in: query
+          description: "Project ID of the returned Data Connector objects."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: sortFields
+          in: query
+          description: |-
+            A string of comma-separated names of the fields by which to sort the returned jobs. The results are sorted by the first field, then by the second field, and so on. Jobs are sorted by each field in ascending order by default; you can prepend any field name with a hyphen ( - ) to sort in descending order. Invalid fields and whitespaces are ignored.
+            Possible values: projectId, createdBy, createdByEmail, createdAt, status, completionStatus, startedAt, completedAt, startDate, endDate.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[field_to_filter]"
+          in: query
+          description: |-
+            Return only the Data Connector jobs in which the specified field has the specified value. Use the following format in the endpoint URL: filter[field_to_filter]=_filter_value_.
+            Note that you can provide multiple job filters in the URL, but you may not filter on multiple values of the same field.
+
+            Possible field_to_filter values: projectId, createdAt, status, completionStatus, startedAt, completedAt, startDate, endDate. You can also retrieve all Data Connector jobs in the current hub by specifying filter[projectId]=null.
+
+            For the createdAt, startedAt, and completedAt fields (which accept a date range), specify the range in the form firstdate..lastdate, in ISO 8601 format with the time required. You can alternatively omit the first date (for example, to get everything on or before June 1, 2019 the range would be ..2019-06-01T23:59:59.999Z). You can also omit the last date (for example, to get everything after June 1, 2019 the range would be 2019-06-01T00:00:00.000Z..)
+
+            Additional notes on using startDate and endDate:
+
+            - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+            - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+            - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the pagination used to return the results array."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The specified upper limit of results to return."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The specified number of results skipped before the results in this array were collected."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results returned here."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The job ID."
+                        requestId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the data request that spawned the job."
+                        accountId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The hub ID."
+                        projectId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The project ID."
+                        projectIdList:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The list of project IDs"
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The BIM 360 / Forma user ID of the user who created the data request that spawned this job."
+                        createdByEmail:
+                          type: string
+                          x-forma-type: string
+                          description: "The email address of the user who created the data request that spawned this job."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the job was created, presented in ISO 8601 format."
+                        status:
+                          type: string
+                          x-forma-type: string
+                          description: "The current status of the job. Possible values: queued, running, complete."
+                        completionStatus:
+                          type: string
+                          x-forma-type: string
+                          description: "The completion status for completed jobs. Possible values: success, failed, cancelled."
+                        startedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the job was started, presented in ISO 8601 format. If the job has not yet started, the value is null."
+                        completedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the job was completed, presented in ISO 8601 format. If the job has not yet completed, the value is null."
+                        sendEmail:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "Send a notification email when the job completes."
+                        progress:
+                          type: integer
+                          x-forma-type: int
+                          description: "Job progress indicator (0 to 100 percent)"
+                        lastDownloadedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last downloaded this job data."
+                        lastDownloadedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The last date and time that a user downloaded this job data, in ISO 8601 format."
+                        startDate:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The start date and time for the data extraction, in ISO 8601 format.
+                            This field applies only to schemas that support date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+                        endDate:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The end date and time for the data extraction, in ISO 8601 format.
+                            This field applies only to schemas that support date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+                    x-forma-type: "array: object"
+                    description: "An array of job records."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-jobs-GET"
+  "/data-connector/v1/accounts/{accountId}/requests/{requestId}/jobs":
+    get:
+      operationId: data-connector-requests-requestId-jobs-GET
+      summary: "Returns an array of data connector jobs associated with a request that was created by the authenticated user"
+      description: "Returns an array of data connector jobs associated with a request that was created by the authenticated user. The user must have project administrator or executive overview permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: requestId
+          in: path
+          required: true
+          description: "The ID of the specified request"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: sort
+          in: query
+          description: "The sort order of returned data connector objects. Possible values: asc ascending by date (earliest to latest date), desc descending by date (latest to earliest date)."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: limit
+          in: query
+          description: "The number of data connector objects to return. Default value: 20"
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The number of data objects to skip before starting to starting to collect the result set. Default value: 0"
+          schema:
+            type: integer
+            x-forma-type: int
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the pagination used to return the results array."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The specified upper limit of results to return."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The specified number of results skipped before the results in this array were collected."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results returned here."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The job ID."
+                        requestId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the data request that spawned the job."
+                        accountId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The hub ID."
+                        projectId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The project ID."
+                        projectIdList:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "The list of project IDs"
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The BIM 360 / Forma user ID of the user who created the data request that spawned this job."
+                        createdByEmail:
+                          type: string
+                          x-forma-type: string
+                          description: "The email address of the user who created the data request that spawned this job."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the job was created, presented in ISO 8601 format."
+                        status:
+                          type: string
+                          x-forma-type: string
+                          description: "The current status of the job. Possible values: queued, running, complete."
+                        completionStatus:
+                          type: string
+                          x-forma-type: string
+                          description: "The completion status for completed jobs. Possible values: success, failed, cancelled."
+                        startedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the job was started, presented in ISO 8601 format. If the job has not yet started, the value is null."
+                        completedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the job was completed, presented in ISO 8601 format. If the job has not yet completed, the value is null."
+                        sendEmail:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "Send a notification email when the job completes."
+                        progress:
+                          type: integer
+                          x-forma-type: int
+                          description: "Job progress indicator (0 to 100 percent)"
+                        lastDownloadedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The ID of the user who last downloaded this job data."
+                        lastDownloadedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The last date and time that a user downloaded this job data, in ISO 8601 format."
+                        startDate:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The start date and time for the data extraction, in ISO 8601 format.
+                            This field applies only to schemas that support date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+                        endDate:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The end date and time for the data extraction, in ISO 8601 format.
+                            This field applies only to schemas that support date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+                    x-forma-type: "array: object"
+                    description: "An array of job records."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-requests-requestId-jobs-GET"
+  "/data-connector/v1/accounts/{accountId}/requests/{requestId}":
+    delete:
+      operationId: data-connector-requests-requestId-DELETE
+      summary: "Deletes the specified data request created earlier by the authenticated user"
+      description: "Deletes the specified data request created earlier by the authenticated user. Note that the user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: requestId
+          in: path
+          required: true
+          description: "The ID of the specified request"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-requests-requestId-DELETE"
+    get:
+      operationId: data-connector-requests-requestId-GET
+      summary: "Returns information about a specified data request created earlier by the authenticated user"
+      description: "Returns information about a specified data request created earlier by the authenticated user. Note that the user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: requestId
+          in: path
+          required: true
+          description: "The ID of the specified request"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the data request."
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: "The user-entered description of this data request. If not supplied, the default value is a null string."
+                  isActive:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "The data request’s active/inactive status. Possible values: true the request is active; false the request is inactive."
+                  accountId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The hub ID."
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "(Legacy): A single project ID for the data request. Superseded by projectIdList."
+                  projectIdList:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "A list of up to 50 project IDs included in the data request. This field contains the project IDs for which data is being extracted. If both projectId and projectIdList were included in the request, this field contains the values from projectIdList."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who created the data request."
+                  createdByEmail:
+                    type: string
+                    x-forma-type: string
+                    description: "The email address of the user who created the data request."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the data request was created, presented in ISO 8601 format."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who last updated the data request."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the data request was last updated, presented in ISO 8601 format."
+                  scheduleInterval:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The scheduling interval unit for jobs spawned by this data request. This value is multiplied by the reoccurringInterval attribute to specify the length of the recurring interval at which jobs run. Possible values:
+
+                      - ONE_TIME: Run the job only once
+
+                      - DAY: Set the recurring job interval in days
+
+                      - WEEK: Set the recurring job interval in weeks
+
+                      - MONTH: Set the recurring job interval in months
+
+                      - YEAR: Set the recurring job interval in years
+                  reoccuringInterval:
+                    type: integer
+                    x-forma-type: int
+                    description: "The number of scheduleInterval units to wait between job execution for the request. For example, a scheduleInterval value of WEEK and a reoccuringInterval value of 2 means the job will run every two weeks."
+                  effectiveFrom:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when a one-time job execution or a recurring interval schedule begins, presented in ISO 8601 format."
+                  effectiveTo:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the recurring interval schedule ends, presented in ISO 8601 format."
+                  lastQueuedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the last job for this data request was scheduled to execute, presented in ISO 8601 format."
+                  serviceGroups:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: |-
+                      The service groups from which data was extracted, separated by commas.
+                      There are two types: standard service groups return full datasets, and delta extraction service groups (identified by the cdc prefix, short for Change Data Capture) return only records that have changed within the specified date range, and are available for selected service groups only.
+
+                      Standard service groups: all, activities, admin, assets, checklists, cost, dailylogs, forms, iq, issues, locations, markups, meetingminutes, photos, relationships, reviews, rfis, schedule, sheets, submittals, submittalsacc, transmittals.
+
+                      Delta extraction service groups (beta): cdcadmin, cdccost, cdcissues, cdclocations, cdcrfis, cdcschedule, cdcsubmittalsacc, cdcsheets, cdcmeetingminutes, cdctransmittals.
+
+                      Note that the admin service includes both project and hub admin, and all indicates that the response contains data from all currently available service groups.
+                  callbackUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "The callback URL specified for the data request. If specified, the Data Connection service calls the URL each time a job executes for the request. The service sends a POST request that provides job execution information. The JSON payload in the POST request contains the following: { \"accountId\": \"account_id\", \"requestId\": \"request_id\", \"jobId\": \"data_connector_job_id\", \"state\": \"complete\", \"success\": true or false }."
+                  sendEmail:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "Send a notification email to the user upon job completion. Values: true or false (default is true)"
+                  startDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The start date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                      Additional notes on using startDate and endDate:
+
+                      - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                      - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                      - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                  endDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The end date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                      Additional notes on using startDate and endDate:
+
+                      - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                      - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                      - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                  dateRange:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The timeframe used for extracting data in the request. Currently, it is applicable only to the Activities service and delta extraction service groups. This field contains the value specified in the request, indicating the range of data included in the response. Possible values:
+
+                      - TODAY: Data for the current day (from 00:00 UTC to the time the request was made).
+
+                      - YESTERDAY: Data for the previous calendar day (from 00:00 UTC to 23:59 UTC).
+
+                      - PAST_7_DAYS: Data for the last 7 days, including the current day.
+
+                      - MONTH_TO_DATE: Data from the start of the current calendar month (00:00 UTC on the 1st) to the time the request was made.
+
+                      - LAST_MONTH: Data for the entire previous calendar month (00:00 UTC on the 1st to 23:59 UTC on the last day).
+
+                      - CUSTOM: Data for the date range defined by the startDate and endDate fields. Both fields are required when using this value.
+                  projectStatus:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The types of projects to be included in a request. The possible values are:
+
+                      - all: - all projects (default)
+
+                      - archived: archived projects only
+
+                      - active: active project only
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-requests-requestId-GET"
+    patch:
+      operationId: data-connector-requests-requestId-PATCH
+      summary: "Updates the attributes of an existing data request created earlier by the authenticated user"
+      description: "Updates the attributes of an existing data request created earlier by the authenticated user. Note that the user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: requestId
+          in: path
+          required: true
+          description: "The ID of the specified request"
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the data request."
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: "The user-entered description of this data request. If not supplied, the default value is a null string."
+                  isActive:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "The data request’s active/inactive status. Possible values: true the request is active; false the request is inactive."
+                  accountId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The hub ID."
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "(Legacy): A single project ID for the data request. Superseded by projectIdList."
+                  projectIdList:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "A list of up to 50 project IDs included in the data request. This field contains the project IDs for which data is being extracted. If both projectId and projectIdList were included in the request, this field contains the values from projectIdList."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who created the data request."
+                  createdByEmail:
+                    type: string
+                    x-forma-type: string
+                    description: "The email address of the user who created the data request."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the data request was created, presented in ISO 8601 format."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who last updated the data request."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the data request was last updated, presented in ISO 8601 format."
+                  scheduleInterval:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The scheduling interval unit for jobs spawned by this data request. This value is multiplied by the reoccurringInterval attribute to specify the length of the recurring interval at which jobs run. Possible values:
+
+                      - ONE_TIME: Run the job only once
+
+                      - DAY: Set the recurring job interval in days
+
+                      - WEEK: Set the recurring job interval in weeks
+
+                      - MONTH: Set the recurring job interval in months
+
+                      - YEAR: Set the recurring job interval in years
+                  reoccuringInterval:
+                    type: integer
+                    x-forma-type: int
+                    description: "The number of scheduleInterval units to wait between job execution for the request. For example, a scheduleInterval value of WEEK and a reoccuringInterval value of 2 means the job will run every two weeks."
+                  effectiveFrom:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when a one-time job execution or a recurring interval schedule begins, presented in ISO 8601 format."
+                  effectiveTo:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the recurring interval schedule ends, presented in ISO 8601 format."
+                  lastQueuedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the last job for this data request was scheduled to execute, presented in ISO 8601 format."
+                  serviceGroups:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: |-
+                      The service groups from which data was extracted, separated by commas.
+                      There are two types: standard service groups return full datasets, and delta extraction service groups (identified by the cdc prefix, short for Change Data Capture) return only records that have changed within the specified date range, and are available for selected service groups only.
+
+                      Standard service groups: all, activities, admin, assets, checklists, cost, dailylogs, forms, iq, issues, locations, markups, meetingminutes, photos, relationships, reviews, rfis, schedule, sheets, submittals, submittalsacc, transmittals.
+
+                      Delta extraction service groups (beta): cdcadmin, cdccost, cdcissues, cdclocations, cdcrfis, cdcschedule, cdcsubmittalsacc, cdcsheets, cdcmeetingminutes, cdctransmittals.
+
+                      Note that the admin service includes both project and hub admin, and all indicates that the response contains data from all currently available service groups.
+                  callbackUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "The callback URL specified for the data request. If specified, the Data Connection service calls the URL each time a job executes for the request. The service sends a POST request that provides job execution information. The JSON payload in the POST request contains the following: { \"accountId\": \"account_id\", \"requestId\": \"request_id\", \"jobId\": \"data_connector_job_id\", \"state\": \"complete\", \"success\": true or false }."
+                  sendEmail:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "Send a notification email to the user upon job completion. Values: true or false (default is true)"
+                  startDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The start date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                      Additional notes on using startDate and endDate:
+
+                      - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                      - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                      - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                  endDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The end date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                      Additional notes on using startDate and endDate:
+
+                      - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                      - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                      - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                  dateRange:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The timeframe used for extracting data in the request. Currently, it is applicable only to the Activities service and delta extraction service groups. This field contains the value specified in the request, indicating the range of data included in the response. Possible values:
+
+                      - TODAY: Data for the current day (from 00:00 UTC to the time the request was made).
+
+                      - YESTERDAY: Data for the previous calendar day (from 00:00 UTC to 23:59 UTC).
+
+                      - PAST_7_DAYS: Data for the last 7 days, including the current day.
+
+                      - MONTH_TO_DATE: Data from the start of the current calendar month (00:00 UTC on the 1st) to the time the request was made.
+
+                      - LAST_MONTH: Data for the entire previous calendar month (00:00 UTC on the 1st to 23:59 UTC on the last day).
+
+                      - CUSTOM: Data for the date range defined by the startDate and endDate fields. Both fields are required when using this value.
+                  projectStatus:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The types of projects to be included in a request. The possible values are:
+
+                      - all: - all projects (default)
+
+                      - archived: archived projects only
+
+                      - active: active project only
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-requests-requestId-PATCH"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                  x-forma-type: boolean
+                  description: "The data request’s active/inactive status. Possible values: true the request is active; false the request is inactive."
+                description:
+                  type: string
+                  x-forma-type: string
+                  description: "The user-entered description of this data request."
+                scheduleInterval:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The scheduling interval unit for jobs spawned by this data request. This value is multiplied by the reoccurringInterval attribute to specify the length of the recurring interval at which jobs run. Possible values:
+
+                    - ONE_TIME: Run the job only once
+
+                    - DAY: Set the recurring job interval in days
+
+                    - WEEK: Set the recurring job interval in weeks
+
+                    - MONTH: Set the recurring job interval in months
+
+                    - YEAR: Set the recurring job interval in years
+
+                    Note that recurring jobs start at the day and time when the request first spawns a job. This may be at the date and time specified in the attribute effectiveFrom.
+
+                    This value is required.
+                reoccuringInterval:
+                  type: integer
+                  x-forma-type: int
+                  description: "The number of scheduleInterval units to wait between job execution for the request. For example, a scheduleInterval value of WEEK and a reoccuringInterval value of 2 means the job will run every two weeks."
+                effectiveFrom:
+                  type: string
+                  format: date-time
+                  x-forma-type: "datetime: ISO 8601"
+                  description: "The date and time when a one-time job execution or a recurring interval schedule begins, presented in ISO 8601 format."
+                effectiveTo:
+                  type: string
+                  format: date-time
+                  x-forma-type: "datetime: ISO 8601"
+                  description: "The date and time when the recurring interval schedule ends, presented in ISO 8601 format."
+                serviceGroups:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The service groups from which to extract data, separated by commas. This required value must identify at least one service group.
+                    There are two types: standard service groups extract full datasets, and delta extraction service groups (identified by the cdc prefix, short for Change Data Capture) extract only records that have changed within the specified date range, and are available for selected service groups only.
+
+                    Standard service groups: all, activities, admin, assets, checklists, cost, dailylogs, forms, iq, issues, locations, markups, meetingminutes, photos, relationships, reviews, rfis, schedule, sheets, submittals, submittalsacc, transmittals.
+
+                    Delta extraction service groups (beta): cdcadmin, cdccost, cdcissues, cdclocations, cdcrfis, cdcschedule, cdcsubmittalsacc, cdcsheets, cdcmeetingminutes, cdctransmittals.
+
+                    Note that the admin service includes both project and hub admin, and all extracts data from all currently available service groups.
+                callbackUrl:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The callback URL specified for the data request. If specified, the Data Connection service calls the URL each time a job executes for the request. The service sends a POST request that provides job execution information. The JSON payload in the POST request contains the following: { "accountId": "account_id", "requestId": "request_id", "jobId": "data_connector_job_id", "state": "complete", "success": true or false }.
+                    If not specified, the Data Connection service does not provide a callback.
+                sendEmail:
+                  type: boolean
+                  x-forma-type: boolean
+                  description: "Send a notification email to the user upon job completion. Values: true or false (default is true)"
+                projectId:
+                  type: string
+                  x-forma-type: string
+                  description: "(Legacy): A single project ID for the data request. Superseded by projectIdList."
+                projectIdList:
+                  type: string
+                  x-forma-type: string
+                  description: "A list of up to 50 project IDs for the data request, which can include a single project or multiple projects. If projectId is also included, projectIdList takes precedence. Required for users with project admin permissions. Optional for users with executive overview permissions, who by default receive data for all projects unless projectIdList is provided."
+                startDate:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The start date and time for the data extraction, in ISO 8601 format.
+                    This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                    Additional notes on using startDate and endDate:
+
+                    - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                    - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                    - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                endDate:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The end date and time for the data extraction, in ISO 8601 format.
+                    This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                    Additional notes on using startDate and endDate:
+
+                    - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                    - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                    - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+  "/data-connector/v1/accounts/{accountId}/requests":
+    get:
+      operationId: data-connector-requests-GET
+      summary: "Returns an array of data requests that the authenticated user has created in the specified hub"
+      description: "Returns an array of data requests that the authenticated user has created in the specified hub. The user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: sort
+          in: query
+          description: "The sort order of returned data connector objects. Possible values: asc ascending by date (earliest to latest date), desc descending by date (latest to earliest date)."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: limit
+          in: query
+          description: "The number of data connector objects to return. Default value: 20"
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: offset
+          in: query
+          description: "The number of data objects to skip before starting to starting to collect the result set. Default value: 0"
+          schema:
+            type: integer
+            x-forma-type: int
+        - name: sortFields
+          in: query
+          description: |-
+            A string of comma-separated names of the fields by which to sort the returned data requests. The results are sorted by the first field, then by the second field, and so on. Requests are sorted by each field in ascending order by default; you can prepend any field name with a hyphen ( - ) to sort in descending order. Invalid fields and whitespaces are ignored.
+            Possible values: isActive, accountId, createdBy, createdByEmail, createdAt, updatedBy, updatedAt, scheduleInterval, reoccuringInterval, effectiveFrom, effectiveTo, startDate, endDate.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: "filter[field_to_filter]"
+          in: query
+          description: |-
+            Return only the data requests in which the specified field has the specified value. Use the following format in the endpoint URL: filter[field_to_filter]=_filter_value_.
+            Note that you can provide multiple request filters in the URL, but you may not filter on multiple values of the same field.
+
+            Possible field_to_filter values: projectId, createdAt, updatedAt, scheduleInterval, reocurringInterval, effectiveFrom, effectiveTo, isActive, startDate, endDate. You can also retrieve all data requests in the current hub by specifying filter[projectId]=null.
+
+            For the createdAt and updatedAt fields (which accept a date range), specify the range in the form firstdate..lastdate, in ISO 8601 format with the time required. You can alternatively omit the first date (for example, to get everything on or before June 1, 2019 the range would be ..2019-06-01T23:59:59.999Z). You can also omit the last date (for example, to get everything after June 1, 2019 the range would be 2019-06-01T00:00:00.000Z..)
+
+            Additional notes on using startDate and endDate:
+
+            - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+            - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+            - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                    x-forma-type: object
+                    description: "Information about the pagination used to return the results array."
+                    properties:
+                      limit:
+                        type: integer
+                        x-forma-type: int
+                        description: "The specified upper limit of results to return."
+                      offset:
+                        type: integer
+                        x-forma-type: int
+                        description: "The specified number of results skipped before the results in this array were collected."
+                      totalResults:
+                        type: integer
+                        x-forma-type: int
+                        description: "The total number of results returned here."
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The ID of the data request."
+                        description:
+                          type: string
+                          x-forma-type: string
+                          description: "The user-entered description of this data request. If not supplied, the default value is a null string."
+                        isActive:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "The data request’s active/inactive status. Possible values: true the request is active; false the request is inactive."
+                        accountId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "The hub ID."
+                        projectId:
+                          type: string
+                          format: uuid
+                          x-forma-type: "string: UUID"
+                          description: "(Legacy): A single project ID for the data request. Superseded by projectIdList."
+                        projectIdList:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: "A list of up to 50 project IDs included in the data request. This field contains the project IDs for which data is being extracted. If both projectId and projectIdList were included in the request, this field contains the values from projectIdList."
+                        createdBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The BIM 360 / Forma user ID of the user who created the data request."
+                        createdByEmail:
+                          type: string
+                          x-forma-type: string
+                          description: "The email address of the user who created the data request."
+                        createdAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the data request was created, presented in ISO 8601 format."
+                        updatedBy:
+                          type: string
+                          x-forma-type: string
+                          description: "The BIM 360 / Forma user ID of the user who last updated the data request."
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the data request was last updated, presented in ISO 8601 format."
+                        scheduleInterval:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The scheduling interval unit for jobs spawned by this data request. This value is multiplied by the reoccurringInterval attribute to specify the length of the recurring interval at which jobs run. Possible values:
+
+                            - ONE_TIME: Run the job only once
+
+                            - DAY: Set the recurring job interval in days
+
+                            - WEEK: Set the recurring job interval in weeks
+
+                            - MONTH: Set the recurring job interval in months
+
+                            - YEAR: Set the recurring job interval in years
+                        reoccuringInterval:
+                          type: integer
+                          x-forma-type: int
+                          description: "The number of scheduleInterval units to wait between job execution for the request. For example, a scheduleInterval value of WEEK and a reoccuringInterval value of 2 means the job will run every two weeks."
+                        effectiveFrom:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when a one-time job execution or a recurring interval schedule begins, presented in ISO 8601 format."
+                        effectiveTo:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time when the recurring interval schedule ends, presented in ISO 8601 format."
+                        lastQueuedAt:
+                          type: string
+                          format: date-time
+                          x-forma-type: "datetime: ISO 8601"
+                          description: "The date and time the last job for this data request was scheduled to execute, presented in ISO 8601 format."
+                        serviceGroups:
+                          type: array
+                          items:
+                            type: string
+                          x-forma-type: "array: string"
+                          description: |-
+                            The service groups from which data was extracted, separated by commas.
+                            There are two types: standard service groups return full datasets, and delta extraction service groups (identified by the cdc prefix, short for Change Data Capture) return only records that have changed within the specified date range, and are available for selected service groups only.
+
+                            Standard service groups: all, activities, admin, assets, checklists, cost, dailylogs, forms, iq, issues, locations, markups, meetingminutes, photos, relationships, reviews, rfis, schedule, sheets, submittals, submittalsacc, transmittals.
+
+                            Delta extraction service groups (beta): cdcadmin, cdccost, cdcissues, cdclocations, cdcrfis, cdcschedule, cdcsubmittalsacc, cdcsheets, cdcmeetingminutes, cdctransmittals.
+
+                            Note that the admin service includes both project and hub admin, and all indicates that the response contains data from all currently available service groups.
+                        callbackUrl:
+                          type: string
+                          x-forma-type: string
+                          description: "The callback URL specified for the data request. If specified, the Data Connection service calls the URL each time a job executes for the request. The service sends a POST request that provides job execution information. The JSON payload in the POST request contains the following: { \"accountId\": \"account_id\", \"requestId\": \"request_id\", \"jobId\": \"data_connector_job_id\", \"state\": \"complete\", \"success\": true or false }."
+                        sendEmail:
+                          type: boolean
+                          x-forma-type: boolean
+                          description: "Send a notification email to the user upon job completion. Values: true or false (default is true)"
+                        startDate:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The start date and time for the data extraction, in ISO 8601 format.
+                            This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                            Additional notes on using startDate and endDate:
+
+                            - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                            - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                            - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                        endDate:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The end date and time for the data extraction, in ISO 8601 format.
+                            This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                            Additional notes on using startDate and endDate:
+
+                            - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                            - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                            - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                        dateRange:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The timeframe used for extracting data in the request. Currently, it is applicable only to the Activities service and delta extraction service groups. This field contains the value specified in the request, indicating the range of data included in the response. Possible values:
+
+                            - TODAY: Data for the current day (from 00:00 UTC to the time the request was made).
+
+                            - YESTERDAY: Data for the previous calendar day (from 00:00 UTC to 23:59 UTC).
+
+                            - PAST_7_DAYS: Data for the last 7 days, including the current day.
+
+                            - MONTH_TO_DATE: Data from the start of the current calendar month (00:00 UTC on the 1st) to the time the request was made.
+
+                            - LAST_MONTH: Data for the entire previous calendar month (00:00 UTC on the 1st to 23:59 UTC on the last day).
+
+                            - CUSTOM: Data for the date range defined by the startDate and endDate fields. Both fields are required when using this value.
+                        projectStatus:
+                          type: string
+                          x-forma-type: string
+                          description: |-
+                            The types of projects to be included in a request. The possible values are:
+
+                            - all: - all projects (default)
+
+                            - archived: archived projects only
+
+                            - active: active project only
+                    x-forma-type: "array: object"
+                    description: "The returned array of data request records."
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-requests-GET"
+    post:
+      operationId: data-connector-requests-POST
+      summary: "Creates a data request for an authenticated user"
+      description: "Creates a data request for an authenticated user. The user can optionally limit the request to one project. The user must have executive overview or project administrator permissions."
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: "The ID of the hub. To obtain the hub ID, call GET hubs in the Data Management API and remove the “b.” prefix."
+          schema:
+            type: string
+            format: uuid
+            x-forma-type: "string: UUID"
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:create"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The ID of the data request."
+                  description:
+                    type: string
+                    x-forma-type: string
+                    description: "The user-entered description of this data request. If not supplied, the default value is a null string."
+                  isActive:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "The data request’s active/inactive status. Possible values: true the request is active; false the request is inactive."
+                  accountId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "The hub ID."
+                  projectId:
+                    type: string
+                    format: uuid
+                    x-forma-type: "string: UUID"
+                    description: "(Legacy): A single project ID for the data request. Superseded by projectIdList."
+                  projectIdList:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: "A list of up to 50 project IDs included in the data request. This field contains the project IDs for which data is being extracted. If both projectId and projectIdList were included in the request, this field contains the values from projectIdList."
+                  createdBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who created the data request."
+                  createdByEmail:
+                    type: string
+                    x-forma-type: string
+                    description: "The email address of the user who created the data request."
+                  createdAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the data request was created, presented in ISO 8601 format."
+                  updatedBy:
+                    type: string
+                    x-forma-type: string
+                    description: "The BIM 360 / Forma user ID of the user who last updated the data request."
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the data request was last updated, presented in ISO 8601 format."
+                  scheduleInterval:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The scheduling interval unit for jobs spawned by this data request. This value is multiplied by the reoccurringInterval attribute to specify the length of the recurring interval at which jobs run. Possible values:
+
+                      - ONE_TIME: Run the job only once
+
+                      - DAY: Set the recurring job interval in days
+
+                      - WEEK: Set the recurring job interval in weeks
+
+                      - MONTH: Set the recurring job interval in months
+
+                      - YEAR: Set the recurring job interval in years
+                  reoccuringInterval:
+                    type: integer
+                    x-forma-type: int
+                    description: "The number of scheduleInterval units to wait between job execution for the request. For example, a scheduleInterval value of WEEK and a reoccuringInterval value of 2 means the job will run every two weeks."
+                  effectiveFrom:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when a one-time job execution or a recurring interval schedule begins, presented in ISO 8601 format."
+                  effectiveTo:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time when the recurring interval schedule ends, presented in ISO 8601 format."
+                  lastQueuedAt:
+                    type: string
+                    format: date-time
+                    x-forma-type: "datetime: ISO 8601"
+                    description: "The date and time the last job for this data request was scheduled to execute, presented in ISO 8601 format."
+                  serviceGroups:
+                    type: array
+                    items:
+                      type: string
+                    x-forma-type: "array: string"
+                    description: |-
+                      The service groups from which data was extracted, separated by commas.
+                      There are two types: standard service groups return full datasets, and delta extraction service groups (identified by the cdc prefix, short for Change Data Capture) return only records that have changed within the specified date range, and are available for selected service groups only.
+
+                      Standard service groups: all, activities, admin, assets, checklists, cost, dailylogs, forms, iq, issues, locations, markups, meetingminutes, photos, relationships, reviews, rfis, schedule, sheets, submittals, submittalsacc, transmittals.
+
+                      Delta extraction service groups (beta): cdcadmin, cdccost, cdcissues, cdclocations, cdcrfis, cdcschedule, cdcsubmittalsacc, cdcsheets, cdcmeetingminutes, cdctransmittals.
+
+                      Note that the admin service includes both project and hub admin, and all indicates that the response contains data from all currently available service groups.
+                  callbackUrl:
+                    type: string
+                    x-forma-type: string
+                    description: "The callback URL specified for the data request. If specified, the Data Connection service calls the URL each time a job executes for the request. The service sends a POST request that provides job execution information. The JSON payload in the POST request contains the following: { \"accountId\": \"account_id\", \"requestId\": \"request_id\", \"jobId\": \"data_connector_job_id\", \"state\": \"complete\", \"success\": true or false }."
+                  sendEmail:
+                    type: boolean
+                    x-forma-type: boolean
+                    description: "Send a notification email to the user upon job completion. Values: true or false (default is true)"
+                  startDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The start date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                      Additional notes on using startDate and endDate:
+
+                      - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                      - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                      - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                  endDate:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The end date and time for the data extraction, in ISO 8601 format.
+                      This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                      Additional notes on using startDate and endDate:
+
+                      - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                      - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                      - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                  dateRange:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The timeframe used for extracting data in the request. Currently, it is applicable only to the Activities service and delta extraction service groups. This field contains the value specified in the request, indicating the range of data included in the response. Possible values:
+
+                      - TODAY: Data for the current day (from 00:00 UTC to the time the request was made).
+
+                      - YESTERDAY: Data for the previous calendar day (from 00:00 UTC to 23:59 UTC).
+
+                      - PAST_7_DAYS: Data for the last 7 days, including the current day.
+
+                      - MONTH_TO_DATE: Data from the start of the current calendar month (00:00 UTC on the 1st) to the time the request was made.
+
+                      - LAST_MONTH: Data for the entire previous calendar month (00:00 UTC on the 1st to 23:59 UTC on the last day).
+
+                      - CUSTOM: Data for the date range defined by the startDate and endDate fields. Both fields are required when using this value.
+                  projectStatus:
+                    type: string
+                    x-forma-type: string
+                    description: |-
+                      The types of projects to be included in a request. The possible values are:
+
+                      - all: - all projects (default)
+
+                      - archived: archived projects only
+
+                      - active: active project only
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: "Not Found"
+        "429":
+          description: "Too Many Requests"
+        "500":
+          description: "Internal Server Error"
+        "503":
+          description: "Service Unavailable"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:create"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/acc/v1/reference/http/data-connector-requests-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  x-forma-type: string
+                  description: "The user-entered description of this data request."
+                isActive:
+                  type: boolean
+                  x-forma-type: boolean
+                  description: "The data request’s active/inactive status. Possible values: true the request is active; false the request is inactive. If not supplied, the default value is true."
+                scheduleInterval:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The scheduling interval unit for jobs spawned by this data request. This value is multiplied by the reoccurringInterval attribute to specify the length of the recurring interval at which jobs run. Possible values:
+
+                    - ONE_TIME: Run the job only once
+
+                    - DAY: Set the recurring job interval in days
+
+                    - WEEK: Set the recurring job interval in weeks
+
+                    - MONTH: Set the recurring job interval in months
+
+                    - YEAR: Set the recurring job interval in years
+
+                    Note that recurring jobs start at the day and time when the request first spawns a job. This may be at the date and time specified in the attribute effectiveFrom.
+                reoccuringInterval:
+                  type: integer
+                  x-forma-type: int
+                  description: |-
+                    The number of scheduleInterval units to wait between job execution for the request. For example, a scheduleInterval value of WEEK and a reoccuringInterval value of 2 means the job will run every two weeks.
+                    This value is required and must be a non-zero integer for all values of scheduleInterval except for a scheduleInterval value of ONE_TIME, in which case this value is ignored.
+                effectiveFrom:
+                  type: string
+                  format: date-time
+                  x-forma-type: "datetime: ISO 8601"
+                  description: "The date and time when a one-time job execution or a recurring interval schedule begins, presented in ISO 8601 format. If the date and time is before the current time, execution of scheduling begins immediately. This value is required."
+                effectiveTo:
+                  type: string
+                  format: date-time
+                  x-forma-type: "datetime: ISO 8601"
+                  description: "The date and time when the recurring interval schedule ends, presented in ISO 8601 format. This value must not be supplied for scheduleInterval values of ONE_TIME, but is required for all other scheduleInterval values."
+                serviceGroups:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: |-
+                    The service groups from which to extract data, separated by commas. This required value must identify at least one service group.
+                    There are two types: standard service groups extract full datasets, and delta extraction service groups (identified by the cdc prefix, short for Change Data Capture) extract only records that have changed within the specified date range, and are available for selected service groups only.
+
+                    Standard service groups: all, activities, admin, assets, checklists, cost, dailylogs, forms, iq, issues, locations, markups, meetingminutes, photos, relationships, reviews, rfis, schedule, sheets, submittals, submittalsacc, transmittals.
+
+                    Delta extraction service groups (beta): cdcadmin, cdccost, cdcissues, cdclocations, cdcrfis, cdcschedule, cdcsubmittalsacc, cdcsheets, cdcmeetingminutes, cdctransmittals.
+
+                    Note that the admin service includes both project and hub admin, and all extracts data from all currently available service groups.
+                callbackUrl:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The callback URL specified for the data request. If specified, the Data Connection service calls the URL each time a job executes for the request. The service sends a POST request that provides job execution information. The JSON payload in the POST request contains the following: { "accountId": "account_id", "requestId": "request_id", "jobId": "data_connector_job_id", "state": "complete", "success": true or false }.
+                    If not specified, the Data Connection service does not provide a callback.
+                sendEmail:
+                  type: boolean
+                  x-forma-type: boolean
+                  description: "Send a notification email to the user upon job completion. Values: true or false (default is true)"
+                projectId:
+                  type: string
+                  x-forma-type: string
+                  description: "(Legacy): A single project ID for the data request. Superseded by projectIdList."
+                projectIdList:
+                  type: array
+                  items:
+                    type: string
+                  x-forma-type: "array: string"
+                  description: "A list of up to 50 project IDs for the data request, which can include a single project or multiple projects. If projectId is also included, projectIdList takes precedence. Required for users with project admin permissions. Optional for users with executive overview permissions, who by default receive data for all projects unless projectIdList is provided."
+                startDate:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The start date and time for the data extraction, in ISO 8601 format.
+                    This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                    Additional notes on using startDate and endDate:
+
+                    - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                    - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                    - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                endDate:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The end date and time for the data extraction, in ISO 8601 format.
+                    This field applies only to schemas supporting date range extraction. The detailed schema documentation delivered with each data extract identifies the schemas and tables that support date range extraction.
+
+                    Additional notes on using startDate and endDate:
+
+                    - If you provide only startDate or endDate (but not both), Data Connector uses that single date for both startDate and endDate.
+
+                    - If you request more than the Maximum Date Range Allowed for an extraction, the default date range as documented in the schema documentation is returned.
+
+                    - For the activities service group, data replication can be delayed up to 20 minutes, so your requests should account for that delay.
+                dateRange:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    Specifies the timeframe for extracting data in a scheduled request (DAY, WEEK, MONTH, YEAR). Currently, it is applicable only to the Activities service and delta extraction service groups. Possible values:
+
+                    - TODAY: The current calendar day, from 00:00 UTC to the time the request is made.
+
+                    - YESTERDAY: The entire previous calendar day (00:00 UTC to 23:59 UTC).
+
+                    - PAST_7_DAYS: The last 7 days, including the current day.
+
+                    - MONTH_TO_DATE: From the start of the current calendar month (00:00 UTC on the 1st) to the time the request is made.
+
+                    - LAST_MONTH: The entire previous calendar month (00:00 UTC on the 1st to 23:59 UTC on the last day).
+
+                    - CUSTOM: Data for the date range defined by the startDate and endDate fields. Both fields are required when using this value.
+                projectStatus:
+                  type: string
+                  x-forma-type: string
+                  description: |-
+                    The types of projects to be included in a request. The possible values are:
+
+                    - all: - all projects (default)
+
+                    - archived: archived projects only
+
+                    - active: active project only
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:create": "data:create"
+            "data:read": "data:read"
+            "data:write": "data:write"

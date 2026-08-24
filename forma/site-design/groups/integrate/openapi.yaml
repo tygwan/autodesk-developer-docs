@@ -1,0 +1,2519 @@
+openapi: "3.1.0"
+info:
+  title: "Forma Site Design — integrate"
+  version: v1
+  description: |-
+    Forma Site Design — integrate.
+    Autodesk 문서에서 자동 추출됨. 원본: https://aps.autodesk.com/en/docs/forma/v1
+    공통 base 경로: /forma/integrate
+    **리전 — 호출 전 반드시 확인** Forma 는 리전별로 완전히 분리된 별개 시스템입니다. 리소스 식별자(urn 등)는 리전을 넘어 유효하지 않습니다. - HTTP API: 호스트는 하나(`developer.api.autodesk.com`)이고, **`X-Ads-Region` 헤더로 리전을 지정**합니다 (`US` | `EMEA`, 미지정 시 `US`). - 웹앱/임베디드 뷰: `app.autodeskforma.com`(US) 과 `app.autodeskforma.eu`(EMEA) 로 도메인 자체가 다릅니다. - 리전이 틀리면 인증이 정상이어도 **403** 이 납니다. 문서의 403 설명이 그대로 "Are you in the right region?" 입니다.
+servers:
+  - url: "https://developer.api.autodesk.com"
+x-forma-group: integrate
+x-forma-common-base: "/forma/integrate"
+paths:
+  "/forma/integrate/v1alpha/elements/{elementId}":
+    post:
+      operationId: integrate-updateelementwithoutrevision-POST
+      summary: "Creates a new element with a new revision under the specified element ID"
+      description: |-
+        Creates a new element with a new revision under the specified
+        element ID. Useful to keep track of changes in geometry in the same
+        logically evolving entity.
+      deprecated: true
+      parameters:
+        - name: elementId
+          in: path
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "Authcontext for the request, such as the Forma project context."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: s3Id
+          in: query
+          description: |-
+            If the payload for the request is larger than 6 MB it needs to be uploaded to S3
+            instead because AWS Lambda can only receive 6 MB. To do this make a GET request
+            to /upload-link?authcontext=${authcontext}. You’ll get back an ID and a URL as
+            JSON. First upload your payload by making a PUT request to the URL with your
+            elements as the body. Then make a POST request with no body where s3Id is
+            the ID you got from the request to /upload-link.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: nextRevision
+          in: query
+          description: "Optionally specify the element revision. Must be an epoch timestamp in ms."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+                  id:
+                    type: string
+                    x-forma-type: string
+                  revision:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/integrate-updateelementwithoutrevision-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                rootElement:
+                  type: string
+                  x-forma-type: string
+                elements:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    "*":
+                      type: object
+                      x-forma-type: object
+                      properties:
+                        id:
+                          type: string
+                          x-forma-type: string
+                        metadata:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            licensing:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                exportable:
+                                  type: boolean
+                                  x-forma-type: boolean
+                                attributions:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      action:
+                                        type: string
+                                        x-forma-type: "enum:string"
+                                        description: "Possible values: display, transfer"
+                                      content:
+                                        type: string
+                                        x-forma-type: string
+                                      url:
+                                        type: string
+                                        x-forma-type: string
+                                    required:
+                                      - action
+                                      - content
+                                      - url
+                                  x-forma-type: "array: object"
+                                licenseUrl:
+                                  type: string
+                                  x-forma-type: string
+                                providerDescriptionUrl:
+                                  type: string
+                                  x-forma-type: string
+                              required:
+                                - attributions
+                                - exportable
+                                - licenseUrl
+                                - providerDescriptionUrl
+                            predecessor:
+                              type: string
+                              x-forma-type: string
+                        properties:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            category:
+                              type: string
+                              x-forma-type: string
+                            name:
+                              type: string
+                              x-forma-type: string
+                            internalRepresentationReference:
+                              type: string
+                              x-forma-type: string
+                            spacemakerObjectStorageReferences:
+                              type: array
+                              items:
+                                type: string
+                              x-forma-type: "array: string"
+                            geoReference:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                srid:
+                                  type: number
+                                  x-forma-type: number
+                                refPoint:
+                                  type: object
+                                  properties:
+                                    anyOf:
+                                      type: object
+                                      properties:
+                                        "0":
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                        "1":
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                      required:
+                                        - "0"
+                                        - "1"
+                                  required:
+                                    - anyOf
+                              required:
+                                - refPoint
+                                - srid
+                            elementProvider:
+                              type: string
+                              x-forma-type: string
+                            geometry:
+                              type: object
+                              properties:
+                                anyOf:
+                                  type: object
+                                  properties:
+                                    "0":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: File"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: glb"
+                                        s3Id:
+                                          type: string
+                                          format: uuid
+                                          x-forma-type: "string: UUID"
+                                        nodeId:
+                                          type: string
+                                          x-forma-type: string
+                                        doubleSided:
+                                          type: boolean
+                                          x-forma-type: boolean
+                                      required:
+                                        - format
+                                        - s3Id
+                                        - type
+                                    "1":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: Inline"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: Mesh"
+                                        doubleSided:
+                                          type: boolean
+                                          x-forma-type: boolean
+                                        verts:
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                        faces:
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                      required:
+                                        - faces
+                                        - format
+                                        - type
+                                        - verts
+                                    "2":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: Inline"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: GeoJSON"
+                                        geoJson:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: FeatureCollection"
+                                            features:
+                                              type: array
+                                              items:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                    x-forma-type: string
+                                                  type:
+                                                    type: string
+                                                    x-forma-type: "enum:string"
+                                                    description: "Will always be: Feature"
+                                                  properties:
+                                                    type: object
+                                                    x-forma-type: object
+                                                    properties:
+                                                      stroke:
+                                                        type: object
+                                                        properties:
+                                                          anyOf:
+                                                            type: object
+                                                            properties:
+                                                              "0":
+                                                                type: string
+                                                                x-forma-type: string
+                                                              "1":
+                                                                type: object
+                                                                x-forma-type: object
+                                                                properties:
+                                                                  color:
+                                                                    type: string
+                                                                    x-forma-type: string
+                                                                  lineWidth:
+                                                                    type: number
+                                                                    x-forma-type: number
+                                                      stroke-width:
+                                                        type: number
+                                                        x-forma-type: number
+                                                      fill:
+                                                        type: object
+                                                        properties:
+                                                          anyOf:
+                                                            type: object
+                                                            properties:
+                                                              "0":
+                                                                type: string
+                                                                x-forma-type: string
+                                                              "1":
+                                                                type: object
+                                                                x-forma-type: object
+                                                                properties:
+                                                                  color:
+                                                                    type: string
+                                                                    x-forma-type: string
+                                                                  opacity:
+                                                                    type: number
+                                                                    x-forma-type: number
+                                                      fill-opacity:
+                                                        type: number
+                                                        x-forma-type: number
+                                                  geometry:
+                                                    x-forma-type: "one of"
+                                                    type: object
+                                                    properties:
+                                                      "0":
+                                                        type: object
+                                                        x-forma-type: object
+                                                        properties:
+                                                          coordinates:
+                                                            type: array
+                                                            items:
+                                                              type: array
+                                                            x-forma-type: "array: array"
+                                                          type:
+                                                            type: string
+                                                            x-forma-type: "enum:string"
+                                                            description: "Will always be: Polygon"
+                                                        required:
+                                                          - coordinates
+                                                          - type
+                                                      "1":
+                                                        type: object
+                                                        x-forma-type: object
+                                                        properties:
+                                                          coordinates:
+                                                            type: array
+                                                            items:
+                                                              type: array
+                                                            x-forma-type: "array: array"
+                                                          type:
+                                                            type: string
+                                                            x-forma-type: "enum:string"
+                                                            description: "Will always be: LineString"
+                                                        required:
+                                                          - coordinates
+                                                          - type
+                                                    required:
+                                                      - "0"
+                                                      - "1"
+                                                required:
+                                                  - geometry
+                                                  - properties
+                                                  - type
+                                              x-forma-type: "array: object"
+                                          required:
+                                            - features
+                                            - type
+                                        nodeId:
+                                          type: string
+                                          x-forma-type: string
+                                      required:
+                                        - format
+                                        - geoJson
+                                        - type
+                                    "3":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: File"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: GeoJSON"
+                                        s3Id:
+                                          type: string
+                                          format: uuid
+                                          x-forma-type: "string: UUID"
+                                        nodeId:
+                                          type: string
+                                          x-forma-type: string
+                                      required:
+                                        - format
+                                        - nodeId
+                                        - s3Id
+                                        - type
+                            color:
+                              type: object
+                              x-forma-type: object
+                            opacity:
+                              type: object
+                              x-forma-type: object
+                            stroke:
+                              type: object
+                              x-forma-type: object
+                            areaStatsReps:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                grossFloorPolygonsV2:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      grossFloorPolygon:
+                                        type: array
+                                        items:
+                                          type: array
+                                        x-forma-type: "array: array"
+                                      elevation:
+                                        type: number
+                                        x-forma-type: number
+                                      areaType:
+                                        type: string
+                                        x-forma-type: string
+                                    required:
+                                      - elevation
+                                      - grossFloorPolygon
+                                  x-forma-type: "array: object"
+                            buildingFloors3DSketch_UNSTABLE:
+                              type: object
+                              x-forma-type: object
+                            gfaUnits:
+                              type: array
+                              x-forma-type: array
+                        representations:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            "*":
+                              x-forma-type: "one of"
+                              type: object
+                              properties:
+                                linked:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: linked"
+                                    blobId:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "Use the upload links endpoint to get a blob ID. Data must be uploaded before the blob ID can be used."
+                                    selection:
+                                      x-forma-type: "one of"
+                                      type: object
+                                      properties:
+                                        equals:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: equals"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                        startsWith:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: startsWith"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                    properties:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                  required:
+                                    - blobId
+                                    - type
+                                embedded-json:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: embedded-json"
+                                    data:
+                                      type: object
+                                      x-forma-type: object
+                                      description: "A maximum of approximately 100 KiB of JSON data can be provided. Use a linked representation if you risk exceeding this."
+                                    selection:
+                                      x-forma-type: "one of"
+                                      type: object
+                                      properties:
+                                        equals:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: equals"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                        startsWith:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: startsWith"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                    properties:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                  required:
+                                    - type
+                        children:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                              transform:
+                                type: array
+                                items:
+                                  type: number
+                                x-forma-type: "array: number"
+                                description: "Standard 4 by 4 transformation matrix as a flat array of 16 numbers in column-major order."
+                              key:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  A key must be unique within the same children list
+                                  Max length: 40
+                            required:
+                              - id
+                          x-forma-type: "array: object"
+                          description: "Note that either all children must have keys specified or none of them"
+                      required:
+                        - id
+                  required:
+                    - "*"
+              required:
+                - elements
+                - rootElement
+  "/forma/integrate/v1alpha/elements":
+    post:
+      operationId: integrate-createelementhierarchy-POST
+      summary: "Create an element with geometry"
+      description: "Create an element with geometry."
+      deprecated: true
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "Authcontext for the request, such as the Forma project context."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: s3Id
+          in: query
+          description: |-
+            If the payload for the request is larger than 6 MB it needs to be uploaded to S3
+            instead because AWS Lambda can only receive 6 MB. To do this make a GET request
+            to /upload-link?authcontext=${authcontext}. You’ll get back an ID and a URL as
+            JSON. First upload your payload by making a PUT request to the URL with your
+            elements as the body. Then make a POST request with no body where s3Id is
+            the ID you got from the request to /upload-link.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+                  id:
+                    type: string
+                    x-forma-type: string
+                  revision:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/integrate-createelementhierarchy-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                rootElement:
+                  type: string
+                  x-forma-type: string
+                elements:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    "*":
+                      type: object
+                      x-forma-type: object
+                      properties:
+                        id:
+                          type: string
+                          x-forma-type: string
+                        metadata:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            licensing:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                exportable:
+                                  type: boolean
+                                  x-forma-type: boolean
+                                attributions:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      action:
+                                        type: string
+                                        x-forma-type: "enum:string"
+                                        description: "Possible values: display, transfer"
+                                      content:
+                                        type: string
+                                        x-forma-type: string
+                                      url:
+                                        type: string
+                                        x-forma-type: string
+                                    required:
+                                      - action
+                                      - content
+                                      - url
+                                  x-forma-type: "array: object"
+                                licenseUrl:
+                                  type: string
+                                  x-forma-type: string
+                                providerDescriptionUrl:
+                                  type: string
+                                  x-forma-type: string
+                              required:
+                                - attributions
+                                - exportable
+                                - licenseUrl
+                                - providerDescriptionUrl
+                            predecessor:
+                              type: string
+                              x-forma-type: string
+                        properties:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            category:
+                              type: string
+                              x-forma-type: string
+                            name:
+                              type: string
+                              x-forma-type: string
+                            internalRepresentationReference:
+                              type: string
+                              x-forma-type: string
+                            spacemakerObjectStorageReferences:
+                              type: array
+                              items:
+                                type: string
+                              x-forma-type: "array: string"
+                            geoReference:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                srid:
+                                  type: number
+                                  x-forma-type: number
+                                refPoint:
+                                  type: object
+                                  properties:
+                                    anyOf:
+                                      type: object
+                                      properties:
+                                        "0":
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                        "1":
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                      required:
+                                        - "0"
+                                        - "1"
+                                  required:
+                                    - anyOf
+                              required:
+                                - refPoint
+                                - srid
+                            elementProvider:
+                              type: string
+                              x-forma-type: string
+                            geometry:
+                              type: object
+                              properties:
+                                anyOf:
+                                  type: object
+                                  properties:
+                                    "0":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: File"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: glb"
+                                        s3Id:
+                                          type: string
+                                          format: uuid
+                                          x-forma-type: "string: UUID"
+                                        nodeId:
+                                          type: string
+                                          x-forma-type: string
+                                        doubleSided:
+                                          type: boolean
+                                          x-forma-type: boolean
+                                      required:
+                                        - format
+                                        - s3Id
+                                        - type
+                                    "1":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: Inline"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: Mesh"
+                                        doubleSided:
+                                          type: boolean
+                                          x-forma-type: boolean
+                                        verts:
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                        faces:
+                                          type: array
+                                          items:
+                                            type: number
+                                          x-forma-type: "array: number"
+                                      required:
+                                        - faces
+                                        - format
+                                        - type
+                                        - verts
+                                    "2":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: Inline"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: GeoJSON"
+                                        geoJson:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: FeatureCollection"
+                                            features:
+                                              type: array
+                                              items:
+                                                type: object
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                    x-forma-type: string
+                                                  type:
+                                                    type: string
+                                                    x-forma-type: "enum:string"
+                                                    description: "Will always be: Feature"
+                                                  properties:
+                                                    type: object
+                                                    x-forma-type: object
+                                                    properties:
+                                                      stroke:
+                                                        type: object
+                                                        properties:
+                                                          anyOf:
+                                                            type: object
+                                                            properties:
+                                                              "0":
+                                                                type: string
+                                                                x-forma-type: string
+                                                              "1":
+                                                                type: object
+                                                                x-forma-type: object
+                                                                properties:
+                                                                  color:
+                                                                    type: string
+                                                                    x-forma-type: string
+                                                                  lineWidth:
+                                                                    type: number
+                                                                    x-forma-type: number
+                                                      stroke-width:
+                                                        type: number
+                                                        x-forma-type: number
+                                                      fill:
+                                                        type: object
+                                                        properties:
+                                                          anyOf:
+                                                            type: object
+                                                            properties:
+                                                              "0":
+                                                                type: string
+                                                                x-forma-type: string
+                                                              "1":
+                                                                type: object
+                                                                x-forma-type: object
+                                                                properties:
+                                                                  color:
+                                                                    type: string
+                                                                    x-forma-type: string
+                                                                  opacity:
+                                                                    type: number
+                                                                    x-forma-type: number
+                                                      fill-opacity:
+                                                        type: number
+                                                        x-forma-type: number
+                                                  geometry:
+                                                    x-forma-type: "one of"
+                                                    type: object
+                                                    properties:
+                                                      "0":
+                                                        type: object
+                                                        x-forma-type: object
+                                                        properties:
+                                                          coordinates:
+                                                            type: array
+                                                            items:
+                                                              type: array
+                                                            x-forma-type: "array: array"
+                                                          type:
+                                                            type: string
+                                                            x-forma-type: "enum:string"
+                                                            description: "Will always be: Polygon"
+                                                        required:
+                                                          - coordinates
+                                                          - type
+                                                      "1":
+                                                        type: object
+                                                        x-forma-type: object
+                                                        properties:
+                                                          coordinates:
+                                                            type: array
+                                                            items:
+                                                              type: array
+                                                            x-forma-type: "array: array"
+                                                          type:
+                                                            type: string
+                                                            x-forma-type: "enum:string"
+                                                            description: "Will always be: LineString"
+                                                        required:
+                                                          - coordinates
+                                                          - type
+                                                    required:
+                                                      - "0"
+                                                      - "1"
+                                                required:
+                                                  - geometry
+                                                  - properties
+                                                  - type
+                                              x-forma-type: "array: object"
+                                          required:
+                                            - features
+                                            - type
+                                        nodeId:
+                                          type: string
+                                          x-forma-type: string
+                                      required:
+                                        - format
+                                        - geoJson
+                                        - type
+                                    "3":
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: File"
+                                        format:
+                                          type: string
+                                          x-forma-type: "enum:string"
+                                          description: "Will always be: GeoJSON"
+                                        s3Id:
+                                          type: string
+                                          format: uuid
+                                          x-forma-type: "string: UUID"
+                                        nodeId:
+                                          type: string
+                                          x-forma-type: string
+                                      required:
+                                        - format
+                                        - nodeId
+                                        - s3Id
+                                        - type
+                            color:
+                              type: object
+                              x-forma-type: object
+                            opacity:
+                              type: object
+                              x-forma-type: object
+                            stroke:
+                              type: object
+                              x-forma-type: object
+                            areaStatsReps:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                grossFloorPolygonsV2:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      grossFloorPolygon:
+                                        type: array
+                                        items:
+                                          type: array
+                                        x-forma-type: "array: array"
+                                      elevation:
+                                        type: number
+                                        x-forma-type: number
+                                      areaType:
+                                        type: string
+                                        x-forma-type: string
+                                    required:
+                                      - elevation
+                                      - grossFloorPolygon
+                                  x-forma-type: "array: object"
+                            buildingFloors3DSketch_UNSTABLE:
+                              type: object
+                              x-forma-type: object
+                            gfaUnits:
+                              type: array
+                              x-forma-type: array
+                        representations:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            "*":
+                              x-forma-type: "one of"
+                              type: object
+                              properties:
+                                linked:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: linked"
+                                    blobId:
+                                      type: string
+                                      x-forma-type: string
+                                      description: "Use the upload links endpoint to get a blob ID. Data must be uploaded before the blob ID can be used."
+                                    selection:
+                                      x-forma-type: "one of"
+                                      type: object
+                                      properties:
+                                        equals:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: equals"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                        startsWith:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: startsWith"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                    properties:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                  required:
+                                    - blobId
+                                    - type
+                                embedded-json:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: embedded-json"
+                                    data:
+                                      type: object
+                                      x-forma-type: object
+                                      description: "A maximum of approximately 100 KiB of JSON data can be provided. Use a linked representation if you risk exceeding this."
+                                    selection:
+                                      x-forma-type: "one of"
+                                      type: object
+                                      properties:
+                                        equals:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: equals"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                        startsWith:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: startsWith"
+                                            value:
+                                              type: string
+                                              x-forma-type: string
+                                          required:
+                                            - type
+                                            - value
+                                    properties:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                  required:
+                                    - type
+                        children:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                x-forma-type: string
+                              transform:
+                                type: array
+                                items:
+                                  type: number
+                                x-forma-type: "array: number"
+                                description: "Standard 4 by 4 transformation matrix as a flat array of 16 numbers in column-major order."
+                              key:
+                                type: string
+                                x-forma-type: string
+                                description: |-
+                                  A key must be unique within the same children list
+                                  Max length: 40
+                            required:
+                              - id
+                          x-forma-type: "array: object"
+                          description: "Note that either all children must have keys specified or none of them"
+                      required:
+                        - id
+                  required:
+                    - "*"
+              required:
+                - elements
+                - rootElement
+  "/forma/integrate/v1alpha/upload-link":
+    get:
+      operationId: integrate-getuploadlink-GET
+      summary: "Useful for submitting element trees with more than 6MB of data"
+      description: "Useful for submitting element trees with more than 6MB of data"
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "Authcontext for the request, such as the Forma project context."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    x-forma-type: string
+                  url:
+                    type: string
+                    x-forma-type: string
+                  blobId:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context optional"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/integrate-getuploadlink-GET"
+  "/forma/integrate/v2alpha/elements/{elementUrn}/update":
+    post:
+      operationId: integrate-updateelementv2-POST
+      summary: "Create a new element based on the existing element"
+      description: |-
+        Create a new element based on the existing element. The element must
+        belong to integrate system.
+      parameters:
+        - name: elementUrn
+          in: path
+          required: true
+          schema:
+            type: string
+            x-forma-type: string
+        - name: authcontext
+          in: query
+          required: true
+          description: "Authcontext for the request, such as the Forma project context."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/integrate-updateelementv2-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                nextUrn:
+                  type: string
+                  x-forma-type: string
+                  description: "URN of the new element. The authcontext must match the current authcontext."
+                metadata:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    licensing:
+                      type: object
+                      x-forma-type: object
+                      properties:
+                        exportable:
+                          type: boolean
+                          x-forma-type: boolean
+                        attributions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              action:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: "Possible values: display, transfer"
+                              content:
+                                type: string
+                                x-forma-type: string
+                              url:
+                                type: string
+                                x-forma-type: string
+                            required:
+                              - action
+                              - content
+                              - url
+                          x-forma-type: "array: object"
+                        licenseUrl:
+                          type: string
+                          x-forma-type: string
+                        providerDescriptionUrl:
+                          type: string
+                          x-forma-type: string
+                      required:
+                        - attributions
+                        - exportable
+                        - licenseUrl
+                        - providerDescriptionUrl
+                    predecessor:
+                      type: string
+                      x-forma-type: string
+                properties:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    category:
+                      type: string
+                      x-forma-type: string
+                    name:
+                      type: string
+                      x-forma-type: string
+                    internalRepresentationReference:
+                      type: string
+                      x-forma-type: string
+                    spacemakerObjectStorageReferences:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                    geoReference:
+                      type: object
+                      x-forma-type: object
+                      properties:
+                        srid:
+                          type: number
+                          x-forma-type: number
+                        refPoint:
+                          type: object
+                          properties:
+                            anyOf:
+                              type: object
+                              properties:
+                                "0":
+                                  type: array
+                                  items:
+                                    type: number
+                                  x-forma-type: "array: number"
+                                "1":
+                                  type: array
+                                  items:
+                                    type: number
+                                  x-forma-type: "array: number"
+                              required:
+                                - "0"
+                                - "1"
+                          required:
+                            - anyOf
+                      required:
+                        - refPoint
+                        - srid
+                    elementProvider:
+                      type: string
+                      x-forma-type: string
+                representations:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    "*":
+                      x-forma-type: "one of"
+                      type: object
+                      properties:
+                        linked:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "Will always be: linked"
+                            blobId:
+                              type: string
+                              x-forma-type: string
+                              description: "Use the upload links endpoint to get a blob ID. Data must be uploaded before the blob ID can be used."
+                            selection:
+                              x-forma-type: "one of"
+                              type: object
+                              properties:
+                                equals:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: equals"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                                startsWith:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: startsWith"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                            properties:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                          required:
+                            - blobId
+                            - type
+                        embedded-json:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "Will always be: embedded-json"
+                            data:
+                              type: object
+                              x-forma-type: object
+                              description: "A maximum of approximately 100 KiB of JSON data can be provided. Use a linked representation if you risk exceeding this."
+                            selection:
+                              x-forma-type: "one of"
+                              type: object
+                              properties:
+                                equals:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: equals"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                                startsWith:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: startsWith"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                            properties:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                          required:
+                            - type
+                children:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      urn:
+                        type: string
+                        x-forma-type: string
+                        description: "URN of the new element. The authcontext must match the current authcontext."
+                      transform:
+                        type: array
+                        items:
+                          type: number
+                        x-forma-type: "array: number"
+                        description: "Standard 4 by 4 transformation matrix as a flat array of 16 numbers in column-major order."
+                      key:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          A key must be unique within the same children list. Either all children must have keys specified or none of them.
+                          Max length: 40
+                    required:
+                      - urn
+                  x-forma-type: "array: object"
+  "/forma/integrate/v2alpha/elements/batch-ingest":
+    post:
+      operationId: integrate-batchingestelementsv2-POST
+      summary: "The desired element URNs can optionally be specified"
+      description: "The desired element URNs can optionally be specified."
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "Authcontext for the request, such as the Forma project context."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: s3Id
+          in: query
+          description: |-
+            If the payload for the request is larger than 6 MB it needs to be uploaded to S3
+            instead because AWS Lambda can only receive 6 MB. To do this make a GET request
+            to /upload-link?authcontext=${authcontext}. You’ll get back an ID and a URL as
+            JSON. First upload your payload by making a PUT request to the URL with your
+            elements as the body. Then make a POST request with no body where s3Id is
+            the ID you got from the request to /upload-link.
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    x-forma-type: array
+                    description: "Each item in the response corresponds to the item with the same index in the request."
+                    items:
+                      type: object
+                      properties:
+                        oneOf:
+                          type: array
+                          x-forma-type: "array:oneOf"
+                          items:
+                            type: object
+                            properties:
+                              ok:
+                                type: object
+                                x-forma-type: object
+                                description: "Result for a successful operation."
+                                properties:
+                                  status:
+                                    type: string
+                                    x-forma-type: "enum:string"
+                                    description: "Will always be: ok"
+                                  urn:
+                                    type: string
+                                    x-forma-type: string
+                              failed:
+                                type: object
+                                x-forma-type: object
+                                description: "Result for a failed operation."
+                                properties:
+                                  status:
+                                    type: string
+                                    x-forma-type: "enum:string"
+                                    description: "Will always be: failed"
+                                  error:
+                                    type: object
+                                    x-forma-type: object
+                                    properties:
+                                      title:
+                                        type: string
+                                        x-forma-type: string
+                                      detail:
+                                        type: string
+                                        x-forma-type: string
+                                      errors:
+                                        type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            field:
+                                              type: string
+                                              x-forma-type: string
+                                            path:
+                                              type: array
+                                              x-forma-type: array
+                                            title:
+                                              type: string
+                                              x-forma-type: string
+                                            detail:
+                                              type: string
+                                              x-forma-type: string
+                                        x-forma-type: "array: object"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/integrate-batchingestelementsv2-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  x-forma-type: array
+                  description: "List of items to create or update. Maximum 1000 items can be specified."
+                  items:
+                    type: object
+                    properties:
+                      oneOf:
+                        type: array
+                        x-forma-type: "array:oneOf"
+                        items:
+                          type: object
+                          properties:
+                            create:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                operation:
+                                  type: string
+                                  x-forma-type: "enum:string"
+                                  description: "Will always be: create"
+                                urn:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "URN of the new element. The authcontext must match the current authcontext."
+                                metadata:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    licensing:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        exportable:
+                                          type: boolean
+                                          x-forma-type: boolean
+                                        attributions:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              action:
+                                                type: string
+                                                x-forma-type: "enum:string"
+                                                description: "Possible values: display, transfer"
+                                              content:
+                                                type: string
+                                                x-forma-type: string
+                                              url:
+                                                type: string
+                                                x-forma-type: string
+                                            required:
+                                              - action
+                                              - content
+                                              - url
+                                          x-forma-type: "array: object"
+                                        licenseUrl:
+                                          type: string
+                                          x-forma-type: string
+                                        providerDescriptionUrl:
+                                          type: string
+                                          x-forma-type: string
+                                      required:
+                                        - attributions
+                                        - exportable
+                                        - licenseUrl
+                                        - providerDescriptionUrl
+                                    predecessor:
+                                      type: string
+                                      x-forma-type: string
+                                properties:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    category:
+                                      type: string
+                                      x-forma-type: string
+                                    name:
+                                      type: string
+                                      x-forma-type: string
+                                    internalRepresentationReference:
+                                      type: string
+                                      x-forma-type: string
+                                    spacemakerObjectStorageReferences:
+                                      type: array
+                                      items:
+                                        type: string
+                                      x-forma-type: "array: string"
+                                    geoReference:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        srid:
+                                          type: number
+                                          x-forma-type: number
+                                        refPoint:
+                                          type: object
+                                          properties:
+                                            anyOf:
+                                              type: object
+                                              properties:
+                                                "0":
+                                                  type: array
+                                                  items:
+                                                    type: number
+                                                  x-forma-type: "array: number"
+                                                "1":
+                                                  type: array
+                                                  items:
+                                                    type: number
+                                                  x-forma-type: "array: number"
+                                              required:
+                                                - "0"
+                                                - "1"
+                                          required:
+                                            - anyOf
+                                      required:
+                                        - refPoint
+                                        - srid
+                                    elementProvider:
+                                      type: string
+                                      x-forma-type: string
+                                representations:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    "*":
+                                      x-forma-type: "one of"
+                                      type: object
+                                      properties:
+                                        linked:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: linked"
+                                            blobId:
+                                              type: string
+                                              x-forma-type: string
+                                              description: "Use the upload links endpoint to get a blob ID. Data must be uploaded before the blob ID can be used."
+                                            selection:
+                                              x-forma-type: "one of"
+                                              type: object
+                                              properties:
+                                                equals:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: equals"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                                startsWith:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: startsWith"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                            properties:
+                                              type: object
+                                              x-forma-type: object
+                                              properties:
+                                          required:
+                                            - blobId
+                                            - type
+                                        embedded-json:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: embedded-json"
+                                            data:
+                                              type: object
+                                              x-forma-type: object
+                                              description: "A maximum of approximately 100 KiB of JSON data can be provided. Use a linked representation if you risk exceeding this."
+                                            selection:
+                                              x-forma-type: "one of"
+                                              type: object
+                                              properties:
+                                                equals:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: equals"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                                startsWith:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: startsWith"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                            properties:
+                                              type: object
+                                              x-forma-type: object
+                                              properties:
+                                          required:
+                                            - type
+                                children:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      urn:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "URN of the new element. The authcontext must match the current authcontext."
+                                      transform:
+                                        type: array
+                                        items:
+                                          type: number
+                                        x-forma-type: "array: number"
+                                        description: "Standard 4 by 4 transformation matrix as a flat array of 16 numbers in column-major order."
+                                      key:
+                                        type: string
+                                        x-forma-type: string
+                                        description: |-
+                                          A key must be unique within the same children list. Either all children must have keys specified or none of them.
+                                          Max length: 40
+                                    required:
+                                      - urn
+                                  x-forma-type: "array: object"
+                              required:
+                                - operation
+                            update:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                                operation:
+                                  type: string
+                                  x-forma-type: "enum:string"
+                                  description: "Will always be: update"
+                                urn:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "Reference to the element to update."
+                                nextUrn:
+                                  type: string
+                                  x-forma-type: string
+                                  description: "URN of the new element. The authcontext must match the current authcontext."
+                                metadata:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    licensing:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        exportable:
+                                          type: boolean
+                                          x-forma-type: boolean
+                                        attributions:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              action:
+                                                type: string
+                                                x-forma-type: "enum:string"
+                                                description: "Possible values: display, transfer"
+                                              content:
+                                                type: string
+                                                x-forma-type: string
+                                              url:
+                                                type: string
+                                                x-forma-type: string
+                                            required:
+                                              - action
+                                              - content
+                                              - url
+                                          x-forma-type: "array: object"
+                                        licenseUrl:
+                                          type: string
+                                          x-forma-type: string
+                                        providerDescriptionUrl:
+                                          type: string
+                                          x-forma-type: string
+                                      required:
+                                        - attributions
+                                        - exportable
+                                        - licenseUrl
+                                        - providerDescriptionUrl
+                                    predecessor:
+                                      type: string
+                                      x-forma-type: string
+                                properties:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    category:
+                                      type: string
+                                      x-forma-type: string
+                                    name:
+                                      type: string
+                                      x-forma-type: string
+                                    internalRepresentationReference:
+                                      type: string
+                                      x-forma-type: string
+                                    spacemakerObjectStorageReferences:
+                                      type: array
+                                      items:
+                                        type: string
+                                      x-forma-type: "array: string"
+                                    geoReference:
+                                      type: object
+                                      x-forma-type: object
+                                      properties:
+                                        srid:
+                                          type: number
+                                          x-forma-type: number
+                                        refPoint:
+                                          type: object
+                                          properties:
+                                            anyOf:
+                                              type: object
+                                              properties:
+                                                "0":
+                                                  type: array
+                                                  items:
+                                                    type: number
+                                                  x-forma-type: "array: number"
+                                                "1":
+                                                  type: array
+                                                  items:
+                                                    type: number
+                                                  x-forma-type: "array: number"
+                                              required:
+                                                - "0"
+                                                - "1"
+                                          required:
+                                            - anyOf
+                                      required:
+                                        - refPoint
+                                        - srid
+                                    elementProvider:
+                                      type: string
+                                      x-forma-type: string
+                                representations:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    "*":
+                                      x-forma-type: "one of"
+                                      type: object
+                                      properties:
+                                        linked:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: linked"
+                                            blobId:
+                                              type: string
+                                              x-forma-type: string
+                                              description: "Use the upload links endpoint to get a blob ID. Data must be uploaded before the blob ID can be used."
+                                            selection:
+                                              x-forma-type: "one of"
+                                              type: object
+                                              properties:
+                                                equals:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: equals"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                                startsWith:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: startsWith"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                            properties:
+                                              type: object
+                                              x-forma-type: object
+                                              properties:
+                                          required:
+                                            - blobId
+                                            - type
+                                        embedded-json:
+                                          type: object
+                                          x-forma-type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                              x-forma-type: "enum:string"
+                                              description: "Will always be: embedded-json"
+                                            data:
+                                              type: object
+                                              x-forma-type: object
+                                              description: "A maximum of approximately 100 KiB of JSON data can be provided. Use a linked representation if you risk exceeding this."
+                                            selection:
+                                              x-forma-type: "one of"
+                                              type: object
+                                              properties:
+                                                equals:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: equals"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                                startsWith:
+                                                  type: object
+                                                  x-forma-type: object
+                                                  properties:
+                                                    type:
+                                                      type: string
+                                                      x-forma-type: "enum:string"
+                                                      description: "Will always be: startsWith"
+                                                    value:
+                                                      type: string
+                                                      x-forma-type: string
+                                                  required:
+                                                    - type
+                                                    - value
+                                            properties:
+                                              type: object
+                                              x-forma-type: object
+                                              properties:
+                                          required:
+                                            - type
+                                children:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      urn:
+                                        type: string
+                                        x-forma-type: string
+                                        description: "URN of the new element. The authcontext must match the current authcontext."
+                                      transform:
+                                        type: array
+                                        items:
+                                          type: number
+                                        x-forma-type: "array: number"
+                                        description: "Standard 4 by 4 transformation matrix as a flat array of 16 numbers in column-major order."
+                                      key:
+                                        type: string
+                                        x-forma-type: string
+                                        description: |-
+                                          A key must be unique within the same children list. Either all children must have keys specified or none of them.
+                                          Max length: 40
+                                    required:
+                                      - urn
+                                  x-forma-type: "array: object"
+                              required:
+                                - operation
+                                - urn
+                          required:
+                            - create
+                            - update
+                    required:
+                      - oneOf
+              required:
+                - items
+  "/forma/integrate/v2alpha/elements":
+    post:
+      operationId: integrate-createelementv2-POST
+      summary: "To store a representation you need to first upload it to S3 by using the upload link endpoint"
+      description: |-
+        To store a representation you need to first upload it to S3 by
+        using the upload link endpoint. The blobId retrieved in that
+        endpoint can then be used in the representation.
+      parameters:
+        - name: authcontext
+          in: query
+          required: true
+          description: "Authcontext for the request, such as the Forma project context."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: X-Ads-Region
+          in: header
+          description: "Specifies the geographical location (region) of the service. US or EMEA. Defaults to US."
+          schema:
+            type: string
+            x-forma-type: string
+        - name: Content-Type
+          in: header
+          required: true
+          description: "Must be application/json"
+          schema:
+            type: string
+            x-forma-type: string
+      security:
+        - oauth2:
+            - "data:read"
+            - "data:write"
+      responses:
+        "201":
+          description: Created
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  urn:
+                    type: string
+                    x-forma-type: string
+        "400":
+          description: "Bad Request"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: "Internal Server Error"
+      x-forma-auth-context: "user context required"
+      x-forma-scopes:
+        - "data:read"
+        - "data:write"
+      x-forma-doc: "https://aps.autodesk.com/en/docs/forma/v1/reference/http-reference/integrate-createelementv2-POST"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                urn:
+                  type: string
+                  x-forma-type: string
+                  description: "URN of the new element. The authcontext must match the current authcontext."
+                metadata:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    licensing:
+                      type: object
+                      x-forma-type: object
+                      properties:
+                        exportable:
+                          type: boolean
+                          x-forma-type: boolean
+                        attributions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              action:
+                                type: string
+                                x-forma-type: "enum:string"
+                                description: "Possible values: display, transfer"
+                              content:
+                                type: string
+                                x-forma-type: string
+                              url:
+                                type: string
+                                x-forma-type: string
+                            required:
+                              - action
+                              - content
+                              - url
+                          x-forma-type: "array: object"
+                        licenseUrl:
+                          type: string
+                          x-forma-type: string
+                        providerDescriptionUrl:
+                          type: string
+                          x-forma-type: string
+                      required:
+                        - attributions
+                        - exportable
+                        - licenseUrl
+                        - providerDescriptionUrl
+                    predecessor:
+                      type: string
+                      x-forma-type: string
+                properties:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    category:
+                      type: string
+                      x-forma-type: string
+                    name:
+                      type: string
+                      x-forma-type: string
+                    internalRepresentationReference:
+                      type: string
+                      x-forma-type: string
+                    spacemakerObjectStorageReferences:
+                      type: array
+                      items:
+                        type: string
+                      x-forma-type: "array: string"
+                    geoReference:
+                      type: object
+                      x-forma-type: object
+                      properties:
+                        srid:
+                          type: number
+                          x-forma-type: number
+                        refPoint:
+                          type: object
+                          properties:
+                            anyOf:
+                              type: object
+                              properties:
+                                "0":
+                                  type: array
+                                  items:
+                                    type: number
+                                  x-forma-type: "array: number"
+                                "1":
+                                  type: array
+                                  items:
+                                    type: number
+                                  x-forma-type: "array: number"
+                              required:
+                                - "0"
+                                - "1"
+                          required:
+                            - anyOf
+                      required:
+                        - refPoint
+                        - srid
+                    elementProvider:
+                      type: string
+                      x-forma-type: string
+                representations:
+                  type: object
+                  x-forma-type: object
+                  properties:
+                    "*":
+                      x-forma-type: "one of"
+                      type: object
+                      properties:
+                        linked:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "Will always be: linked"
+                            blobId:
+                              type: string
+                              x-forma-type: string
+                              description: "Use the upload links endpoint to get a blob ID. Data must be uploaded before the blob ID can be used."
+                            selection:
+                              x-forma-type: "one of"
+                              type: object
+                              properties:
+                                equals:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: equals"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                                startsWith:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: startsWith"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                            properties:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                          required:
+                            - blobId
+                            - type
+                        embedded-json:
+                          type: object
+                          x-forma-type: object
+                          properties:
+                            type:
+                              type: string
+                              x-forma-type: "enum:string"
+                              description: "Will always be: embedded-json"
+                            data:
+                              type: object
+                              x-forma-type: object
+                              description: "A maximum of approximately 100 KiB of JSON data can be provided. Use a linked representation if you risk exceeding this."
+                            selection:
+                              x-forma-type: "one of"
+                              type: object
+                              properties:
+                                equals:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: equals"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                                startsWith:
+                                  type: object
+                                  x-forma-type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      x-forma-type: "enum:string"
+                                      description: "Will always be: startsWith"
+                                    value:
+                                      type: string
+                                      x-forma-type: string
+                                  required:
+                                    - type
+                                    - value
+                            properties:
+                              type: object
+                              x-forma-type: object
+                              properties:
+                          required:
+                            - type
+                children:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      urn:
+                        type: string
+                        x-forma-type: string
+                        description: "URN of the new element. The authcontext must match the current authcontext."
+                      transform:
+                        type: array
+                        items:
+                          type: number
+                        x-forma-type: "array: number"
+                        description: "Standard 4 by 4 transformation matrix as a flat array of 16 numbers in column-major order."
+                      key:
+                        type: string
+                        x-forma-type: string
+                        description: |-
+                          A key must be unique within the same children list. Either all children must have keys specified or none of them.
+                          Max length: 40
+                    required:
+                      - urn
+                  x-forma-type: "array: object"
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: "APS OAuth2. 엔드포인트마다 x-forma-auth-context 를 확인하세요. \"user context required\" 는 3-legged 토큰이 필요하고, \"user context optional\" 은 2-legged(client_credentials)로도 호출할 수 있습니다."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://developer.api.autodesk.com/authentication/v2/token"
+          scopes:
+            "data:read": "data:read"
+            "data:write": "data:write"
