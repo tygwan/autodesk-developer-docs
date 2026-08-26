@@ -13,6 +13,37 @@ Find the Autodesk API or SDK you need, follow the source, and keep every answer 
 > [!NOTE]
 > This is an unofficial, source-faithful archive of the [Autodesk Platform Services API & SDK Documentation](https://aps.autodesk.com/developer/documentation) catalog. **Local docs** opens a versioned snapshot in this repository; **Official source only** opens Autodesk documentation that is not available locally.
 
+## AI coding-agent entrypoint
+
+This repository is both a versioned documentation archive and a Claude Code/Codex plugin. The bundled [`autodesk-api-implementer`](./skills/autodesk-api-implementer/SKILL.md) workflow activates automatically for Autodesk developer API or SDK implementation, planning, review, and troubleshooting. Ask naturally; the user does not need to name the workflow.
+
+If you are an AI agent working from this repository:
+
+1. Open `CATALOG.json` first and select the product, surface, version, interface, and runtime that match the request.
+2. Inspect the target project's dependencies and existing authentication code before asking for information that may already be present.
+3. Use README and INDEX files only to route. Support consequential methods, paths, SDK symbols, fields, scopes, and constraints with leaf documents.
+4. After selecting a surface, restrict file listings and searches to its cataloged `path`. Expand only for a concrete authentication, input/output, identifier, or runtime dependency.
+5. Keep version, protocol or SDK language, runtime, region, and authentication context attached to every finding. Do not merge facts across surfaces.
+6. Treat local documentation as snapshot evidence, not proof of current service availability. For latest behavior, status, pricing, entitlement, or availability, verify the current official Autodesk source and distinguish it from the snapshot.
+
+### Install from a checkout
+
+Run the commands from the repository root, then start a new conversation so the client reloads the plugin metadata.
+
+**Codex**
+
+```powershell
+codex plugin marketplace add .
+codex plugin add autodesk-developer-docs@autodesk-developer-docs
+```
+
+**Claude Code**
+
+```powershell
+claude plugin marketplace add --scope user .
+claude plugin install --scope user autodesk-developer-docs@autodesk-developer-docs
+```
+
 ## Explore the archive
 
 - **[Authentication API](./authentication/README.md)** · `OAuth 2.0`<br>
@@ -27,26 +58,6 @@ Find the Autodesk API or SDK you need, follow the source, and keep every answer 
   Work across Forma APIs, the AEC Data Model, and Site Design or Embedded View capabilities.
 
 A common model-to-browser route is `Authentication → Data Management → Model Derivative → Viewer`. Use only the layers your source system and task require.
-
-## Ask with an AI agent
-
-Use this request shape:
-
-```text
-Using only this repository, find how to <goal> for <runtime and source system>.
-
-Start: CATALOG.json → product README → product INDEX → surface/category INDEX → leaf document
-
-Return:
-- relevant product, surface, and version
-- authentication requirements and scopes
-- source-backed steps with local leaf-document citations
-- explicitly labeled inference or missing coverage
-```
-
-- Cite the leaf documents used, not only README or INDEX summaries.
-- Treat `RELATED.md` as evidence-backed navigation hints, not a guaranteed integration workflow.
-- Keep version, protocol, runtime, region, and authentication requirements attached to their original surface.
 
 ## Designed for reliable answers
 

@@ -13,6 +13,37 @@
 > [!NOTE]
 > 이 저장소는 [Autodesk Platform Services API & SDK Documentation](https://aps.autodesk.com/developer/documentation) 카탈로그를 원문에 충실하게 보관한 비공식 아카이브입니다. **로컬 문서**는 이 저장소의 버전 스냅샷을 열고, **공식 원문만 연결**은 아직 이 저장소에 없는 Autodesk 문서를 엽니다.
 
+## AI 코딩 에이전트 시작점
+
+이 저장소는 버전이 지정된 문서 아카이브이자 Claude Code/Codex 플러그인입니다. 포함된 [`autodesk-api-implementer`](./skills/autodesk-api-implementer/SKILL.md) 워크플로는 Autodesk 개발자 API·SDK 구현, 계획, 검토, 문제 해결 요청에 자동으로 활성화됩니다. 자연어로 요청하면 되며 사용자가 워크플로 이름을 지정할 필요는 없습니다.
+
+이 저장소에서 작업하는 AI 에이전트는 다음 순서를 따릅니다.
+
+1. 먼저 `CATALOG.json`을 열고 요청에 맞는 제품, 문서군, 버전, 인터페이스, 실행 환경을 선택합니다.
+2. 이미 확인할 수 있는 정보를 다시 묻기 전에 대상 프로젝트의 의존성과 기존 인증 코드를 살펴봅니다.
+3. README와 INDEX는 탐색에만 사용합니다. 중요한 메서드, 경로, SDK 심벌, 필드, scope, 제약은 leaf 문서로 뒷받침합니다.
+4. 문서군을 선택한 뒤에는 카탈로그의 해당 `path` 안에서만 파일을 나열하고 검색합니다. 구체적인 인증, 입출력, 식별자 또는 실행 환경 의존성이 있을 때만 범위를 넓힙니다.
+5. 버전, 프로토콜 또는 SDK 언어, 실행 환경, 리전, 인증 맥락을 각 근거와 함께 유지하고 서로 다른 문서군의 사실을 합치지 않습니다.
+6. 로컬 문서는 스냅샷 근거이며 현재 서비스 제공 여부를 보장하지 않습니다. 최신 동작, 상태, 가격, entitlement 또는 제공 여부를 묻는다면 현재 Autodesk 공식 원문을 확인하고 스냅샷과 구분합니다.
+
+### 체크아웃한 저장소에서 설치
+
+저장소 루트에서 다음 명령을 실행한 뒤, 클라이언트가 플러그인 메타데이터를 다시 불러오도록 새 대화를 시작합니다.
+
+**Codex**
+
+```powershell
+codex plugin marketplace add .
+codex plugin add autodesk-developer-docs@autodesk-developer-docs
+```
+
+**Claude Code**
+
+```powershell
+claude plugin marketplace add --scope user .
+claude plugin install --scope user autodesk-developer-docs@autodesk-developer-docs
+```
+
 ## 아카이브 둘러보기
 
 - **[Authentication API](./authentication/README.ko.md)** · `OAuth 2.0`<br>
@@ -27,26 +58,6 @@
   Forma API·AEC Data Model·Site Design·Embedded View의 개발 경로를 탐색합니다.
 
 모델을 브라우저에 표시하는 일반적인 경로는 `Authentication → Data Management → Model Derivative → Viewer`입니다. 원본 시스템과 작업에 필요한 계층만 선택하세요.
-
-## AI에게 이렇게 요청하세요
-
-다음 요청 형식을 사용하세요.
-
-```text
-이 저장소만 사용해서 <실행 환경과 원본 시스템>에서 <목표>를 구현하는 방법을 찾아줘.
-
-시작: CATALOG.json → 제품 README → 제품 INDEX → 문서군/카테고리 INDEX → leaf 문서
-
-반환할 내용:
-- 관련 제품, 문서군과 버전
-- 인증 요구사항과 scope
-- 로컬 leaf 문서를 인용한 원문 근거 단계
-- 명확히 표시한 추론 또는 수집되지 않은 범위
-```
-
-- README나 INDEX 요약만이 아니라 실제 사용한 leaf 문서를 인용하세요.
-- `RELATED.md`는 원문 근거가 있는 탐색 힌트이며, 보장된 통합 워크플로가 아닙니다.
-- 버전·프로토콜·실행 환경·리전·인증 요구사항을 원래 문서군과 분리하지 마세요.
 
 ## 신뢰할 수 있는 답변을 위한 구조
 
