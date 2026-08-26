@@ -1,0 +1,20 @@
+{
+  "name": "autodesk-developer-docs",
+  "interface": {
+    "displayName": "Autodesk Developer Docs (Unofficial)"
+  },
+  "plugins": [
+    {
+      "name": "autodesk-developer-docs",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Coding"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Viewer SDK routing
+# Viewer SDK browser routing
 
 Use this reference for Viewer SDK browser work. Route exact APIs through the captured Viewer surface and its public leaf references.
 

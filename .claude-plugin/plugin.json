@@ -1,0 +1,12 @@
+{
+  "name": "autodesk-developer-docs",
+  "version": "0.1.0",
+  "description": "Unofficial, source-faithful Autodesk developer documentation with an evidence-grounded implementation skill.",
+  "author": {
+    "name": "tygwan",
+    "url": "https://github.com/tygwan"
+  },
+  "homepage": "https://github.com/tygwan/autodesk-developer-docs",
+  "repository": "https://github.com/tygwan/autodesk-developer-docs",
+  "keywords": ["autodesk", "aps", "forge", "api", "sdk", "documentation"]
+}

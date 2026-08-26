@@ -1,6 +1,6 @@
 ---
 name: autodesk-api-implementer
-description: Use automatically for implementation, planning, review, or troubleshooting involving Autodesk developer APIs or SDKs, including APS or Forge, Viewer, Data Management, Model Derivative, OSS, OAuth, Forma, and AEC Data Model. Ground code and API decisions in the local documentation archive. Excludes archive maintenance and end-user CAD product help.
+description: Use automatically for implementation, planning, review, or troubleshooting involving Autodesk developer APIs or SDKs, including APS or Forge, Viewer, Data Management, Model Derivative, OSS, OAuth, Forma, and AEC Data Model. Ground code and API decisions in the bundled or user-supplied documentation archive. Excludes archive maintenance and end-user CAD product help.
 ---
 
 # Autodesk API Implementer
@@ -9,7 +9,13 @@ Ground Autodesk integration decisions and code in the local archive while loadin
 
 ## Locate the archive
 
-Use a repository path supplied by the user. Otherwise find the nearest workspace directory containing `CATALOG.json`; do not confuse this skill directory with the archive. If the archive is unavailable, request its path instead of substituting remembered API details.
+Resolve one absolute archive root before opening documentation:
+
+1. Use an archive path supplied by the user. Validate that it contains `CATALOG.json`; if it does not, report the invalid path instead of silently switching sources.
+2. Otherwise find the nearest workspace directory containing `CATALOG.json`.
+3. Otherwise derive the bundled plugin root from this `SKILL.md` location by walking upward until a directory contains `CATALOG.json` and at least one plugin manifest: `.codex-plugin/plugin.json` or `.claude-plugin/plugin.json`.
+
+Do not confuse the skill directory with the archive or scan unrelated directories. If no valid archive is available, request its path instead of substituting remembered API details.
 
 Treat captured documentation as read-only. It is a versioned snapshot, not proof of current service availability.
 

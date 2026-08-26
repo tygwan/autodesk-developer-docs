@@ -2,6 +2,8 @@
 
 Score observable behavior, not wording or heading order.
 
+Run behavioral cases against the packaged `autodesk-developer-docs` plugin. The repository-local `report` skill is test instrumentation and is not part of the production plugin.
+
 ## Hard failures
 
 Any one of these fails the case regardless of numeric score:

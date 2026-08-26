@@ -1,0 +1,27 @@
+{
+  "name": "autodesk-developer-docs",
+  "version": "0.1.0",
+  "description": "Unofficial, source-faithful Autodesk developer documentation with an evidence-grounded implementation skill.",
+  "author": {
+    "name": "tygwan",
+    "url": "https://github.com/tygwan"
+  },
+  "homepage": "https://github.com/tygwan/autodesk-developer-docs",
+  "repository": "https://github.com/tygwan/autodesk-developer-docs",
+  "keywords": ["autodesk", "aps", "forge", "api", "sdk", "documentation"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Autodesk Developer Docs (Unofficial)",
+    "shortDescription": "Build Autodesk integrations from source-faithful docs",
+    "longDescription": "Use a bundled, versioned Autodesk API and SDK documentation archive to plan, implement, review, and troubleshoot integrations with leaf-level evidence.",
+    "developerName": "tygwan",
+    "category": "Coding",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/tygwan/autodesk-developer-docs",
+    "defaultPrompt": [
+      "Plan an evidence-backed APS integration for my application.",
+      "Implement this Autodesk API task using the bundled documentation.",
+      "Review this Viewer integration against the captured SDK reference."
+    ]
+  }
+}

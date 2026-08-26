@@ -1,4 +1,4 @@
-# Authentication routing
+# Authentication and scope routing
 
 Use this reference to choose an OAuth context and derive the minimum scopes. Exact support, parameters, and scopes must still come from the selected Authentication and operation leaf documents.
 

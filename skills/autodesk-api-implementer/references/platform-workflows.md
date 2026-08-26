@@ -1,4 +1,4 @@
-# Cross-product workflow routing
+# Cross-surface workflow routing
 
 Load this reference only when the task spans multiple non-authentication product surfaces or passes identifiers between surfaces. A token-only Authentication dependency does not trigger it.
 

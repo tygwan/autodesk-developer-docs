@@ -1,0 +1,20 @@
+{
+  "name": "autodesk-developer-docs",
+  "description": "Install the unofficial Autodesk developer documentation plugin and its evidence-grounded API implementation skill.",
+  "owner": {
+    "name": "tygwan"
+  },
+  "plugins": [
+    {
+      "name": "autodesk-developer-docs",
+      "source": "./",
+      "description": "Unofficial, source-faithful Autodesk developer documentation with an evidence-grounded implementation skill.",
+      "version": "0.1.0",
+      "author": {
+        "name": "tygwan"
+      },
+      "homepage": "https://github.com/tygwan/autodesk-developer-docs",
+      "repository": "https://github.com/tygwan/autodesk-developer-docs"
+    }
+  ]
+}
