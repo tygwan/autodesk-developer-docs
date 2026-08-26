@@ -1,0 +1,7 @@
+{"id":"implicit-aps-upload","prompt":"Implement an APS Data Management file upload in this Node service using the supplied local docs.","expected":{"skill":"autodesk-api-implementer","mode":"implicit"}}
+{"id":"implicit-viewer-toolbar","prompt":"Add a custom toolbar button to this Autodesk Viewer v7 browser app after the model loads.","expected":{"skill":"autodesk-api-implementer","mode":"implicit"}}
+{"id":"implicit-forma-graphql","prompt":"Plan an AEC Data Model GraphQL query for wall properties using our captured Autodesk documentation.","expected":{"skill":"autodesk-api-implementer","mode":"implicit"}}
+{"id":"negative-archive-maintenance","prompt":"Refresh the Autodesk documentation snapshot and regenerate its CATALOG and INDEX files.","expected":{"skill":"autodesk-docs-maintainer","must_not":"autodesk-api-implementer"}}
+{"id":"negative-product-help","prompt":"How do I trim a polyline interactively in AutoCAD?","expected":{"skill":null,"must_not":"autodesk-api-implementer"}}
+{"id":"negative-generic-report","prompt":"Summarize the Jest test results and write a development status report.","expected":{"skill":null,"must_not":"report"}}
+{"id":"explicit-private-report","prompt":"/report","expected":{"skill":"report","mode":"explicit"}}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Autodesk API Implementer"
+  short_description: "Build Autodesk integrations from local source-faithful docs"
+  default_prompt: "Use $autodesk-api-implementer to implement this Autodesk API or SDK task from the local documentation archive."
+policy:
+  allow_implicit_invocation: true

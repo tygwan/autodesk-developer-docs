@@ -1,0 +1,6 @@
+interface:
+  display_name: "Report"
+  short_description: "Write a private Autodesk skill evaluation report"
+  default_prompt: "Use $report to create a private file-only report from the saved Autodesk API Implementer evaluation artifacts."
+policy:
+  allow_implicit_invocation: false
