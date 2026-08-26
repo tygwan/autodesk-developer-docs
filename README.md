@@ -15,6 +15,30 @@ Find the Autodesk API or SDK you need, follow the source, and keep every answer 
 
 ## AI coding-agent entrypoint
 
+Copy the entire block below into Claude Code or Codex. It asks the agent to inspect the environment, offer applicable setup choices, use this README's checkout instructions, verify the result, and finish with practical usage guidance.
+
+```text
+Set up the Autodesk Developer Documentation plugin for me and teach me how to use it.
+
+Source:
+- repository: https://github.com/tygwan/autodesk-developer-docs
+- distribution ref: main-test
+- expected plugin: autodesk-developer-docs
+- expected automatic workflow: autodesk-api-implementer
+
+Proceed as follows:
+1. Identify whether this session is Claude Code or Codex. Using read-only checks first, determine whether the expected plugin is already installed and enabled and whether a valid source checkout is available. A valid repository root contains CATALOG.json, .claude-plugin/plugin.json, and .codex-plugin/plugin.json.
+2. Read the README from the valid checkout or distribution ref, including its "AI coding-agent entrypoint" and "Install from a checkout" sections. Treat the commands in "Install from a checkout" as authoritative; do not invent install commands. If you cannot access the README, ask me for a checkout path instead of guessing.
+3. Before changing local or user-level state, present only the setup choices that apply: use an existing verified installation; install from an existing checkout; or obtain the source checkout at the distribution ref and then install from it. Explain what each applicable choice changes and ask me to choose.
+4. After I choose, perform only the authorized setup. If this environment cannot execute a required command, give me the exact command and wait for its result. Do not request Autodesk credentials during plugin setup.
+5. Verify that the autodesk-developer-docs plugin and autodesk-api-implementer workflow are discoverable. If the client must start a new conversation to reload plugin metadata, say so explicitly and give me a one-line continuation prompt to paste there.
+6. Finish the onboarding after verification: explain automatic activation, supported request types, captured archive coverage, and the snapshot-versus-current limitation. Give me three natural-language example requests tailored to my project or runtime when known, then ask for my first Autodesk developer task.
+
+Do not stop after listing installation commands. Continue through verification and usage onboarding, and do not require me to invoke the workflow by name.
+```
+
+### How the installed workflow operates
+
 This repository is both a versioned documentation archive and a Claude Code/Codex plugin. The bundled [`autodesk-api-implementer`](./skills/autodesk-api-implementer/SKILL.md) workflow activates automatically for Autodesk developer API or SDK implementation, planning, review, and troubleshooting. Ask naturally; the user does not need to name the workflow.
 
 If you are an AI agent working from this repository:
